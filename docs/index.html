@@ -47,9 +47,9 @@
 <h2>Simulation</h2>
 
 <p>For our simulation, we update the position, density, and temperature using an Incompressible Navier-Stokes equation. Below are the equations we might use in our simulation. The simulation process includes several part: updating velocity, updating density, updating temperature and displaying density. The most important part of these is the update of velocity. We need to seperately calculate the advection form, external forces and pressures according to the Navier-Stokes Equation. Specifically, advections means moving the smokes through its velocity field. One of the most significant external forces is gravity. </p>
-<p>Then we declare the variable symbols used here: u is the velocity field, v is viscosity(we may not need it in smoke simulation), f is external forces including gravity, ρ is smoke density, p is pressure, S is external smoke sources, and T is temparture of smoke. </p>
+<p>Then we declare the variable symbols used here: \(\textbf{u}\) is the velocity field, \(v\) is viscosity(we may not need it in smoke simulation), \(\textbf{f}\) is external forces including gravity, \(\rho\) is smoke density, \(p\) is pressure, \(S\) is external smoke sources, and \(T\) is temparture of smoke. </p>
 
- </p>
+
 <center>
 <table style="width=100%">
 <tr>
@@ -61,6 +61,7 @@
 </table>
 </center>
 
+The first equation means the smoke is incompressible, and in the second equation, the term \(-\left(\textbf{u}\cdot \nabla\right)\textbf{u}\) is self-advecation, term \(-\frac{1}{\rho}\nabla p\) means updating the pressure.
 <center>
 <table style="width=100%">
 <tr>
@@ -82,7 +83,7 @@
 </tr>
 </table>
 </center>
-where \(\textbf{u}\) is the velocity field, \(\textbf{f}\) is the external forces, \(p\) is the pressure of the gas. The first equation means the smoke is incompressible, and in the second equation, the term \(-\left(\textbf{u}\cdot \nabla\right)\textbf{u}\) is self-advecation, term \(-\frac{1}{\rho}\nabla p\) means updating the pressure.
+
   
 <h2>Rendering</h2>
 <p>Smoke rendering is a crucial part of our project and is achieved by separating the scene into many cells and then using the result of simulation to interpolate within the cells. To render the texture, we used temperature obtained from simulation instead of actual color values, and then we use the temperature value to look up for the color value from another texture. What's more, we use ray marching to simulate illumination; thus, the density of smoke influences the brightness and transparency of smoke.</p>
