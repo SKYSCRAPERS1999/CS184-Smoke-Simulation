@@ -35,14 +35,14 @@
 <div>
 
 <h1 align="middle">Overview</h1>
-<p>For our final project, we want to create a realistic simulation of smoke using the Navier-Stokes equations. In order to render the smoke, we are going to use a ray marching algorithm. <p>
+<p>For our final project, we want to create a realistic simulation of smoke using the Navier-Stokes equations. In order to render the smoke, we may use a ray marching algorithm, although we may need to do some research on other methods of rendering smoke. <p>
 
 
 <h1 align="middle">Problem Description </h1>
-<p>The problem we want to solve is simulating and rendering realistic smoke in either 2D or 3D. This problem is important, because smoke is widely present in movies, games, and engineering applications. Being able to render smoke and simulate its motion will allow to to create a wide array of special effects. The most challenging part of the project is figuring out how we are going to model our smoke and render that on the screen.</p>
+<p>The problem we want to solve is simulating and rendering realistic smoke in either 2D or 3D. This problem is important, because smoke is widely present in movies, games, and engineering applications. Being able to render smoke and simulate its motion will allow to to create a wide array of special effects. The most challenging part of the project is figuring out how we are going to model our smoke and render that on the screen. In addition, another challenge is figuring out what programming languages and frameworks to use within our project.</p>
 
 
-<p>Our general approach on solving this problem is by splitting this problem into two parts. The first part is simulating the dynamic motion of the smoke using a series of Navier-Stokes equations. The second part is actually rendering the smoke on the screen using some type of ray marching algorithm. </p>
+<p>Our general approach on solving this problem is by splitting this problem into two parts. The first part is simulating the dynamic motion of the smoke using a series of Navier-Stokes equations. The second part is actually rendering the smoke on the screen using ray marching algorithm or some other type of rendering algorithm. </p>
 
 <h2>Simulation</h2>
 
@@ -92,20 +92,20 @@ In this equation, the term \(-\left(\textbf{u}\cdot \nabla\right)\rho\) is advec
 
 
 <h2>Rendering</h2>
-<p>Smoke rendering is a crucial part of our project and is achieved by separating the scene into many cells and then using the result of simulation to interpolate within the cells. To render the texture, we used temperature obtained from simulation instead of actual color values, and then we use the temperature value to look up for the color value from another texture. What's more, we use ray marching to simulate illumination; thus, the density of smoke influences the brightness and transparency of smoke.</p>
+<p>Smoke rendering is a crucial part of our project and is achieved by separating the scene into many cells and then using the result of simulation to interpolate within the cells. To render the texture, we used temperature obtained from simulation instead of actual color values, and then we use the temperature value to look up for the color value from another texture. What more, we can use ray marching to simulate illumination; thus, the density of smoke influences the brightness and transparency of smoke.</p>
 
 <h1 align="middle">Goals and Deliverables</h1>
 
-<p>For this project, our deliverables will be screenshots of the smoke simulation in action. We can similarly showcase our smoke simulation in action during our demo. In order to measure the quality of our simulation, we could measure the time between each frame of our simulation (relative speed up) and the quality of the smoke rendered. </p>
+<p>For this project, our deliverables will be screenshots of the smoke simulation in action. We can similarly showcase our smoke simulation in action during our demo. In order to measure the quality of our simulation, we could measure the time between each frame of our simulation (relative speed up) and the quality of the smoke rendered. We can visualize these measurments using a graph. </p>
 
 <p>Our plan is to be able to load some file with initial smoke positions and use that file to simulate smoke on a GUI.</p>
 
 <p>Our hopes for this project is to add interactivity. When the user clicks the mouse at a location within the GUI, we can start a smoke effect at that location. We also hope to be able to modify different parameters of the smoke within the GUI, such as density and temperature. </p>
   
 <h1 align="middle"> Schedules </h1>
-First 2 weeks: Focus on the simulation part. Build a basic model for our smoke simulator and implemented tbe Navier Stoke equations.
+First 2 weeks: Focus on the simulation part. Build a basic model for our smoke simulator and implement the Navier Stokes equations. Ask for help in office hours.
 <br>
-Last 2 weeks: Focus on the rendering part. Build the GUI and figure our how to render our smoke.
+Last 2 weeks: Focus on the rendering part. Build the GUI and figure our how to render our smoke. Finalize our demo and make sure our pipline is smooth.
 <br>
   
 <h1 align="middle"> Resources </h1>
