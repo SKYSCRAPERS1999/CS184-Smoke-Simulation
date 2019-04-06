@@ -58,6 +58,28 @@
 </table>
 </center>
 
+<center>
+<table style="width=100%">
+<tr>
+  <td>
+    <img src="images/prop-eq2.png" align="middle" width="600px"/>
+    <figcaption align="middle">Update density</figcaption>
+  </td>
+</tr>
+</table>
+</center>
+
+<center>
+<table style="width=100%">
+<tr>
+  <td>
+    <img src="images/prop-eq3.png" align="middle" width="600px"/>
+    <figcaption align="middle">Update temprature</figcaption>
+  </td>
+</tr>
+</table>
+</center>
+  
 <h2>Rendering</h2>
 <p>Smoke rendering is a crucial part of our project and is achieved by separating the scene into many cells and then using the result of simulation to interpolate within the cells. To render the texture, we used temperature obtained from simulation instead of actual color values, and then we use the temperature value to look up for the color value from another texture. What's more, we use ray marching to simulate illumination; thus, the density of smoke influences the brightness and transparency of smoke.</p>
 
