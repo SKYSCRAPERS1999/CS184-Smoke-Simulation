@@ -47,7 +47,7 @@
 
 <p>For our simulation, we update the position, density, and temperature using an Incompressible Navier-Stokes equation. Below are the equations we might use in our simulation. The simulation process includes several part: updating velocity, updating density, updating temperature and displaying density. The most important part of these is the update of velocity. We need to seperately calculate the advection form, external forces and pressures according to the Navier-Stokes Equation. Specifically, advections means moving the smokes through its velocity field. One of the most significant external forces is gravity </p>
 
-
+<center>
 <table style="width=100%">
 <tr>
   <td>
@@ -56,6 +56,7 @@
   </td>
 </tr>
 </table>
+</center>
 
 <h2>Rendering</h2>
 <p>Smoke rendering is a crucial part of our project and is achieved by separating the scene into many cells and then using the result of simulation to interpolate within the cells. To render the texture, we used temperature obtained from simulation instead of actual color values, and then we use the temperature value to look up for the color value from another texture. What's more, we use ray marching to simulate illumination; thus, the density of smoke influences the brightness and transparency of smoke.</p>
