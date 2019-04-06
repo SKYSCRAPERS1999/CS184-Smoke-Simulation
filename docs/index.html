@@ -1,7 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <style>
   body {
     padding: 100px;
@@ -46,12 +45,10 @@
 
 <h2>Simulation</h2>
 
-
-<p>For our simulation, we update the position, density, and temperature using an Incompressible Navier-Stokes equation. Below are the equations we might use in our simulation. The simulation process includes several parts: updating velocity, updating density, updating temperature and displaying density. The most important part of these is the update of velocity. We need to separately calculate the advection form, external forces, and pressures according to the Navier-Stokes Equation. Specifically, advection means moving the smokes through its velocity field. One of the most significant external forces is gravity.</p>
+<p>For our simulation, we update the position, density, and temperature using an Incompressible Navier-Stokes equation. Below are the equations we might use in our simulation. The simulation process includes several part: updating velocity, updating density, updating temperature and displaying density. The most important part of these is the update of velocity. We need to seperately calculate the advection form, external forces and pressures according to the Navier-Stokes Equation. Specifically, advections means moving the smokes through its velocity field. One of the most significant external forces is gravity. </p>
 <p>Then we declare the variable symbols used here: u is the velocity field, v is viscosity(we may not need it in smoke simulation), f is external forces including gravity, ρ is smoke density, p is pressure, S is external smoke sources, and T is temparture of smoke. </p>
 
-
-
+ </p>
 <center>
 <table style="width=100%">
 <tr>
@@ -62,7 +59,6 @@
 </tr>
 </table>
 </center>
-where \(\textbf{u}\) is the velocity field, \(\textbf{f}\) is the external forces, \(p\) is the pressure of the gas. The first equation means the smoke is incompressible, and in the second equation, the term \(-\left(\textbf{u}\cdot \nabla\right)\textbf{u}\) is self-advecation, term \(-\frac{1}{\rho}\nabla p\) means updating the pressure.
 
 <center>
 <table style="width=100%">
@@ -98,9 +94,9 @@ where \(\textbf{u}\) is the velocity field, \(\textbf{f}\) is the external force
 <p>Our hopes for this project is to add interactivity. When the user clicks the mouse at a location within the GUI, we can start a smoke effect at that location. We also hope to be able to modify different parameters of the smoke within the GUI, such as density and temperature. </p>
   
 <h1 align="middle"> Schedules </h1>
-First 2 weeks: focuse on the simulation part
+First 2 weeks: Focus on the simulation part. Build a basic model for our smoke simulator and implemented tbe Navier Stoke equations.
 <br>
-Last 2 weeks: focus on the rendering part
+Last 2 weeks: Focus on the rendering part. Build the GUI and figure our how to render our smoke.
 <br>
   
 <h1 align="middle"> Resources </h1>
