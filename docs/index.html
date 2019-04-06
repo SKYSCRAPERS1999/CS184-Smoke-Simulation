@@ -45,10 +45,59 @@
 
 <h2>Simulation</h2>
 
-<p>For our simulation, we update the position, density, and temperature using an incompressible Navier-Stokes equation. Below are the equations we might use in our simulation.</p>
+<p>For our simulation, we update the position, density, and temperature using an Incompressible Navier-Stokes equation. Below are the equations we might use in our simulation. The simulation process includes several part: updating velocity, updating density, updating temperature and displaying density. The most important part of these is the update of velocity. We need to seperately calculate the advection form, external forces and pressures according to the Navier-Stokes Equation.</p>
+
+
+<table style="width=100%">
+<tr>
+  <td>
+    <img src="images/prop-eq1.png" align="middle" width="800px"/>
+    <figcaption align="middle">Incompressible Navier-Stokes equation</figcaption>
+  </td>
+</tr>
+</table>
+  
+<table style="width=100%">
+<tr>
+  <td>
+    <img src="images/Advection.png" align="middle" width="200px"/>
+    <figcaption align="middle">Advection: Move the smokes through its velocity field</figcaption>
+  </td>
+  <td>
+    <img src="images/External.png" align="middle" width="200px"/>
+    <figcaption align="middle">External forces: like gravity</figcaption>
+  </td>
+  <td>
+  <img src="images/Pressure.png" align="middle" width="200px"/>
+  <figcaption align="middle">Pressure</figcaption>
+  </td>
+</tr>
+</table>
 
 <h2>Rendering</h2>
 <p>Smoke rendering is a crucial part of our project and is achieved by separating the scene into many cells and then using the result of simulation to interpolate within the cells. To render the texture, we used temperature obtained from simulation instead of actual color values, and then we use the temperature value to look up for the color value from another texture. What's more, we use ray marching to simulate illumination; thus, the density of smoke influences the brightness and transparency of smoke.</p>
 
+<h1 align="middle">Goals and Deliverables</h1>
+
+<p>For this project, our deliverables will be screenshots of the smoke simulation in action. We can similarly showcase our smoke simulation in action during our demo. In order to measure the quality of our simulation, we could measure the time between each frame of our simulation (relative speed up) and the quality of the smoke rendered. </p>
+
+<p>Our plan is to be able to load some file with initial smoke positions and use that file to simulate smoke on a GUI.</p>
+
+<p>Our hopes for this project is to add interactivity. When the user clicks the mouse at a location within the GUI, we can start a smoke effect at that location. We also hope to be able to modify different parameters of the smoke within the GUI, such as density and temperature. </p>
+  
+<h2 align="middle"> Schedules </h2>
+First 2 weeks: focuse on the simulation part
+<br>
+Last 2 weeks: focus on the rendering part
+<br>
+  
+<h2 align="middle"> Resources </h2>
+http://www.cs.unc.edu/~lin/COMP768-S09/LEC/smoke.ppt  
+<br>
+https://github.com/mharrys/fluids-2d
+<br>
+http://graphics.ucsd.edu/~henrik/papers/smoke/smoke.pdf
+<br>
+  
 </body>
 </html>
