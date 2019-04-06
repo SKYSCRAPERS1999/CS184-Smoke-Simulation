@@ -45,31 +45,14 @@
 
 <h2>Simulation</h2>
 
-<p>For our simulation, we update the position, density, and temperature using an Incompressible Navier-Stokes equation. Below are the equations we might use in our simulation. The simulation process includes several part: updating velocity, updating density, updating temperature and displaying density. The most important part of these is the update of velocity. We need to seperately calculate the advection form, external forces and pressures according to the Navier-Stokes Equation.</p>
+<p>For our simulation, we update the position, density, and temperature using an Incompressible Navier-Stokes equation. Below are the equations we might use in our simulation. The simulation process includes several part: updating velocity, updating density, updating temperature and displaying density. The most important part of these is the update of velocity. We need to seperately calculate the advection form, external forces and pressures according to the Navier-Stokes Equation. Specifically, advections means moving the smokes through its velocity field. One of the most significant external forces is gravity </p>
 
 
 <table style="width=100%">
 <tr>
   <td>
-    <img src="images/prop-eq1.png" align="middle" width="800px"/>
+    <img src="images/prop-eq1.png" align="middle" width="600px"/>
     <figcaption align="middle">Incompressible Navier-Stokes equation</figcaption>
-  </td>
-</tr>
-</table>
-  
-<table style="width=100%">
-<tr>
-  <td>
-    <img src="images/Advection.png" align="middle" width="200px"/>
-    <figcaption align="middle">Advection: Move the smokes through its velocity field</figcaption>
-  </td>
-  <td>
-    <img src="images/External.png" align="middle" width="200px"/>
-    <figcaption align="middle">External forces: like gravity</figcaption>
-  </td>
-  <td>
-  <img src="images/Pressure.png" align="middle" width="200px"/>
-  <figcaption align="middle">Pressure</figcaption>
   </td>
 </tr>
 </table>
