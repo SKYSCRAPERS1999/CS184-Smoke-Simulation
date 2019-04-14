@@ -1,3 +1,6 @@
+# Original file Copyright CMU462 Fall 2015: 
+# Kayvon Fatahalian, Keenan Crane,
+# Sky Gao, Bryce Summers, Michael Choquette.
 cmake_minimum_required(VERSION 2.8)
 project(CGL)
 
@@ -83,10 +86,12 @@ endif(APPLE)
 ##################
 if(UNIX AND NOT APPLE)
 
+  link_directories(/usr/lib/x86_64-linux-gnu/mesa/)
+
   # GCC only
   if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 
-    set(GCC_CXX_FLAGS "-std=gnu++11 -m64")
+    set(GCC_CXX_FLAGS "-std=c++11 -m64")
 
     # X11 Dependencies
     if(NOT CGL_BUILD_SHARED)
@@ -134,7 +139,7 @@ if(WIN32)
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MSVC_CXX_FLAGS}")
 
-    add_subdirectory("${CGL_SOURCE_DIR}/deps/freetype") 
+    add_subdirectory("${CGL_SOURCE_DIR}/deps/freetype")
 
   endif(MSVC)
 
@@ -158,29 +163,36 @@ endif(WIN32)
 #-------------------------------------------------------------------------------
 
 # Required packages
+find_package(OpenGL REQUIRED)
 if(NOT WIN32)
   find_package(Freetype REQUIRED)
 endif()
 
+include_directories( ${OPENGL_INCLUDE_DIRS})
 
-#-------------------------------------------------------------------------------
-# Set definitions
-#-------------------------------------------------------------------------------
-add_definitions(${NANOGUI_EXTRA_DEFS})
+add_definitions(-DGLEW_STATIC)
+add_subdirectory("${CGL_SOURCE_DIR}/deps/glew")
+set_property( TARGET glew APPEND_STRING PROPERTY COMPILE_FLAGS -w )
+
+add_subdirectory("${CGL_SOURCE_DIR}/deps/glfw")
+set_property( TARGET glfw APPEND_STRING PROPERTY COMPILE_FLAGS -w )
 
 #-------------------------------------------------------------------------------
 # Set include directories
 #-------------------------------------------------------------------------------
 include_directories(
   ${CGL_INCLUDE_DIRS}
+  ${GLEW_INCLUDE_DIRS}
+  ${GLFW_INCLUDE_DIRS}
   ${FREETYPE_INCLUDE_DIRS}
-  ${NANOGUI_EXTRA_INCS}
 )
 
 #-------------------------------------------------------------------------------
 # Set link directories
 #-------------------------------------------------------------------------------
 link_directories(
+  ${GLEW_LIBRARY_DIRS}
+  ${GLFW_LIBRARY_DIRS}
   ${FREETYPE_LIBRARY_DIRS}
 )
 

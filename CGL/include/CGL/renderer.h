@@ -19,13 +19,14 @@ namespace CGL {
  * its own control keybindings, etc.
  */
 class Renderer {
-public:
+ public:
+
   /**
    * Virtual Destructor.
    * Each renderer implementation should define its own destructor
    * that takes care of freeing the resources that it uses.
    */
-  virtual ~Renderer(void) {}
+  virtual ~Renderer( void ) { }
 
   /**
    * Initialize the renderer.
@@ -33,14 +34,14 @@ public:
    * to be used. The viewer will call the init function before using the
    * renderer in drawing.
    */
-  virtual void init(void) = 0;
+  virtual void init( void ) = 0;
 
   /**
    * Draw content.
    * Renderers are free to define their own routines for drawing to the
    * context. The viewer calls this function on every frame update.
    */
-  virtual void render(void) = 0;
+  virtual void render( void ) = 0;
 
   /**
    * Respond to buffer resize.
@@ -50,21 +51,21 @@ public:
    * \param w The new width of the context
    * \param h The new height of the context
    */
-  virtual void resize(size_t w, size_t h) = 0;
+  virtual void resize( size_t w, size_t h ) = 0;
 
-  /**
-    * Return a name for the renderer.
-    * If the viewer has a renderer set at initialization, it will include
-    * the renderer name in the window title.
-    */
-  virtual std::string name(void) = 0;
+ /**
+   * Return a name for the renderer.
+   * If the viewer has a renderer set at initialization, it will include
+   * the renderer name in the window title.
+   */
+  virtual std::string name( void ) = 0;
 
   /**
    * Return a brief description of the renderer.
    * Each renderer can define this differently. The viewer will use the
    * returned value in the renderer section of its on-screen display.
    */
-  virtual std::string info(void) = 0;
+  virtual std::string info( void ) = 0;
 
   /**
    * Respond to cursor events.
@@ -75,7 +76,7 @@ public:
    * \param x the x coordinate of the cursor
    * \param y the y coordinate of the cursor
    */
-  virtual void cursor_event(float x, float y) {}
+  virtual void cursor_event( float x, float y ) { }
 
   /**
    * Respond to zoom event.
@@ -85,7 +86,7 @@ public:
    * \param offset_x Scroll offset in x direction
    * \param offset_y Scroll offset in y direction
    */
-  virtual void scroll_event(float offset_x, float offset_y) {}
+  virtual void scroll_event( float offset_x, float offset_y ) { }
 
   /**
    * Respond to mouse click event.
@@ -98,7 +99,7 @@ public:
    * \param mods if any modifier keys are held down at the time of the event
    *        modifiers are defined in macros.
    */
-  virtual void mouse_event(int key, int event, unsigned char mods) {}
+  virtual void mouse_event( int key, int event, unsigned char mods ) { }
 
   /**
    * Respond to keyboard event.
@@ -111,7 +112,7 @@ public:
    * \param mods if any modifier keys are held down at the time of the event
    *        modifiers are defined in macros.
    */
-  virtual void keyboard_event(int key, int event, unsigned char mods) {}
+  virtual void keyboard_event( int key, int event, unsigned char mods ) { }
 
   /**
    * Internal -
@@ -119,8 +120,10 @@ public:
    */
   void use_hdpi_render_target() { use_hdpi = true; }
 
-protected:
+ protected:
+
   bool use_hdpi; ///< if the render target is using HIDPI
+
 };
 
 } // namespace CGL

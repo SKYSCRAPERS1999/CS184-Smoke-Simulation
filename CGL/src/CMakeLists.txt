@@ -1,3 +1,6 @@
+# Original file Copyright CMU462 Fall 2015: 
+# Kayvon Fatahalian, Keenan Crane,
+# Sky Gao, Bryce Summers, Michael Choquette.
 cmake_minimum_required(VERSION 2.8)
 
 include_directories(${PROJECT_SOURCE_DIR}/include/CGL)
@@ -13,10 +16,13 @@ set(CGL_SOURCE
     complex.cpp
     color.cpp
     spectrum.cpp
-    # viewer.cpp
+    osdtext.cpp
+    osdfont.cpp
+    viewer.cpp
     base64.cpp
     lodepng.cpp
     tinyxml2.cpp
+    path.cpp
 )
 
 #-------------------------------------------------------------------------------
@@ -26,7 +32,9 @@ add_library(CGL STATIC ${CGL_SOURCE})
 
 target_link_libraries(
   CGL
-  nanogui ${NANOGUI_EXTRA_LIBS}
+  ${GLEW_LIBRARIES}
+  ${GLFW_LIBRARIES}
+  ${OPENGL_LIBRARIES}
   ${FREETYPE_LIBRARIES}
 )
 
@@ -37,7 +45,9 @@ if(CGL_BUILD_SHARED)
   add_library(CGL_SHARED SHARED ${CGL_SOURCE})
   target_link_libraries(
     CGL_SHARED
-    nanogui ${NANOGUI_EXTRA_LIBS}
+    ${GLEW_LIBRARIES}
+    ${GLFW_LIBRARIES}
+    ${OPENGL_LIBRARIES}
     ${FREETYPE_LIBRARIES}
   )
 endif()
@@ -78,8 +88,7 @@ endif(APPLE)
 ##################
 # Build on Linux #
 ##################
-set(LINUX UNIX AND NOT APPLE)
-if(LINUX)
+if(UNIX AND NOT APPLE)
   if(CGL_BUILD_DEBUG)
     set_target_properties(CGL PROPERTIES OUTPUT_NAME CGL_d)
     if(CGL_BUILD_SHARED)
@@ -91,7 +100,7 @@ if(LINUX)
       set_target_properties(CGL_SHARED PROPERTIES OUTPUT_NAME CGL)
     endif()
   endif(CGL_BUILD_DEBUG)
-endif(LINUX)
+endif()
 
 ####################
 # Build on Windows #

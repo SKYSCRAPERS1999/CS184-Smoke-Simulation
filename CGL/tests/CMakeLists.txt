@@ -1,3 +1,6 @@
+# Original file Copyright CMU462 Fall 2015: 
+# Kayvon Fatahalian, Keenan Crane,
+# Sky Gao, Bryce Summers, Michael Choquette.
 link_libraries(CGL)
 
 include_directories("${PROJECT_SOURCE_DIR}/include")

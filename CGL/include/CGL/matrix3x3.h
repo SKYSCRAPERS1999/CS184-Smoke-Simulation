@@ -16,8 +16,14 @@ class Matrix3x3 {
 
   public:
 
-  // The default constructor.
-  Matrix3x3(void) { }
+  // The default constructor. Returns identity.
+  Matrix3x3(void) { 
+    for( int i = 0; i < 3; i++ ) {
+      for( int j = 0; j < 3; j++ ) {
+          (*this)(i,j) = (i==j) ? 1. : 0.;
+      }
+    }
+  }
 
   // Constructor for row major form data.
   // Transposes to the internal column major form.
@@ -30,6 +36,15 @@ class Matrix3x3 {
 	        (*this)(i,j) = data[i*3 + j];
       }
     }
+  }
+
+  Matrix3x3(double m00, double m01, double m02, 
+            double m10, double m11, double m12, 
+            double m20, double m21, double m22)
+  {
+    (*this)(0,0) = m00; (*this)(0,1) = m01; (*this)(0,2) = m02;
+    (*this)(1,0) = m10; (*this)(1,1) = m11; (*this)(1,2) = m12;
+    (*this)(2,0) = m20; (*this)(2,1) = m21; (*this)(2,2) = m22;
   }
 
   /**

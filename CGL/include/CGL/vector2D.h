@@ -35,6 +35,16 @@ class Vector2D {
    */
   Vector2D( const Vector2D& v ) : x( v.x ), y( v.y ) { }
 
+  // returns reference to the specified component (0-based indexing: x, y)
+  inline double& operator[] ( const int& index ) {
+    return ( &x )[ index ];
+  }
+
+  // returns const reference to the specified component (0-based indexing: x, y)
+  inline const double& operator[] ( const int& index ) const {
+    return ( &x )[ index ];
+  }
+
   // additive inverse
   inline Vector2D operator-( void ) const {
     return Vector2D( -x, -y );
