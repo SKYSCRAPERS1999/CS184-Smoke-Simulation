@@ -58,13 +58,9 @@ int main() {
 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // To prevent screen tearing
-    unsigned prev_time = time(NULL);
     while (!glfwWindowShouldClose(window)) {
-        if (time(NULL) != prev_time) {
-            randomize_grid();
-            display();
-            prev_time - time(NULL);
-        }
+        randomize_grid();
+        display();
         
         glfwSwapBuffers(window);
         glfwPollEvents();
