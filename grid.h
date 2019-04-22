@@ -22,6 +22,8 @@ struct Grid {
 
   Grid(const Grid& grid);
   Grid& operator=(const Grid& grid);
+  Grid(Grid&& grid) noexcept;
+  Grid& operator=(Grid&& grid) noexcept;
 
   ~Grid() {}
 
@@ -35,13 +37,13 @@ struct Grid {
   void simulate(double timestep);
 
   // Getter and setter methods
-  double getDensity(int x, int y) { return density[y * width + x]; }
+  double getDensity(int x, int y) const { return density[y * width + x]; }
 
-  double getDensity(Vector2D vec) {
+  double getDensity(Vector2D vec) const {
     return density[vec[1] * width + vec[0]];
   };
 
-  Vector2D getVelocity(int x, int y) { return velocity[y * width + x]; }
+  Vector2D getVelocity(int x, int y) const { return velocity[y * width + x]; }
 
   void setDensity(int x, int y, double den);
 

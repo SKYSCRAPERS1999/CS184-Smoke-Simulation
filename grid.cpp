@@ -8,6 +8,7 @@
 #include "grid.h"
 #include <algorithm>
 #include <string>
+#include <memory>
 #include "CGL/vector2D.h"
 
 using namespace std;
@@ -20,6 +21,40 @@ Grid::Grid(int width, int height) {
   this->height = height;
   this->density = vector<double>(width * height, 0.0);
   this->velocity = vector<Vector2D>(width * height, Vector2D(2.5, 0));
+}
+
+Grid::Grid(const Grid& grid) {
+  height = grid.height;
+  width = grid.width;
+  density = grid.density;
+  velocity = grid.velocity;
+//  cout << "copy" << endl;
+}
+
+Grid& Grid::operator=(const Grid &grid) {
+  height = grid.height;
+  width = grid.width;
+  density = grid.density;
+  velocity = grid.velocity;
+//  cout << "copy assign" << endl;
+  return *this;
+}
+
+Grid::Grid(Grid &&grid) noexcept {
+  height = grid.height;
+  width = grid.width;
+  density = move(grid.density);
+  velocity = move(grid.velocity);
+//  cout << "move" << endl;
+}
+
+Grid& Grid::operator=(Grid &&grid) noexcept {
+  height = grid.height;
+  width = grid.width;
+  density = move(grid.density);
+  velocity = move(grid.velocity);
+//  cout << "move assign" << endl;
+  return *this;
 }
 
 void Grid::simulate(double timestep) {
@@ -53,7 +88,7 @@ void Grid::simulate(double timestep) {
 
 
   // copy over the new grid to existing grid
-  *this = newGrid;
+  *this = (newGrid);
 //  copyGrid(newGrid);
 }
 
@@ -91,17 +126,3 @@ void Grid::printGrid() {
   cout << "____________" << endl;
 }
 
-Grid::Grid(const Grid& grid) {
-  density = grid.density;
-  velocity = grid.velocity;
-  height = grid.height;
-  width = grid.width;
-}
-
-Grid& Grid::operator=(const Grid &grid) {
-  density = grid.density;
-  velocity = grid.velocity;
-  height = grid.height;
-  width = grid.width;
-  return *this;
-}

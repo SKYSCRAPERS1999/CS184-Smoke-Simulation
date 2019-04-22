@@ -17,7 +17,7 @@ void randomize_grid(Grid &grid) {
   grid.setDensity(chosenx, choseny, 75);
 }
 
-void display(Grid grid) {
+void display(const Grid& grid) {
   glClear(GL_COLOR_BUFFER_BIT);
   float width = 1 / (float) NUMCOL * 2;
   float height = 1 / (float) NUMROW * 2;
