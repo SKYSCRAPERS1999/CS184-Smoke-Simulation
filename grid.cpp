@@ -88,7 +88,7 @@ void Grid::simulate(double timestep) {
 
 
   // copy over the new grid to existing grid
-  *this = (newGrid);
+  *this = move(newGrid);
 //  copyGrid(newGrid);
 }
 
