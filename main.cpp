@@ -2,30 +2,31 @@
 #include <GLFW/glfw3.h>
 #include <OpenGL/gl.h>
 #include <random>
+#include "grid.h"
+#include <time.h>
 
+#define NUMROW 50
+#define NUMCOL 50
+//float grid[NUMROW][NUMCOL][3];
 
-#define NUMROW 10
-#define NUMCOL 10
-float grid[NUMROW][NUMCOL][3];
-
-void randomize_grid() {
-    for (int i = 0; i < NUMROW; ++i) {
-        for (int j = 0; j < NUMCOL; ++j) {
-            for (int k = 0; k < 3; ++k) {
-                grid[i][j][k] = (rand() % 100) / (float)100;
-            }
-        }
-    }
+// starts a smoke at a random location
+void randomize_grid(Grid& grid) {
+  int chosenx = rand() % NUMCOL;
+  int choseny = rand() % NUMROW;
+  
+  grid.setDensity(chosenx, choseny, 75);
 }
 
-void display() {
+void display(Grid grid) {
     glClear(GL_COLOR_BUFFER_BIT);
     float width = 1 / (float)NUMCOL * 2;
     float height = 1 / (float)NUMROW * 2;
 
     for (int i = 0; i < NUMROW; ++i) {
         for (int j = 0; j < NUMCOL; ++j) {
-            glColor3f(grid[i][j][0], grid[i][j][1], grid[i][j][2]);
+            glColor3f(grid.getDensity(j, i)/100, grid.getDensity(j, i)/100, grid.getDensity(j, i)/100);
+            //glColor3f((double)j/NUMCOL, (double)j/NUMCOL, (double)j/NUMCOL);
+
             glBegin(GL_QUADS);
             float bottom_left_x = -1 + width * j;
             float bottom_left_y = -1 + height * i;
@@ -43,6 +44,8 @@ void display() {
 
 int main() {
     GLFWwindow *window;
+
+    Grid grid = Grid(NUMCOL, NUMROW);
     // Initialize
     if (!glfwInit()) {
         return -1;
@@ -54,14 +57,25 @@ int main() {
     }
     // Randomize grid
     srand((unsigned) time(NULL));
-    randomize_grid();
+  
+    time_t last_time;
+    time(&last_time);
+  
 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // To prevent screen tearing
     while (!glfwWindowShouldClose(window)) {
-        randomize_grid();
-        display();
-        
+        time_t cur_time;
+        time(&cur_time);
+      
+        if (difftime(cur_time, last_time) >= 0.5) {
+          //std::cout << "Update the grid" << std::endl;
+          last_time = cur_time;
+          grid.simulate(1);
+          randomize_grid(grid);
+          //grid.printGrid();
+        }
+        display(grid);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
