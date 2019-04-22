@@ -5,8 +5,8 @@
 #include "grid.h"
 #include <time.h>
 
-#define NUMROW 50
-#define NUMCOL 50
+#define NUMROW 15
+#define NUMCOL 15
 //float grid[NUMROW][NUMCOL][3];
 
 // starts a smoke at a random location

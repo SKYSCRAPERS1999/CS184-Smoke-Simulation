@@ -71,16 +71,19 @@ void Grid::simulate(double timestep) {
         double newx = x + reverse_velocity[0];
         double newy = y + reverse_velocity[1];
         Vector2D newloc = Vector2D(newx, newy);
-        Vector2D bl = Vector2D((int) newloc[0], (int) newloc[1]);
-        Vector2D br = Vector2D((int) newloc[0] + 1, (int) newloc[1]);
-        Vector2D tl = Vector2D((int) newloc[0], (int) newloc[1] + 1);
-        Vector2D tr = Vector2D((int) newloc[0] + 1, (int) newloc[1] + 1);
 
-        float tlerp = interpolate(getDensity(tl), getDensity(tr), newx - tl[0]);
-        float blerp = interpolate(getDensity(bl), getDensity(br), newx - tl[0]);
-        float vlerp = interpolate(blerp, tlerp, newy - bl[1]);
+        Vector2D bl = Vector2D(int(newloc[0]), int(newloc[1]));
+        Vector2D br = bl + Vector2D{1, 0};
+        Vector2D tl = bl + Vector2D{0, 1};
+        Vector2D tr = bl + Vector2D{1, 1};
+
+        double tlerp = interpolate(getDensity(tl), getDensity(tr), newx - tl[0]);
+        double blerp = interpolate(getDensity(bl), getDensity(br), newx - tl[0]);
+        double vlerp = interpolate(blerp, tlerp, newy - bl[1]);
 
         newGrid.setDensity(x, y, vlerp);
+
+        cout << reverse_velocity[0] << " "<< reverse_velocity[1] << endl;
         //cout << "current " << x << " " << y << " prev " << x + reverse_velocity[0] << " " << y + reverse_velocity[1] << endl;
       }
     }
