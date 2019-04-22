@@ -53,7 +53,8 @@ void Grid::simulate(double timestep) {
 
 
   // copy over the new grid to existing grid
-  copyGrid(newGrid);
+  *this = newGrid;
+//  copyGrid(newGrid);
 }
 
 // interpolates between d1 and d2 based on weight s (between 0 and 1)
@@ -88,4 +89,19 @@ void Grid::printGrid() {
     cout << s << endl;
   }
   cout << "____________" << endl;
+}
+
+Grid::Grid(const Grid& grid) {
+  density = grid.density;
+  velocity = grid.velocity;
+  height = grid.height;
+  width = grid.width;
+}
+
+Grid& Grid::operator=(const Grid &grid) {
+  density = grid.density;
+  velocity = grid.velocity;
+  height = grid.height;
+  width = grid.width;
+  return *this;
 }

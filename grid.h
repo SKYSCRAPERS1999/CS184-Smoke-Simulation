@@ -20,6 +20,9 @@ struct Grid {
 
   Grid(int width, int height);
 
+  Grid(const Grid& grid);
+  Grid& operator=(const Grid& grid);
+
   ~Grid() {}
 
   // Grid parameters
