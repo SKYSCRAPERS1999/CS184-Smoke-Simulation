@@ -86,14 +86,13 @@ void Grid::simulate(double timestep) {
     }
   }
 
-
   // copy over the new grid to existing grid
   *this = move(newGrid);
 //  copyGrid(newGrid);
 }
 
 // interpolates between d1 and d2 based on weight s (between 0 and 1)
-double interpolate(double s, double d1, double d2) {
+double interpolate(double d1, double d2, double s) {
   return (1 - s) * d1 + s * d2;
 }
 
