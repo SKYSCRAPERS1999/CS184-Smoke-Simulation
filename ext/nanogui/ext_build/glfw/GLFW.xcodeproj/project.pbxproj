@@ -1,0 +1,1049 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		7341FCCB86E84380817681AA /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 8E9EAAEEF4CE45B58575C21A /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				CBBCD3D5C95743F49870960A /* CMake Rules */,
+			);
+			dependencies = (
+				CEB4083100E14D79A1133E0E /* PBXTargetDependency */,
+				8B91E8A2EC4846588295496F /* PBXTargetDependency */,
+				5153516A621542D199B82BA8 /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+		82E4BA1505654870824432C1 /* install */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = F40B21050E7540699C8E85A5 /* Build configuration list for PBXAggregateTarget "install" */;
+			buildPhases = (
+				FD41D61D2E5D41F18F835ACA /* CMake PostBuild Rules */,
+			);
+			dependencies = (
+				B2C820A60F914B9F88D80388 /* PBXTargetDependency */,
+			);
+			name = install;
+			productName = install;
+		};
+		D7DEEBCFB0DB4834A3592EB5 /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 961630B06DD7412498CB6BEF /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				A52AC456020C4E09A1C8AC9C /* CMake Rules */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		0401F79106744F2BA2A7DF86 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_monitor.m */ = {isa = PBXBuildFile; fileRef = 770D39B9ACA64485A7CE4291 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_monitor.m */; };
+		097177B1AD154BF08B600D27 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_joystick.h */ = {isa = PBXBuildFile; fileRef = 5377FB0A72D741E4949CDEF3 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_joystick.h */; };
+		0D64B697CD924A24B9DC3816 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/internal.h */ = {isa = PBXBuildFile; fileRef = AAF1BBDBBCEC4707905D0DBD /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/internal.h */; };
+		19970E15FEB14148968FE36F /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/glfw_config.h */ = {isa = PBXBuildFile; fileRef = C62251D442684DECA755DCD7 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/glfw_config.h */; };
+		29D28609D9F84AA3AD6DC3B1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/input.c */ = {isa = PBXBuildFile; fileRef = 720569C1B2A54FA990AFD065 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/input.c */; };
+		2F8CAE5041EA45EA93D2A04D /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include/GLFW/glfw3.h */ = {isa = PBXBuildFile; fileRef = 915F1596793149FEB8CA6304 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include/GLFW/glfw3.h */; };
+		3C66F05CDA7B4351996D0D82 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/vulkan.c */ = {isa = PBXBuildFile; fileRef = C7D95CD95395439E9650E37D /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/vulkan.c */; };
+		718D03D49D5C43AE999601D4 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_joystick.m */ = {isa = PBXBuildFile; fileRef = B2C87F524BE145AEAE447A80 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_joystick.m */; };
+		7A836FFF313F411E9B7BE53F /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/nsgl_context.h */ = {isa = PBXBuildFile; fileRef = D6D4BC400D714771B452F8DF /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/nsgl_context.h */; };
+		80172DE66ECE417C8298EBAB /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 0410D4CCC7F047709C5C70BB /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/CMakeLists.txt */; };
+		8E91CCADEC194CD798866D78 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/monitor.c */ = {isa = PBXBuildFile; fileRef = 7CFEE25015BC4390822A428D /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/monitor.c */; };
+		9156C92BAD7F46C895BD6991 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include/GLFW/glfw3native.h */ = {isa = PBXBuildFile; fileRef = 5BF03BF672BF4E008C5174C9 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include/GLFW/glfw3native.h */; };
+		92442354F5E540DD8ECB82D8 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/init.c */ = {isa = PBXBuildFile; fileRef = 0ED9BE2566F14141850756F6 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/init.c */; };
+		9E27347FA602418F8BB759A1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_init.m */ = {isa = PBXBuildFile; fileRef = 887C332F5E57412AB094B945 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_init.m */; };
+		B585B4A046404C88902FE093 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_window.m */ = {isa = PBXBuildFile; fileRef = 3446FD0DF6534D989FE60FD1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_window.m */; };
+		C1531DB3F7724C2F94326FFA /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_time.c */ = {isa = PBXBuildFile; fileRef = 5CBD63C3974D469C857B5CBB /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_time.c */; };
+		C4042F9A4E8F41158A801124 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/context.c */ = {isa = PBXBuildFile; fileRef = 039C1681BF3D4BE986E22394 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/context.c */; };
+		CEE0C51F8BD74F91AD1CF24A /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/window.c */ = {isa = PBXBuildFile; fileRef = D2AFE5D7BA5C4CE0B280963B /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/window.c */; };
+		D14CC4B7E42348A08B7CC80C /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/CMakeLists.txt */ = {isa = PBXBuildFile; fileRef = 32D9E3E6E5D44F78BCC3B151 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/CMakeLists.txt */; };
+		D2970E21514141889AFFAB81 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/posix_tls.c */ = {isa = PBXBuildFile; fileRef = 8E7BA2F3B99B4F4E88CB04E1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/posix_tls.c */; };
+		DCAB1B49737748B586FB0997 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/posix_tls.h */ = {isa = PBXBuildFile; fileRef = 1287B6EB5F864EAEB031E860 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/posix_tls.h */; };
+		DE6204802E554687B4872A67 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_platform.h */ = {isa = PBXBuildFile; fileRef = DB3CD978B2684DEC8B4249DC /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_platform.h */; };
+		DE9F8F4B7C2F4A66B02FA331 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/nsgl_context.m */ = {isa = PBXBuildFile; fileRef = 6ACF8B601F8A4412A42E6DE1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/nsgl_context.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXBuildStyle section */
+		61765D232707445AA774BBFC /* RelWithDebInfo */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = RelWithDebInfo;
+		};
+		7954B825E77845318FAA7A83 /* Release */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Release;
+		};
+		A39EE52980B14626845A2185 /* MinSizeRel */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = MinSizeRel;
+		};
+		BAEA361FF5BB454B87378016 /* Debug */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Debug;
+		};
+/* End PBXBuildStyle section */
+
+/* Begin PBXContainerItemProxy section */
+		0E4784A925D94F9CA10E0353 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C2B65B6628C4ADB9769A7A6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D7DEEBCFB0DB4834A3592EB5;
+			remoteInfo = ZERO_CHECK;
+		};
+		B0BA67DEF9914EEEAD0C7743 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C2B65B6628C4ADB9769A7A6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78A70E2E931B40F99DF6C229;
+			remoteInfo = glfw;
+		};
+		D64BC6C4E9DA4E5D996D453E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C2B65B6628C4ADB9769A7A6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6028BBB1DC3C42CB8DFF199B;
+			remoteInfo = glfw_objects;
+		};
+		F6282E9EF3D847CC83C78EB4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C2B65B6628C4ADB9769A7A6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7341FCCB86E84380817681AA;
+			remoteInfo = ALL_BUILD;
+		};
+		FB0B321C9C804CB9B4277521 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2C2B65B6628C4ADB9769A7A6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6028BBB1DC3C42CB8DFF199B;
+			remoteInfo = glfw_objects;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		039C1681BF3D4BE986E22394 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/context.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = context.c; path = src/context.c; sourceTree = SOURCE_ROOT; };
+		0410D4CCC7F047709C5C70BB /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = src/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		064D2C751B0246F3863E8469 /* glfw */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; path = libglfw.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		0ED9BE2566F14141850756F6 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/init.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = init.c; path = src/init.c; sourceTree = SOURCE_ROOT; };
+		1287B6EB5F864EAEB031E860 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/posix_tls.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = posix_tls.h; path = src/posix_tls.h; sourceTree = SOURCE_ROOT; };
+		32D9E3E6E5D44F78BCC3B151 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = src/CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		3446FD0DF6534D989FE60FD1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_window.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_window.m; path = src/cocoa_window.m; sourceTree = SOURCE_ROOT; };
+		5377FB0A72D741E4949CDEF3 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_joystick.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = cocoa_joystick.h; path = src/cocoa_joystick.h; sourceTree = SOURCE_ROOT; };
+		5BF03BF672BF4E008C5174C9 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include/GLFW/glfw3native.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw3native.h; path = include/GLFW/glfw3native.h; sourceTree = SOURCE_ROOT; };
+		5CBD63C3974D469C857B5CBB /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_time.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = cocoa_time.c; path = src/cocoa_time.c; sourceTree = SOURCE_ROOT; };
+		6ACF8B601F8A4412A42E6DE1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/nsgl_context.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = nsgl_context.m; path = src/nsgl_context.m; sourceTree = SOURCE_ROOT; };
+		720569C1B2A54FA990AFD065 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/input.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = input.c; path = src/input.c; sourceTree = SOURCE_ROOT; };
+		770D39B9ACA64485A7CE4291 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_monitor.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_monitor.m; path = src/cocoa_monitor.m; sourceTree = SOURCE_ROOT; };
+		7CFEE25015BC4390822A428D /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/monitor.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = monitor.c; path = src/monitor.c; sourceTree = SOURCE_ROOT; };
+		887C332F5E57412AB094B945 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_init.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_init.m; path = src/cocoa_init.m; sourceTree = SOURCE_ROOT; };
+		8E7BA2F3B99B4F4E88CB04E1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/posix_tls.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = posix_tls.c; path = src/posix_tls.c; sourceTree = SOURCE_ROOT; };
+		915F1596793149FEB8CA6304 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include/GLFW/glfw3.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw3.h; path = include/GLFW/glfw3.h; sourceTree = SOURCE_ROOT; };
+		AAF1BBDBBCEC4707905D0DBD /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/internal.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = internal.h; path = src/internal.h; sourceTree = SOURCE_ROOT; };
+		B2C87F524BE145AEAE447A80 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_joystick.m */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; name = cocoa_joystick.m; path = src/cocoa_joystick.m; sourceTree = SOURCE_ROOT; };
+		C62251D442684DECA755DCD7 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/glfw_config.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = glfw_config.h; path = ../../ext_build/glfw/src/glfw_config.h; sourceTree = SOURCE_ROOT; };
+		C7D95CD95395439E9650E37D /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/vulkan.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = vulkan.c; path = src/vulkan.c; sourceTree = SOURCE_ROOT; };
+		D2AFE5D7BA5C4CE0B280963B /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/window.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.c; fileEncoding = 4; name = window.c; path = src/window.c; sourceTree = SOURCE_ROOT; };
+		D6D4BC400D714771B452F8DF /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/nsgl_context.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = nsgl_context.h; path = src/nsgl_context.h; sourceTree = SOURCE_ROOT; };
+		DA1AA52B9894482E8F8475A2 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; name = CMakeLists.txt; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		DB3CD978B2684DEC8B4249DC /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_platform.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = cocoa_platform.h; path = src/cocoa_platform.h; sourceTree = SOURCE_ROOT; };
+		F8A9D34FA51E4E65AA044CE2 /* glfw_objects */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libglfw_objects.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		202C1B1B62574CEC89A75085 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				064D2C751B0246F3863E8469 /* glfw */,
+				F8A9D34FA51E4E65AA044CE2 /* glfw_objects */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3D9FD13500E047EC83C77738 /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				FBB9D65831284C85BB681145 /* CMake Rules */,
+				DA1AA52B9894482E8F8475A2 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		526E7273770642029D17A414 /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				887C332F5E57412AB094B945 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_init.m */,
+				B2C87F524BE145AEAE447A80 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_joystick.m */,
+				770D39B9ACA64485A7CE4291 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_monitor.m */,
+				5CBD63C3974D469C857B5CBB /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_time.c */,
+				3446FD0DF6534D989FE60FD1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_window.m */,
+				039C1681BF3D4BE986E22394 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/context.c */,
+				0ED9BE2566F14141850756F6 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/init.c */,
+				720569C1B2A54FA990AFD065 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/input.c */,
+				7CFEE25015BC4390822A428D /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/monitor.c */,
+				6ACF8B601F8A4412A42E6DE1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/nsgl_context.m */,
+				8E7BA2F3B99B4F4E88CB04E1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/posix_tls.c */,
+				C7D95CD95395439E9650E37D /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/vulkan.c */,
+				D2AFE5D7BA5C4CE0B280963B /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/window.c */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		9A31259A48E549978E4A4CCC = {
+			isa = PBXGroup;
+			children = (
+				3D9FD13500E047EC83C77738 /* ALL_BUILD */,
+				AF8B8E0BCEB441DDBFF792AB /* dependencies */,
+				202C1B1B62574CEC89A75085 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A668162DB8F144F8BC79BA31 /* glfw_objects */ = {
+			isa = PBXGroup;
+			children = (
+				526E7273770642029D17A414 /* Source Files */,
+				D81F9B4E79284FD08BBBF04D /* Header Files */,
+				32D9E3E6E5D44F78BCC3B151 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/CMakeLists.txt */,
+			);
+			name = glfw_objects;
+			sourceTree = "<group>";
+		};
+		AF8B8E0BCEB441DDBFF792AB /* dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				CE3C0DCF2CBA497B9AF7F3C3 /* glfw */,
+				A668162DB8F144F8BC79BA31 /* glfw_objects */,
+			);
+			name = dependencies;
+			sourceTree = "<group>";
+		};
+		CE3C0DCF2CBA497B9AF7F3C3 /* glfw */ = {
+			isa = PBXGroup;
+			children = (
+				0410D4CCC7F047709C5C70BB /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/CMakeLists.txt */,
+			);
+			name = glfw;
+			sourceTree = "<group>";
+		};
+		D81F9B4E79284FD08BBBF04D /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				915F1596793149FEB8CA6304 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include/GLFW/glfw3.h */,
+				5BF03BF672BF4E008C5174C9 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include/GLFW/glfw3native.h */,
+				5377FB0A72D741E4949CDEF3 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_joystick.h */,
+				DB3CD978B2684DEC8B4249DC /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_platform.h */,
+				AAF1BBDBBCEC4707905D0DBD /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/internal.h */,
+				D6D4BC400D714771B452F8DF /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/nsgl_context.h */,
+				1287B6EB5F864EAEB031E860 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/posix_tls.h */,
+				C62251D442684DECA755DCD7 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/glfw_config.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		FBB9D65831284C85BB681145 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6028BBB1DC3C42CB8DFF199B /* glfw_objects */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3131F070DE9C4016803BBF61 /* Build configuration list for PBXNativeTarget "glfw_objects" */;
+			buildPhases = (
+				8B42E8C486BC4D19A0B7EF87 /* Sources */,
+				55922335341A40DBB6E76252 /* CMake PostBuild Rules */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = glfw_objects;
+			productName = glfw_objects;
+			productReference = F8A9D34FA51E4E65AA044CE2 /* glfw_objects */;
+			productType = "com.apple.product-type.library.static";
+		};
+		78A70E2E931B40F99DF6C229 /* glfw */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B722AE21DCD44C59861BEFFD /* Build configuration list for PBXNativeTarget "glfw" */;
+			buildPhases = (
+				4890F5F98AF64077B5ED43E3 /* CMake PostBuild Rules */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4935F44027494CA2B32754A0 /* PBXTargetDependency */,
+			);
+			name = glfw;
+			productName = glfw;
+			productReference = 064D2C751B0246F3863E8469 /* glfw */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2C2B65B6628C4ADB9769A7A6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0920;
+			};
+			buildConfigurationList = 493159663FD444BAB1867BAE /* Build configuration list for PBXProject "GLFW" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				BAEA361FF5BB454B87378016 /* Debug */,
+				7954B825E77845318FAA7A83 /* Release */,
+				A39EE52980B14626845A2185 /* MinSizeRel */,
+				61765D232707445AA774BBFC /* RelWithDebInfo */,
+			);
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 0;
+			mainGroup = 9A31259A48E549978E4A4CCC;
+			projectDirPath = ../../ext/glfw;
+			projectRoot = "";
+			targets = (
+				7341FCCB86E84380817681AA /* ALL_BUILD */,
+				D7DEEBCFB0DB4834A3592EB5 /* ZERO_CHECK */,
+				78A70E2E931B40F99DF6C229 /* glfw */,
+				6028BBB1DC3C42CB8DFF199B /* glfw_objects */,
+				82E4BA1505654870824432C1 /* install */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		17B561AB38D8460986C0AF8F = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		4890F5F98AF64077B5ED43E3 /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src -f /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/CMakeScripts/glfw_postBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		55922335341A40DBB6E76252 /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src -f /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/CMakeScripts/glfw_objects_postBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		66C7404993B7464C8A0A4430 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		9C11096E355542B8AB7A79D8 = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here
+exit 0";
+			showEnvVarsInLog = 0;
+		};
+		A52AC456020C4E09A1C8AC9C /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw -f /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		CBBCD3D5C95743F49870960A /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw -f /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		FD41D61D2E5D41F18F835ACA /* CMake PostBuild Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake PostBuild Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw -f /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/CMakeScripts/install_postBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8B42E8C486BC4D19A0B7EF87 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E27347FA602418F8BB759A1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_init.m */,
+				718D03D49D5C43AE999601D4 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_joystick.m */,
+				0401F79106744F2BA2A7DF86 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_monitor.m */,
+				C1531DB3F7724C2F94326FFA /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_time.c */,
+				B585B4A046404C88902FE093 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/cocoa_window.m */,
+				C4042F9A4E8F41158A801124 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/context.c */,
+				92442354F5E540DD8ECB82D8 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/init.c */,
+				29D28609D9F84AA3AD6DC3B1 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/input.c */,
+				8E91CCADEC194CD798866D78 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/monitor.c */,
+				DE9F8F4B7C2F4A66B02FA331 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/nsgl_context.m */,
+				D2970E21514141889AFFAB81 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/posix_tls.c */,
+				3C66F05CDA7B4351996D0D82 /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/vulkan.c */,
+				CEE0C51F8BD74F91AD1CF24A /* /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src/window.c */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4935F44027494CA2B32754A0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6028BBB1DC3C42CB8DFF199B /* glfw_objects */;
+			targetProxy = D64BC6C4E9DA4E5D996D453E /* PBXContainerItemProxy */;
+		};
+		5153516A621542D199B82BA8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D7DEEBCFB0DB4834A3592EB5 /* ZERO_CHECK */;
+			targetProxy = 0E4784A925D94F9CA10E0353 /* PBXContainerItemProxy */;
+		};
+		8B91E8A2EC4846588295496F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6028BBB1DC3C42CB8DFF199B /* glfw_objects */;
+			targetProxy = FB0B321C9C804CB9B4277521 /* PBXContainerItemProxy */;
+		};
+		B2C820A60F914B9F88D80388 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7341FCCB86E84380817681AA /* ALL_BUILD */;
+			targetProxy = F6282E9EF3D847CC83C78EB4 /* PBXContainerItemProxy */;
+		};
+		CEB4083100E14D79A1133E0E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78A70E2E931B40F99DF6C229 /* glfw */;
+			targetProxy = B0BA67DEF9914EEEAD0C7743 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		03C60EE39F6847DAACA70F16 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		2BE9C7F149D24647BD82520B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		3784322803A24A5B8EF61E23 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		37C38F5B66CD4B76883514A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/GLFW.build/Debug/glfw_objects.build/Objects-normal/";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",_GLFW_USE_CONFIG_H);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include","/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src","/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = " -Wno-deprecated-declarations    -fPIC -Wall -Wno-deprecated-declarations -fno-common  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfw_objects;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		3E57C0E821B84199A817A342 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		482E010935EF40C5816828B5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = 3.0.0;
+				DYLIB_CURRENT_VERSION = 3.2.0;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",glfw_EXPORTS);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = " -Wno-deprecated-declarations    -fPIC  ";
+				OTHER_LDFLAGS = " -dynamiclib -Wl,-headerpad_max_install_names -install_name @rpath/libglfw.3.dylib /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/context.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/init.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/input.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/monitor.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/vulkan.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/window.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_init.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_joystick.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_monitor.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_window.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_time.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/posix_tls.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/nsgl_context.o -framework Cocoa -framework IOKit -framework CoreFoundation -framework CoreVideo";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfw.3.2;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		4D5968B6E1104A9792FE2F71 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk;
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/build";
+			};
+			name = RelWithDebInfo;
+		};
+		5B18E887489F4EB8A820DCBA /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		703E3B56FCF24446B1B410ED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		71F951BD441E4193B6F595ED /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = install;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		73E5BE93E52C43ADBD7EB37B /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = 3.0.0;
+				DYLIB_CURRENT_VERSION = 3.2.0;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",glfw_EXPORTS);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = " -Wno-deprecated-declarations        -DNDEBUG -fPIC  ";
+				OTHER_LDFLAGS = " -dynamiclib -Wl,-headerpad_max_install_names -install_name @rpath/libglfw.3.dylib /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/context.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/init.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/input.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/monitor.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/vulkan.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/window.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_init.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_joystick.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_monitor.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_window.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_time.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/posix_tls.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/nsgl_context.o -framework Cocoa -framework IOKit -framework CoreFoundation -framework CoreVideo";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfw.3.2;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		B4EA1AC0C6D049C997DDDA86 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = 3.0.0;
+				DYLIB_CURRENT_VERSION = 3.2.0;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",glfw_EXPORTS);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = " -Wno-deprecated-declarations     -DNDEBUG -fPIC  ";
+				OTHER_LDFLAGS = " -dynamiclib -Wl,-headerpad_max_install_names -install_name @rpath/libglfw.3.dylib /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/context.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/init.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/input.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/monitor.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/vulkan.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/window.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_init.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_joystick.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_monitor.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_window.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_time.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/posix_tls.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/nsgl_context.o -framework Cocoa -framework IOKit -framework CoreFoundation -framework CoreVideo";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfw.3.2;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		B756C7BC814D42C4A063C80B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_COMPATIBILITY_VERSION = 3.0.0;
+				DYLIB_CURRENT_VERSION = 3.2.0;
+				EXECUTABLE_PREFIX = lib;
+				EXECUTABLE_SUFFIX = .dylib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",glfw_EXPORTS);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				LIBRARY_SEARCH_PATHS = "";
+				LIBRARY_STYLE = DYNAMIC;
+				OTHER_CFLAGS = " -Wno-deprecated-declarations     -DNDEBUG -fPIC  ";
+				OTHER_LDFLAGS = " -dynamiclib -Wl,-headerpad_max_install_names -install_name @rpath/libglfw.3.dylib /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/context.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/init.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/input.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/monitor.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/vulkan.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/window.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_init.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_joystick.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_monitor.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_window.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/cocoa_time.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/posix_tls.o /Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/$(PROJECT_NAME).build/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/glfw_objects.build/Objects-normal/x86_64/nsgl_context.o -framework Cocoa -framework IOKit -framework CoreFoundation -framework CoreVideo";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfw.3.2;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		BFD697BE822246BF84263C56 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		C49E277EFC194B77B371EC63 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk;
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/build";
+			};
+			name = Release;
+		};
+		C57004870C474D24B08F166D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Debug;
+		};
+		C85CF0C0AFCE4FA6B1428544 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/GLFW.build/MinSizeRel/glfw_objects.build/Objects-normal/";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",_GLFW_USE_CONFIG_H);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include","/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src","/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = " -Wno-deprecated-declarations     -DNDEBUG -fPIC -Wall -Wno-deprecated-declarations -fno-common  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfw_objects;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		D76A2B45134F4A8EA924CED8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+		E043770735884E529A931ACE /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = MinSizeRel;
+		};
+		EA1EDD3CECEB4384A2B84C64 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk;
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/build";
+			};
+			name = Debug;
+		};
+		F622C0699BA94BF4B74BA0EA /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk;
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/build";
+			};
+			name = MinSizeRel;
+		};
+		FB833E497EF24F04BD26449D /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/GLFW.build/RelWithDebInfo/glfw_objects.build/Objects-normal/";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",_GLFW_USE_CONFIG_H);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include","/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src","/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = " -Wno-deprecated-declarations        -DNDEBUG -fPIC -Wall -Wno-deprecated-declarations -fno-common  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfw_objects;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		FC0C8085A5CD4763A2579480 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'");
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = RelWithDebInfo;
+		};
+		FF9CD45499BD4BC29167E562 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src/GLFW.build/Release/glfw_objects.build/Objects-normal/";
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = ("'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",_GLFW_USE_CONFIG_H);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = ("/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/include","/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext/glfw/src","/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src");
+				INSTALL_PATH = "";
+				LIBRARY_STYLE = STATIC;
+				OTHER_CFLAGS = " -Wno-deprecated-declarations     -DNDEBUG -fPIC -Wall -Wno-deprecated-declarations -fno-common  ";
+				OTHER_LIBTOOLFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = glfw_objects;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/ericying/cs184/Smoke-Simulation/ext/nanogui/ext_build/glfw/src";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = ("-Wmost","-Wno-four-char-constants","-Wno-unknown-pragmas","$(inherited)");
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3131F070DE9C4016803BBF61 /* Build configuration list for PBXNativeTarget "glfw_objects" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37C38F5B66CD4B76883514A4 /* Debug */,
+				FF9CD45499BD4BC29167E562 /* Release */,
+				C85CF0C0AFCE4FA6B1428544 /* MinSizeRel */,
+				FB833E497EF24F04BD26449D /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		493159663FD444BAB1867BAE /* Build configuration list for PBXProject "GLFW" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EA1EDD3CECEB4384A2B84C64 /* Debug */,
+				C49E277EFC194B77B371EC63 /* Release */,
+				F622C0699BA94BF4B74BA0EA /* MinSizeRel */,
+				4D5968B6E1104A9792FE2F71 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8E9EAAEEF4CE45B58575C21A /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3784322803A24A5B8EF61E23 /* Debug */,
+				3E57C0E821B84199A817A342 /* Release */,
+				E043770735884E529A931ACE /* MinSizeRel */,
+				BFD697BE822246BF84263C56 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		961630B06DD7412498CB6BEF /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C57004870C474D24B08F166D /* Debug */,
+				D76A2B45134F4A8EA924CED8 /* Release */,
+				5B18E887489F4EB8A820DCBA /* MinSizeRel */,
+				FC0C8085A5CD4763A2579480 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B722AE21DCD44C59861BEFFD /* Build configuration list for PBXNativeTarget "glfw" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				482E010935EF40C5816828B5 /* Debug */,
+				B756C7BC814D42C4A063C80B /* Release */,
+				B4EA1AC0C6D049C997DDDA86 /* MinSizeRel */,
+				73E5BE93E52C43ADBD7EB37B /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F40B21050E7540699C8E85A5 /* Build configuration list for PBXAggregateTarget "install" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2BE9C7F149D24647BD82520B /* Debug */,
+				703E3B56FCF24446B1B410ED /* Release */,
+				71F951BD441E4193B6F595ED /* MinSizeRel */,
+				03C60EE39F6847DAACA70F16 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2C2B65B6628C4ADB9769A7A6 /* Project object */;
+}
