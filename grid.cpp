@@ -20,7 +20,7 @@ Grid::Grid(int width, int height) {
   this->width = width;
   this->height = height;
   this->density = vector<double>(width * height, 0.0);
-  this->velocity = vector<Vector2D>(width * height, Vector2D(2.5, 0));
+  this->velocity = vector<Vector2D>(width * height, Vector2D(1.25, 1.25));
 }
 
 Grid::Grid(const Grid& grid) {

@@ -7,29 +7,30 @@
 
 #define NUMROW 15
 #define NUMCOL 15
-//float grid[NUMROW][NUMCOL][3];
+
+std::mt19937 rng(0); // random number generator in C++11
 
 // starts a smoke at a random location
 void randomize_grid(Grid &grid) {
-  int chosenx = rand() % NUMCOL;
-  int choseny = rand() % NUMROW;
+  int chosenx = rng() % NUMCOL;
+  int choseny = rng() % NUMROW;
 
   grid.setDensity(chosenx, choseny, 75);
 }
 
 void display(const Grid& grid) {
   glClear(GL_COLOR_BUFFER_BIT);
-  float width = 1 / (float) NUMCOL * 2;
-  float height = 1 / (float) NUMROW * 2;
+  double width = 1 / (double) NUMCOL * 2;
+  double height = 1 / (double) NUMROW * 2;
 
-  for (int i = 0; i < NUMROW; ++i) {
-    for (int j = 0; j < NUMCOL; ++j) {
-      glColor3f(grid.getDensity(j, i) / 100, grid.getDensity(j, i) / 100, grid.getDensity(j, i) / 100);
-      //glColor3f((double)j/NUMCOL, (double)j/NUMCOL, (double)j/NUMCOL);
+  for (int y = 0; y < NUMROW; ++y) {
+    for (int x = 0; x < NUMCOL; ++x) {
+      glColor3d(grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100);
+      //glColor3d((double)x/NUMCOL, (double)x/NUMCOL, (double)x/NUMCOL);
 
       glBegin(GL_QUADS);
-      float bottom_left_x = -1 + width * j;
-      float bottom_left_y = -1 + height * i;
+      double bottom_left_x = -1 + width * x;
+      double bottom_left_y = -1 + height * y;
 
       glVertex2d(bottom_left_x, bottom_left_y);
       glVertex2d(bottom_left_x + width, bottom_left_y);
