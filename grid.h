@@ -31,6 +31,7 @@ struct Grid {
   int height;
   int width;
   vector<double> density;
+  vector<double> temperature;
   vector<Vector2D> velocity;
 
 
@@ -48,6 +49,8 @@ struct Grid {
   void setDensity(int x, int y, double den);
 
   void setVelocity(int x, int y, Vector2D velocity);
+
+  void possion(double alpha, double beta, Vector2D coords);
 
   void copyGrid(Grid g);
 

@@ -4,18 +4,30 @@
 #include <random>
 #include "grid.h"
 #include <time.h>
+#include <chrono>
+using std::mt19937;
+using std::uniform_int_distribution;
+using uni_dis = uniform_int_distribution<int>;
 
-#define NUMROW 15
-#define NUMCOL 15
+const int NUMROW = 50;
+const int NUMCOL = 50;
+const int FREQ   = 30;
 
-std::mt19937 rng(0); // random number generator in C++11
+static std::random_device rd;
+static mt19937 rng(rd()); // random number generator in C++11
+
+using namespace std::chrono;
 
 // starts a smoke at a random location
-void randomize_grid(Grid &grid) {
-  int chosenx = rng() % NUMCOL;
-  int choseny = rng() % NUMROW;
-
-  grid.setDensity(chosenx, choseny, 75);
+void randomize_grid(Grid &grid, int iter = 3) {
+  uni_dis dis_x(0, NUMCOL - 1); // uniform distribution in C++11
+  uni_dis dis_y(0, NUMROW - 1); // uniform distribution in C++11
+  uni_dis dis_density(25, 75); // uniform distribution in C++11
+  while (iter--) {
+    int chosenx = dis_x(rng);
+    int choseny = dis_y(rng);
+    grid.setDensity(chosenx, choseny, dis_density(rng));
+  }
 }
 
 void display(const Grid& grid) {
@@ -56,20 +68,17 @@ int main() {
     glfwTerminate();
     return -1;
   }
-  // Randomize grid
-  srand((unsigned) time(NULL));
-
-  time_t last_time;
-  time(&last_time);
 
 
   glfwMakeContextCurrent(window);
   glfwSwapInterval(1); // To prevent screen tearing
-  while (!glfwWindowShouldClose(window)) {
-    time_t cur_time;
-    time(&cur_time);
 
-    if (difftime(cur_time, last_time) >= 0.5) {
+  auto last_time = steady_clock::now();
+  while (!glfwWindowShouldClose(window)) {
+    auto cur_time = steady_clock::now();
+    auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
+
+    if (FREQ * elapsed.count() >= 1000) {
       //std::cout << "Update the grid" << std::endl;
       last_time = cur_time;
       grid.simulate(1);

@@ -9,18 +9,25 @@
 #include <algorithm>
 #include <string>
 #include <memory>
+#include <random>
 #include "CGL/vector2D.h"
 
 using namespace std;
 using namespace CGL;
+
+static std::random_device rd;
+static mt19937 rng(rd()); // random number generator in C++11
 
 double interpolate(double d1, double d2, double s);
 
 Grid::Grid(int width, int height) {
   this->width = width;
   this->height = height;
-  this->density = vector<double>(width * height, 0.0);
-  this->velocity = vector<Vector2D>(width * height, Vector2D(1.25, 1.25));
+  this->density.resize(width * height, 0.0);
+  this->temperature.resize(width * height, 0.0);
+
+  normal_distribution<double> dis_v(0, 2); // normal distribution in C++11
+  this->velocity.resize(width * height, Vector2D(dis_v(rng), dis_v(rng)));
 }
 
 Grid::Grid(const Grid& grid) {
@@ -83,15 +90,16 @@ void Grid::simulate(double timestep) {
 
         newGrid.setDensity(x, y, vlerp);
 
-        cout << reverse_velocity[0] << " "<< reverse_velocity[1] << endl;
+//        cout << reverse_velocity[0] << " "<< reverse_velocity[1] << endl;
         //cout << "current " << x << " " << y << " prev " << x + reverse_velocity[0] << " " << y + reverse_velocity[1] << endl;
       }
     }
   }
 
+
+
   // copy over the new grid to existing grid
   *this = move(newGrid);
-//  copyGrid(newGrid);
 }
 
 // interpolates between d1 and d2 based on weight s (between 0 and 1)
