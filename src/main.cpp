@@ -1,22 +1,18 @@
 #include <iostream>
-#include <GLFW/glfw3.h>
-#include <OpenGL/gl.h>
 #include <random>
-#include "grid.h"
-#include <time.h>
 #include <chrono>
-using std::mt19937;
-using std::uniform_int_distribution;
-using uni_dis = uniform_int_distribution<int>;
+#include <algorithm>
+#include <GLFW/glfw3.h>
+#include <OpenGL/OpenGL.h>
 
-const int NUMROW = 50;
-const int NUMCOL = 50;
-const int FREQ   = 30;
+#include "grid.h"
+#include "common.h"
+#include "callback.h"
 
 static std::random_device rd;
 static mt19937 rng(rd()); // random number generator in C++11
 
-using namespace std::chrono;
+Grid grid;
 
 // starts a smoke at a random location
 void randomize_grid(Grid &grid, int iter = 3) {
@@ -56,22 +52,25 @@ void display(const Grid& grid) {
 }
 
 int main() {
-  GLFWwindow *window;
 
-  Grid grid = Grid(NUMCOL, NUMROW);
+  grid = Grid(NUMCOL, NUMROW);
+
+  GLFWwindow *window;
   // Initialize
   if (!glfwInit()) {
     return -1;
   }
-  window = glfwCreateWindow(640, 480, "Smoke Simulation", nullptr, nullptr);
+  window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
   if (!window) {
     glfwTerminate();
     return -1;
   }
 
-
   glfwMakeContextCurrent(window);
   glfwSwapInterval(1); // To prevent screen tearing
+
+  glfwSetCursorPosCallback(window, cursor_position_callback);
+  glfwSetMouseButtonCallback(window, mouse_button_callback);
 
   auto last_time = steady_clock::now();
   while (!glfwWindowShouldClose(window)) {

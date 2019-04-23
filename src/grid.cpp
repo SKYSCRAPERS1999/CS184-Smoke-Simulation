@@ -35,6 +35,7 @@ Grid::Grid(const Grid& grid) {
   width = grid.width;
   density = grid.density;
   velocity = grid.velocity;
+  temperature = grid.temperature;
 //  cout << "copy" << endl;
 }
 
@@ -43,6 +44,7 @@ Grid& Grid::operator=(const Grid &grid) {
   width = grid.width;
   density = grid.density;
   velocity = grid.velocity;
+  temperature = grid.temperature;
 //  cout << "copy assign" << endl;
   return *this;
 }
@@ -52,6 +54,7 @@ Grid::Grid(Grid &&grid) noexcept {
   width = grid.width;
   density = move(grid.density);
   velocity = move(grid.velocity);
+  temperature = move(grid.temperature);
 //  cout << "move" << endl;
 }
 
@@ -60,6 +63,7 @@ Grid& Grid::operator=(Grid &&grid) noexcept {
   width = grid.width;
   density = move(grid.density);
   velocity = move(grid.velocity);
+  temperature = move(grid.temperature);
 //  cout << "move assign" << endl;
   return *this;
 }
@@ -96,8 +100,6 @@ void Grid::simulate(double timestep) {
     }
   }
 
-
-
   // copy over the new grid to existing grid
   *this = move(newGrid);
 }
@@ -113,6 +115,10 @@ void Grid::setDensity(int x, int y, double den) {
 
 void Grid::setVelocity(int x, int y, Vector2D vel) {
   this->velocity[y * width + x] = vel;
+}
+
+void Grid::setTemperature(int x, int y, double temp) {
+  this->temperature[y * width + x] = temp;
 }
 
 void Grid::copyGrid(Grid g) {

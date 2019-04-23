@@ -135,10 +135,10 @@ cmake_minimum_required(VERSION 2.8)
 
 # Application source
 set(APPLICATION_SOURCE
-    main.cpp
-    grid.cpp
-    grid.h
-)
+        src/main.cpp
+        src/grid.cpp
+        src/grid.h
+        src/callback.h)
 
 #-------------------------------------------------------------------------------
 # Set include directories

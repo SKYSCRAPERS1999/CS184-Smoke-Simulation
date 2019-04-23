@@ -30,10 +30,11 @@ struct Grid {
   // Grid parameters
   int height;
   int width;
+  Vector2D cursor_pos;
+
   vector<double> density;
   vector<double> temperature;
   vector<Vector2D> velocity;
-
 
   void simulate(double timestep);
 
@@ -46,9 +47,13 @@ struct Grid {
 
   Vector2D getVelocity(int x, int y) const { return velocity[y * width + x]; }
 
+  double getTemperature(int x, int y) const { return temperature[y * width + x]; }
+
   void setDensity(int x, int y, double den);
 
   void setVelocity(int x, int y, Vector2D velocity);
+
+  void setTemperature(int x, int y, double temp);
 
   void possion(double alpha, double beta, Vector2D coords);
 
