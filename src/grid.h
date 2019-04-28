@@ -31,11 +31,16 @@ struct Grid {
   int height;
   int width;
   Vector2D cursor_pos;
+  
+  // Number of iterations for viscous diffusion
+  int num_iter;
 
+  // Properties of smoke
   vector<double> density;
   vector<double> temperature;
   vector<Vector2D> velocity;
 
+  // Primary simulate function
   void simulate(double timestep);
 
   // Getter and setter methods
@@ -54,6 +59,8 @@ struct Grid {
   void setVelocity(int x, int y, Vector2D velocity);
 
   void setTemperature(int x, int y, double temp);
+  
+  
 
   void possion(double alpha, double beta, Vector2D coords);
 

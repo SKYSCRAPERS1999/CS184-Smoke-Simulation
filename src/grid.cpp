@@ -25,6 +25,7 @@ Grid::Grid(int width, int height) {
     this->height = height;
     this->density.resize(width * height, 0.0);
     this->temperature.resize(width * height, 0.0);
+    this->num_iter = 16;
 
     normal_distribution<double> dis_v(0, 5); // normal distribution in C++11
     this->velocity.resize(width * height);
@@ -41,6 +42,7 @@ Grid::Grid(const Grid &grid) {
     density = grid.density;
     velocity = grid.velocity;
     temperature = grid.temperature;
+    num_iter = grid.num_iter;
 //  cout << "copy" << endl;
 }
 
@@ -50,6 +52,8 @@ Grid &Grid::operator=(const Grid &grid) {
     density = grid.density;
     velocity = grid.velocity;
     temperature = grid.temperature;
+    num_iter = grid.num_iter;
+
 //  cout << "copy assign" << endl;
     return *this;
 }
@@ -60,6 +64,8 @@ Grid::Grid(Grid &&grid) noexcept {
     density = move(grid.density);
     velocity = move(grid.velocity);
     temperature = move(grid.temperature);
+    num_iter = grid.num_iter;
+
 //  cout << "move" << endl;
 }
 
@@ -69,6 +75,8 @@ Grid &Grid::operator=(Grid &&grid) noexcept {
     density = move(grid.density);
     velocity = move(grid.velocity);
     temperature = move(grid.temperature);
+    num_iter = grid.num_iter;
+
 //  cout << "move assign" << endl;
     return *this;
 }
@@ -107,9 +115,10 @@ void Grid::simulate(double timestep) {
     vector<Vector2D> tem(width * height);
     tem.assign(this->velocity.begin(), this->velocity.end());
     // alpha and beta are hyperparameters
-    double alpha = 5;
-    double beta = 9;
-    for (int iter = 0; iter < 16; ++iter) {
+    
+    double alpha = 1 / (timestep*num_iter);
+    double beta = 4 + alpha;
+    for (int iter = 0; iter < num_iter; ++iter) {
         for (int x = 0; x < width; ++x) {
             for (int y = 0; y < height; ++y) {
                 // TODO didn't care about boundary grids
