@@ -74,13 +74,13 @@ Grid &Grid::operator=(Grid &&grid) noexcept {
 
 void Grid::simulate(double timestep) {
     // (1) Perform advection using Stam's method.
-    vector<double> new_density_grid(width * height, 0.0);
+    vector<double> advection_grid(width * height, 0.0);
     for (int x = 0; x < width; ++x) {
         for (int y = 0; y < height; ++y) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
             if (x + reverse_velocity[0] < 0 || x + reverse_velocity[0] >= width || y + reverse_velocity[1] < 0 ||
-                y + reverse_velocity[1] >= height) {
-                new_density_grid[y * width + x] = 0.0;
+                y + reverse_velocity[1] >= height) { // TODO didn't care about boundary grids
+                advection_grid[y * width + x] = 0.0;
             } else {
                 double newx = x + reverse_velocity[0];
                 double newy = y + reverse_velocity[1];
@@ -95,37 +95,36 @@ void Grid::simulate(double timestep) {
                 double blerp = interpolate(getDensity(bl), getDensity(br), newx - tl[0]);
                 double vlerp = interpolate(blerp, tlerp, newy - bl[1]);
 
-                new_density_grid[y * width + x] = vlerp;
+                advection_grid[y * width + x] = vlerp;
             }
         }
     }
 
-//    Grid viscous_grid = newGrid;
-//    // (2) Perform viscosity using iterative solver
-//    for (int iter = 0; iter < 16; ++iter) {
-//        for (int x = 0; x < width; ++x) {
-//            for (int y = 0; y < height; ++y) {
-//                // TODO didn't care about boundary grids
-////                if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-////                    viscous_grid.setDensity(x, y, newGrid.getDensity(x, y));
-////                    continue;
-////                }
-//                double l = newGrid.getDensity(x - 1, y);
-//                double r = newGrid.getDensity(x + 1, y);
-//                double u = newGrid.getDensity(x, y + 1);
-//                double b = newGrid.getDensity(x, y - 1);
-//                double center = newGrid.getDensity(x, y);
-//
-//                double new_density = (l + r + u + b + 5 * center) / 9;
-//                viscous_grid.setDensity(x, y, new_density);
-//            }
-//        }
-//    }
+    vector<double> viscous_density_grid(width * height, 0.0);
+    // (2) Perform viscosity using iterative solver
+    for (int iter = 0; iter < 16; ++iter) {
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                // TODO didn't care about boundary grids
+                if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
+                    viscous_density_grid[y * width + x] = advection_grid[y * width + x];
+                    continue;
+                }
+                double l = advection_grid[y * width + x - 1];
+                double r = advection_grid[y * width + x + 1];
+                double u = advection_grid[(y + 1) * width + x];
+                double b = advection_grid[(y - 1) * width + x];
+                double center = advection_grid[y * width + x];
 
-
+                double new_density = (l + r + u + b + 10 * center) / 14;
+                viscous_density_grid[y * width + x] = new_density;
+            }
+        }
+        advection_grid.assign(viscous_density_grid.begin(), viscous_density_grid.end());
+    }
 
     // Copy over the new grid to existing grid
-    this->density.assign(new_density_grid.begin(), new_density_grid.end());
+    this->density.assign(viscous_density_grid.begin(), viscous_density_grid.end());
 }
 
 // interpolates between d1 and d2 based on weight s (between 0 and 1)

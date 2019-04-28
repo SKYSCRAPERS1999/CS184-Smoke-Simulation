@@ -27,7 +27,7 @@ void randomize_grid(Grid &grid, int num_speckle = 3, int size = 5) {
         double chosen_density = dis_density(rng);
         for (int i = 0; i < chosen_size; ++i) {
             for (int j = 0; j < chosen_size; ++j) {
-                grid.setDensity(chosen_x + i, chosen_y + j, chosen_density);
+                grid.setDensity(chosen_x + i, chosen_y + j, grid.getDensity(chosen_x + i, chosen_y + j) + chosen_density);
             }
         }
     }
@@ -87,7 +87,7 @@ int main() {
             //std::cout << "Update the grid" << std::endl;
             last_time = cur_time;
             grid.simulate(1);
-            randomize_grid(grid, 5, 10);
+            randomize_grid(grid, 5, 15);
             //grid.printGrid();
         }
         display(grid);
