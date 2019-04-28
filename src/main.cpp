@@ -87,7 +87,7 @@ int main() {
             //std::cout << "Update the grid" << std::endl;
             last_time = cur_time;
             grid.simulate(1);
-            randomize_grid(grid, 5, 15);
+            randomize_grid(grid, 1, 15);
             //grid.printGrid();
         }
         display(grid);

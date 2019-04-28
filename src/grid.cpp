@@ -26,12 +26,13 @@ Grid::Grid(int width, int height) {
     this->density.resize(width * height, 0.0);
     this->temperature.resize(width * height, 0.0);
 
-//    normal_distribution<double> dis_v(0, 2); // normal distribution in C++11
-//    this->velocity.resize(width * height);
-//    for (int i = 0; i < width * height; ++i) {
-//        this->velocity[i] = Vector2D(dis_v(rng), dis_v(rng));
-//    }
-    this->velocity.resize(width * height, Vector2D(0.5, 0.5));
+    normal_distribution<double> dis_v(0, 5); // normal distribution in C++11
+    this->velocity.resize(width * height);
+    for (int i = 0; i < width * height; ++i) {
+        this->velocity[i] = Vector2D(dis_v(rng), dis_v(rng));
+    }
+//    this->velocity.resize(width * height, Vector2D(dis_v(rng), dis_v(rng)));
+//    this->velocity.resize(width * height, Vector2D(0.5, 0.5));
 }
 
 Grid::Grid(const Grid &grid) {
@@ -100,31 +101,38 @@ void Grid::simulate(double timestep) {
         }
     }
 
-    vector<double> viscous_density_grid(width * height, 0.0);
+
     // (2) Perform viscosity using iterative solver
+    vector<Vector2D> viscous_velocity_grid(width * height);
+    vector<Vector2D> tem(width * height);
+    tem.assign(this->velocity.begin(), this->velocity.end());
+    // alpha and beta are hyperparameters
+    double alpha = 5;
+    double beta = 9;
     for (int iter = 0; iter < 16; ++iter) {
         for (int x = 0; x < width; ++x) {
             for (int y = 0; y < height; ++y) {
                 // TODO didn't care about boundary grids
                 if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                    viscous_density_grid[y * width + x] = advection_grid[y * width + x];
+                    viscous_velocity_grid[y * width + x] = tem[y * width + x];
                     continue;
                 }
-                double l = advection_grid[y * width + x - 1];
-                double r = advection_grid[y * width + x + 1];
-                double u = advection_grid[(y + 1) * width + x];
-                double b = advection_grid[(y - 1) * width + x];
-                double center = advection_grid[y * width + x];
+                Vector2D l = tem[y * width + x - 1];
+                Vector2D r = tem[y * width + x + 1];
+                Vector2D u = tem[(y + 1) * width + x];
+                Vector2D b = tem[(y - 1) * width + x];
+                Vector2D center = tem[y * width + x];
 
-                double new_density = (l + r + u + b + 10 * center) / 14;
-                viscous_density_grid[y * width + x] = new_density;
+                Vector2D new_velocity = (l + r + u + b + alpha * center) / beta;
+                viscous_velocity_grid[y * width + x] = new_velocity;
             }
         }
-        advection_grid.assign(viscous_density_grid.begin(), viscous_density_grid.end());
+        tem.assign(viscous_velocity_grid.begin(), viscous_velocity_grid.end());
     }
 
     // Copy over the new grid to existing grid
-    this->density.assign(viscous_density_grid.begin(), viscous_density_grid.end());
+    this->density.assign(advection_grid.begin(), advection_grid.end());
+    this->velocity.assign(viscous_velocity_grid.begin(), viscous_velocity_grid.end());
 }
 
 // interpolates between d1 and d2 based on weight s (between 0 and 1)
