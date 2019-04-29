@@ -41,7 +41,7 @@ struct Grid {
   vector<Vector2D> velocity;
 
   // Primary simulate function
-  void simulate(double timestep);
+  void simulate(double timestep, vector<Vector2D> external_forces);
 
   // Getter and setter methods
   double getDensity(int x, int y) const { return density[y * width + x]; }
@@ -51,6 +51,10 @@ struct Grid {
   };
 
   Vector2D getVelocity(int x, int y) const { return velocity[y * width + x]; }
+    
+  Vector2D getVelocity(Vector2D vec) const {
+      return velocity[vec[1] * width + vec[0]];
+  };
 
   double getTemperature(int x, int y) const { return temperature[y * width + x]; }
 
