@@ -138,7 +138,8 @@ set(APPLICATION_SOURCE
         src/main.cpp
         src/grid.cpp
         src/grid.h
-        src/callback.h)
+        src/callback.h
+	src/common.h)
 
 #-------------------------------------------------------------------------------
 # Set include directories

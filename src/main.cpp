@@ -15,7 +15,7 @@ static mt19937 rng(rd()); // random number generator in C++11
 Grid grid;
 
 // starts a smoke at a random location
-void randomize_grid(Grid &grid, int num_speckle = 3, int size = 5) {
+void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
     uni_dis dis_x(0, NUMCOL - size); // uniform distribution in C++11
     uni_dis dis_y(0, NUMROW - size); // uniform distribution in C++11
     uni_dis dis_density(25, 75); // uniform distribution in C++11
@@ -59,7 +59,14 @@ void display(const Grid &grid) {
 
 int main() {
     grid = Grid(NUMCOL, NUMROW);
-
+  
+    // Parameters of smoke simulation. Allow for adjusting later.
+    vector<Vector2D> external_forces;
+    external_forces.resize(grid.width * grid.height, Vector2D(0, 0.0));
+    // These parameters effect the smoke that gets placed down with mouse clicks
+    int size_smoke = 1;
+    double amount_smoke = 0.15;
+  
     GLFWwindow *window;
     // Initialize
     if (!glfwInit()) {
@@ -90,16 +97,23 @@ int main() {
             
             int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
             int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
-            
-            double den = grid.getDensity(col, row);
-            grid.setDensity(col, row, std::max(den + 25, 100.0));
+          
+            for (int y = row-size_smoke; y < row+size_smoke; y++) {
+              for (int x = col-size_smoke; x < col+size_smoke; x++) {
+                if (y < 0 || y >= grid.height || x < 0 || x >= grid.width) {
+                  continue;
+                }
+                double den = grid.getDensity(x, y);
+                grid.setDensity(x, y, max(den + amount_smoke, 100.0));
+              }
+            }
         }
 
         if (FREQ * elapsed.count() >= 1000) {
             //std::cout << "Update the grid" << std::endl;
             last_time = cur_time;
-            grid.simulate(1);
-            randomize_grid(grid, 1, 15);
+            grid.simulate(1, external_forces);
+            //randomize_grid(grid, 1, 5);
             
             //grid.printGrid();
         }
