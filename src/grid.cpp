@@ -164,7 +164,7 @@ void Grid::simulate(double timestep, vector<Vector2D> external_forces) {
                 Vector2D vlerp = interpolate(blerp, tlerp, newy - bl[1]);
 
                 self_advection_grid[y * width + x] += vlerp;
-              
+
                 // Preserve mass
 //                cout << tr[0] << ", " << tr[1] << endl;
 //                cout << "WH " << width << ", " << height << endl;
