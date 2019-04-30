@@ -84,17 +84,17 @@ Grid &Grid::operator=(Grid &&grid) noexcept {
 void Grid::simulate(const double timestep, const vector<Vector2D>& external_forces) {
     
     // (I) DENSITY UPDATE
-    vector<double> new_density = update_density(timestep, external_forces);
+    vector<double> new_density = simulate_density(timestep, external_forces);
 
     // (II) VELOCITY UPDATE
-    vector<Vector2D> new_velocity = update_velocity(timestep, external_forces);
+    vector<Vector2D> new_velocity = simulate_velocity(timestep, external_forces);
   
     // Copy over the new grid to existing grid
     this->density = new_density;
     this->velocity = new_velocity;
 }
 
-vector<double> Grid::update_density(const double timestep, const vector<Vector2D>& external_forces) {
+vector<double> Grid::simulate_density(const double timestep, const vector<Vector2D>& external_forces) {
     // (I) DENSITY UPDATE
     vector<double> combined_density(width * height, 0.0);
 
@@ -132,7 +132,7 @@ vector<double> Grid::update_density(const double timestep, const vector<Vector2D
     return combined_density;
 }
 
-vector<Vector2D> Grid::update_velocity(const double timestep, const vector<Vector2D>& external_forces) {
+vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vector2D>& external_forces) {
     // (II) VELOCITY UPDATE
 
     vector<Vector2D> combined_velocity(width * height, Vector2D(0,0));
