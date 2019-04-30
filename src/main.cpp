@@ -26,6 +26,7 @@ void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
         int chosen_y = dis_y(rng);
         int chosen_size = dis_size(rng);
         double chosen_density = dis_density(rng);
+#pragma omp parallel for
         for (int i = 0; i < chosen_size; ++i) {
             for (int j = 0; j < chosen_size; ++j) {
                 grid.setDensity(chosen_x + i, chosen_y + j,
@@ -39,7 +40,7 @@ void display(const Grid &grid) {
     glClear(GL_COLOR_BUFFER_BIT);
     double width = 1 / (double) NUMCOL * 2;
     double height = 1 / (double) NUMROW * 2;
-
+#pragma omp parallel for
     for (int y = 0; y < NUMROW; ++y) {
         for (int x = 0; x < NUMCOL; ++x) {
             glColor3d(grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100);
@@ -60,6 +61,17 @@ void display(const Grid &grid) {
 }
 
 int main() {
+
+    int num_threads;
+    int cur_thread;
+
+    #pragma omp parallel
+    {
+        num_threads = omp_get_num_threads();
+        cur_thread = omp_get_thread_num();
+        printf("Thread %d / %d\n", cur_thread, num_threads);
+    }
+
     grid = Grid(NUMCOL, NUMROW);
 
     // Parameters of smoke simulation. Allow for adjusting later.
@@ -97,7 +109,7 @@ int main() {
 
             int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
             int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
-
+#pragma omp parallel for
             for (int y = row - size_smoke; y < row + size_smoke; ++y) {
                 for (int x = col - size_smoke; x < col + size_smoke; ++x) {
                     if (y < 0 || y >= grid.height || x < 0 || x >= grid.width) {

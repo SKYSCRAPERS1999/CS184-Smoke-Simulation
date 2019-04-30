@@ -11,6 +11,7 @@
 #include "CGL/CGL.h"
 #include "CGL/misc.h"
 #include "CGL/vector2D.h"
+#include "omp.h"
 
 using namespace CGL;
 using namespace std;
