@@ -65,7 +65,9 @@ int main() {
     external_forces.resize(grid.width * grid.height, Vector2D(0, 0.0));
     // These parameters effect the smoke that gets placed down with mouse clicks
     int size_smoke = 1;
-    double amount_smoke = 0.15;
+    double amount_smoke = 50;
+    
+    vector<double> external_source_buffer(grid.width*grid.height, 0.0);
   
     GLFWwindow *window;
     // Initialize
@@ -104,7 +106,7 @@ int main() {
                   continue;
                 }
                 double den = grid.getDensity(x, y);
-                grid.setDensity(x, y, max(den + amount_smoke, 100.0));
+                grid.setDensity(x, y, min(den + amount_smoke, 100.0));
               }
             }
         }
@@ -115,7 +117,6 @@ int main() {
             grid.simulate(1, external_forces);
             //randomize_grid(grid, 1, 5);
             
-            //grid.printGrid();
         }
         display(grid);
         glfwSwapBuffers(window);
