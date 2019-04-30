@@ -88,9 +88,7 @@ int main() {
 
     auto last_time = steady_clock::now();
     while (!glfwWindowShouldClose(window)) {
-        auto cur_time = steady_clock::now();
-        auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
-        
+
         // Handle dragging of mouse to create a stream of smoke
         if (mouse_down) {
             double xpos = grid.cursor_pos[0];
@@ -110,12 +108,18 @@ int main() {
             }
         }
 
+        auto cur_time = steady_clock::now();
+        auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
+
+        if (rng() % 100 == 0) {
+          printf("timestep expected is %d, while timestep taken is %d\n", 1000 / FREQ, int(elapsed.count()));
+        }
+
         if (FREQ * elapsed.count() >= 1000) {
             //std::cout << "Update the grid" << std::endl;
             last_time = cur_time;
             grid.simulate(1, external_forces);
             //randomize_grid(grid, 1, 5);
-            
         }
         display(grid);
         glfwSwapBuffers(window);
