@@ -119,12 +119,8 @@ void Grid::simulate(double timestep, vector<Vector2D> external_forces) {
         }
     }
     
-    for (int x = 0; x < width; ++x) {
-        for (int y = 0; y < height; ++y) {
-            combined_density[width*y + x] = advection_grid[width*y + x];
-        }
-    }
-    
+    combined_density  = advection_grid;
+
     // (II) VELOCITY UPDATE
     
     vector<Vector2D> combined_velocity(width * height, Vector2D(0,0));
@@ -166,8 +162,8 @@ void Grid::simulate(double timestep, vector<Vector2D> external_forces) {
 
     // (4) Perform viscosity diffusion using iterative solver
     vector<Vector2D> viscous_velocity_grid(width * height);
-    vector<Vector2D> tem(width * height);
-    tem.assign(self_advection_grid.begin(), self_advection_grid.end());
+    vector<Vector2D> tem(self_advection_grid);
+
     // alpha and beta are hyperparameters
     
     double alpha = 1 / (timestep*num_iter);
@@ -190,7 +186,7 @@ void Grid::simulate(double timestep, vector<Vector2D> external_forces) {
                 viscous_velocity_grid[y * width + x] = new_velocity;
             }
         }
-        tem.assign(viscous_velocity_grid.begin(), viscous_velocity_grid.end());
+        tem = viscous_velocity_grid;
     }
 
     // (5) Projection Step
@@ -210,7 +206,6 @@ void Grid::simulate(double timestep, vector<Vector2D> external_forces) {
     
     // Calculate pressure through poisson equations
     vector<double> pressure(width*height, 0.0);
-    pressure.resize(width*height, 0.0);
     vector<double> tem_2(width*height, 0.0);
     alpha = -1;
     beta = 4;
@@ -232,7 +227,7 @@ void Grid::simulate(double timestep, vector<Vector2D> external_forces) {
                 pressure[y * width + x] = new_pressure;
             }
         }
-        tem_2.assign(pressure.begin(), pressure.end());
+        tem_2 = pressure;
     }
     
     // Subtract gradient from velocity field
