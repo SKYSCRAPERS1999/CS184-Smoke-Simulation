@@ -86,7 +86,6 @@ void Grid::simulate(const double timestep, const vector<Vector2D> &external_forc
 
     // (I) DENSITY UPDATE
     vector<double> new_density = simulate_density(timestep, external_forces);
-
     // (II) VELOCITY UPDATE
     vector<Vector2D> new_velocity = simulate_velocity(timestep, external_forces);
 
@@ -97,17 +96,38 @@ void Grid::simulate(const double timestep, const vector<Vector2D> &external_forc
 
 vector<double> Grid::simulate_density(const double timestep, const vector<Vector2D> &external_forces) {
     // (I) DENSITY UPDATE
-    vector<double> combined_density(width * height, 0.0);
+    vector<double> density(width * height, 0.0);
+    apply_density_advection(density, timestep, external_forces);
 
+    return density;
+}
+
+vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vector2D> &external_forces) {
+
+    // (II) VELOCITY UPDATE
+    vector<Vector2D> velocity(width * height, Vector2D(0, 0));
+
+    // (3) Perform self advection of velocity
+    apply_velocity_self_advection(velocity, timestep, external_forces);
+
+    // (4) Perform viscosity diffusion using iterative solver
+    apply_velocity_viscosity(velocity, timestep, external_forces);
+
+    // (5) Projection Step
+    apply_velocity_projection(velocity, timestep, external_forces);
+
+    return velocity;
+}
+
+// density update subroutines
+void Grid::apply_density_advection(vector<double> &data, double timestep, const vector<Vector2D> &external_forces) {
     // (2) Perform density advection using Stam's method.
-    vector<double> advection_grid(width * height, 0.0);
-    //advection_grid.assign(density.begin(), density.end());
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
             if (x + reverse_velocity[0] < 0 || x + reverse_velocity[0] > width - 2 || y + reverse_velocity[1] < 0 ||
                 y + reverse_velocity[1] > height - 2) { // TODO didn't care about boundary grids
-                advection_grid[y * width + x] = 0.0;
+                data[y * width + x] = 0.0;
             } else {
                 double newx = x + reverse_velocity[0];
                 double newy = y + reverse_velocity[1];
@@ -124,21 +144,14 @@ vector<double> Grid::simulate_density(const double timestep, const vector<Vector
                 double blerp = interpolate(getDensity(bl), getDensity(br), s);
                 double vlerp = interpolate(blerp, tlerp, t);
 
-                advection_grid[y * width + x] += vlerp;
+                data[y * width + x] += vlerp;
             }
         }
     }
-
-    combined_density = advection_grid;
-    return combined_density;
 }
 
-vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vector2D> &external_forces) {
-    // (II) VELOCITY UPDATE
-
-    vector<Vector2D> combined_velocity(width * height, Vector2D(0, 0));
-    // (3) Perform self advection of velocity
-    vector<Vector2D> self_advection_grid(width * height, Vector2D(0, 0));
+// velocity update subroutines
+void Grid::apply_velocity_self_advection(vector<Vector2D>& velocity, double timestep, const vector<Vector2D> &external_forces) {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
@@ -162,19 +175,14 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
                 Vector2D blerp = interpolate(getVelocity(bl), getVelocity(br), s);
                 Vector2D vlerp = interpolate(blerp, tlerp, t);
 
-                self_advection_grid[y * width + x] += vlerp;
-
-//                self_advection_grid[bl[1]*width + bl[0]] -= vlerp/4.0;
-//                self_advection_grid[br[1]*width + br[0]] -= vlerp/4.0;
-//                self_advection_grid[tl[1]*width + tl[0]] -= vlerp/4.0;
-//                self_advection_grid[tr[1]*width + tr[0]] -= vlerp/4.0;
+                velocity[y * width + x] += vlerp;
             }
         }
     }
+}
 
-    // (4) Perform viscosity diffusion using iterative solver
-    vector<Vector2D> viscous_velocity_grid(width * height);
-    vector<Vector2D> tem = self_advection_grid;
+void Grid::apply_velocity_viscosity(vector<Vector2D>& velocity, double timestep, const vector<Vector2D> &external_forces) {
+    vector<Vector2D> tem = velocity;
 
     // alpha and beta are hyperparameters
     /** COMPUTING EXPENSIVE PART **/
@@ -185,7 +193,7 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
             for (int x = 0; x < width; ++x) {
                 // TODO didn't care about boundary grids
                 if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
-                    viscous_velocity_grid[y * width + x] = tem[y * width + x];
+                    velocity[y * width + x] = tem[y * width + x];
                     continue;
                 }
                 Vector2D &l = tem[y * width + x - 1];
@@ -195,14 +203,17 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
                 Vector2D &center = tem[y * width + x];
 
                 Vector2D new_velocity = (l + r + u + b + alpha * center) / beta;
-                viscous_velocity_grid[y * width + x] = new_velocity;
+                velocity[y * width + x] = new_velocity;
             }
         }
         // speed up by avoiding copying
-        tem.swap(viscous_velocity_grid);
+        tem.swap(velocity);
     }
 
-    // (5) Projection Step
+    velocity.swap(tem);
+}
+
+void Grid::apply_velocity_projection(vector<Vector2D> &data, double timestep, const vector<Vector2D> &external_forces) {
     // Calculate the divergence
     vector<double> divergence(width * height, 0.0);
     double halfrdx = 0.5;
@@ -221,8 +232,8 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
     /** COMPUTING EXPENSIVE PART **/
     vector<double> pressure(width * height, 0.0);
     vector<double> tem_2(width * height, 0.0);
-    alpha = -1;
-    beta = 4;
+    double alpha = -1;
+    double beta = 4;
     for (int iter = 0; iter < num_iter; ++iter) {
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
@@ -253,20 +264,18 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
             double &pB = pressure[(y - 1) * width + x];
             double &pT = pressure[(y + 1) * width + x];
 
-            viscous_velocity_grid[y * width + x] -= halfrdx * Vector2D(pR - pL, pT - pB);
+            velocity[y * width + x] -= halfrdx * Vector2D(pR - pL, pT - pB);
         }
     }
-
-    return viscous_velocity_grid;
 }
 
 // interpolates between d1 and d2 based on weight s (between 0 and 1)
-double interpolate(double d1, double d2, double s) {
+double Grid::interpolate(double d1, double d2, double s) {
     return (1 - s) * d1 + s * d2;
 }
 
 // interpolate on Vector2D
-Vector2D interpolate(Vector2D d1, Vector2D d2, double s) {
+Vector2D Grid::interpolate(Vector2D d1, Vector2D d2, double s) {
     return (1 - s) * d1 + s * d2;
 }
 
