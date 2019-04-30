@@ -11,6 +11,7 @@
 #include "CGL/CGL.h"
 #include "CGL/misc.h"
 #include "CGL/vector2D.h"
+#include "omp.h"
 
 using namespace CGL;
 using namespace std;
@@ -30,23 +31,38 @@ public:
 
   ~Grid() {}
 
-  // Grid parameters
+  /** Grid parameters **/
   int height;
   int width;
   Vector2D cursor_pos;
 
-  // Primary simulate function
+  /** Primary simulate function **/
   void simulate(double timestep, const vector<Vector2D>& external_forces);
 
 private:
   // simulate functions called by simulate()
   vector<Vector2D> simulate_velocity(double timestep, const vector<Vector2D>& external_forces);
   vector<double> simulate_density(double timestep, const vector<Vector2D>& external_forces);
+  void set_boundary_conditions(vector<Vector2D>& vec);
 
-  // Number of iterations for viscous diffusion
+  /** apply_... methods means apply change to data in place **/
+
+  /** simulate functions called by simulate_density(); **/
+  void apply_density_advection(vector<double> &data, double timestep, const vector<Vector2D> &external_forces);
+
+  /** simulate functions called by simulate_velocity() **/
+  void apply_velocity_self_advection(vector<Vector2D> &data, double timestep, const vector<Vector2D> &external_forces);
+  void apply_velocity_viscosity(vector<Vector2D> &data, double timestep, const vector<Vector2D> &external_forces);
+  void apply_velocity_projection(vector<Vector2D> &data, double timestep, const vector<Vector2D> &external_forces);
+
+  /** interpolations **/
+  double interpolate(double d1, double d2, double s);
+  Vector2D interpolate(Vector2D d1, Vector2D d2, double s);
+
+    /** Number of iterations for viscous diffusion **/
   int num_iter;
 
-  // Properties of smoke
+  /** Properties of smoke **/
   vector<double> density;
   vector<double> temperature;
   vector<Vector2D> velocity;
@@ -54,7 +70,7 @@ private:
 
 public:
 
-  // Getter and setter methods
+  /** Getter and setter methods **/
   double getDensity(int x, int y) const { return density[y * width + x]; }
 
   double getDensity(Vector2D vec) const {
@@ -62,7 +78,7 @@ public:
   };
 
   Vector2D getVelocity(int x, int y) const { return velocity[y * width + x]; }
-    
+
   Vector2D getVelocity(Vector2D vec) const {
       return velocity[vec[1] * width + vec[0]];
   };
@@ -74,8 +90,9 @@ public:
   void setVelocity(int x, int y, Vector2D velocity);
 
   void setTemperature(int x, int y, double temp);
-  
+
   void printGrid();
+
 };
 
 

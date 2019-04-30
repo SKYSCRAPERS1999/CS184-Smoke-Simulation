@@ -22,7 +22,7 @@ if(APPLE)
   # Clang configuration
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
-    set(CLANG_CXX_FLAGS "-std=c++11 -m64")
+    set(CLANG_CXX_FLAGS "-std=c++11 -m64 -openmp")
 
     if(BUILD_DEBUG)
       set(CMAKE_BUILD_TYPE Debug)
@@ -139,7 +139,8 @@ set(APPLICATION_SOURCE
         src/grid.cpp
         src/grid.h
         src/callback.h
-	src/common.h)
+	    src/common.h
+        src/omp.h)
 
 #-------------------------------------------------------------------------------
 # Set include directories
@@ -164,6 +165,13 @@ link_directories(
   ${CGL_LIBRARY_DIRS}
   ${FREETYPE_LIBRARY_DIRS}
 )
+
+find_package(OpenMP)
+if (OPENMP_FOUND)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+endif()
 
 #-------------------------------------------------------------------------------
 # Add executable

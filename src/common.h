@@ -8,7 +8,7 @@ using namespace std::chrono;
 
 const int NUMROW = 200;
 const int NUMCOL = 200;
-const int FREQ   = 20;
+const int FREQ   = 30;
 const int WINDOW_WIDTH = 640; // x is WIDTH
 const int WINDOW_HEIGHT = 640; // y is HEIGHT
 
