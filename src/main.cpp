@@ -60,6 +60,7 @@ void display(const Grid &grid) {
 }
 
 int main() {
+
   grid = Grid(NUMCOL + 2, NUMROW + 2);
 
   // Parameters of smoke simulation. Allow for adjusting later.
@@ -105,6 +106,7 @@ int main() {
           }
           double den = grid.getDensity(x, y);
           grid.setDensity(x, y, min(den + amount_smoke, 100.0));
+
         }
       }
     }

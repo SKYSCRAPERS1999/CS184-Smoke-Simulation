@@ -291,6 +291,24 @@ void Grid::set_boundary_conditions(vector<Vector2D> &vec) {
   vec[(height-1)*width+width-1] = 0.5*(vec[(height-1)*width + width - 2] + vec[(height-2)*width + width - 1]);
 }
 
+// Handle boundary conditions
+void Grid::set_boundary_conditions(vector<CGL::Vector2D> &vec) {
+    // Horizontal walls top/bot
+    for (int i = 1 ; i < width - 1; i++) {
+        vec[i] = Vector2D(vec[i][0], -vec[i][1]);
+        vec[((height-1)*width) + i] = Vector2D(vec[i][0], -vec[i][1]);
+    }
+    // Vertical walls left/right
+    for (int i = 1 ; i < height - 1; i++) {
+        vec[i*width] = Vector2D(-vec[i][0], vec[i][1]);
+        vec[i*width + width - 1] = Vector2D(-vec[i][0], vec[i][1]);
+    }
+    vec[0] = 0.5*(vec[1] + vec[width]);
+    vec[(height-1)*width] = 0.5*(vec[(height-1)*width + 1] + vec[(height-2)*width]);
+    vec[width-1] = 0.5*(vec[width - 2] + vec[width + width - 1]);
+    vec[(height-1)*width+width-1] = 0.5*(vec[(height-1)*width + width - 2] + vec[(height-2)*width + width - 1]);
+}
+
 // interpolates between d1 and d2 based on weight s (between 0 and 1)
 double Grid::interpolate(double d1, double d2, double s) {
   return (1 - s) * d1 + s * d2;
