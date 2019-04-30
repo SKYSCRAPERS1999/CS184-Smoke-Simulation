@@ -173,10 +173,10 @@ vector<Vector2D> Grid::update_velocity(const double timestep, const vector<Vecto
 
     // (4) Perform viscosity diffusion using iterative solver
     vector<Vector2D> viscous_velocity_grid(width * height);
-    vector<Vector2D> tem(self_advection_grid);
+    vector<Vector2D> tem = self_advection_grid;
 
     // alpha and beta are hyperparameters
-
+    /** COMPUTING EXPENSIVE PART **/
     double alpha = 1 / (timestep*num_iter);
     double beta = 4 + alpha;
     for (int iter = 0; iter < num_iter; ++iter) {
@@ -197,7 +197,8 @@ vector<Vector2D> Grid::update_velocity(const double timestep, const vector<Vecto
                 viscous_velocity_grid[y * width + x] = new_velocity;
             }
         }
-        tem = viscous_velocity_grid;
+        // speed up by avoiding copying
+        tem.swap(viscous_velocity_grid);
     }
 
     // (5) Projection Step
@@ -216,6 +217,7 @@ vector<Vector2D> Grid::update_velocity(const double timestep, const vector<Vecto
     }
 
     // Calculate pressure through poisson equations
+    /** COMPUTING EXPENSIVE PART **/
     vector<double> pressure(width*height, 0.0);
     vector<double> tem_2(width*height, 0.0);
     alpha = -1;
@@ -238,7 +240,8 @@ vector<Vector2D> Grid::update_velocity(const double timestep, const vector<Vecto
                 pressure[y * width + x] = new_pressure;
             }
         }
-        tem_2 = pressure;
+        // speed up by avoiding copying
+        tem_2.swap(pressure);
     }
 
     // Subtract gradient from velocity field
