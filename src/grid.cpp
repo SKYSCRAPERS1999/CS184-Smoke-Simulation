@@ -19,6 +19,7 @@ static std::random_device rd;
 static mt19937 rng(rd()); // random number generator in C++11
 
 double interpolate(double d1, double d2, double s);
+
 Vector2D interpolate(Vector2D d1, Vector2D d2, double s);
 
 Grid::Grid(int width, int height) {
@@ -29,7 +30,7 @@ Grid::Grid(int width, int height) {
     this->num_iter = 16;
 
     normal_distribution<double> dis_v(3, 5); // normal distribution in C++11
-    this->velocity.resize(width * height, Vector2D(0,0));
+    this->velocity.resize(width * height, Vector2D(0, 0));
     for (int i = 0; i < width * height; ++i) {
         this->velocity[i] = Vector2D(dis_v(rng), dis_v(rng));
         //this->velocity[i] = Vector2D(1, 1);
@@ -81,28 +82,28 @@ Grid &Grid::operator=(Grid &&grid) noexcept {
     return *this;
 }
 
-void Grid::simulate(const double timestep, const vector<Vector2D>& external_forces) {
-    
+void Grid::simulate(const double timestep, const vector<Vector2D> &external_forces) {
+
     // (I) DENSITY UPDATE
     vector<double> new_density = simulate_density(timestep, external_forces);
 
     // (II) VELOCITY UPDATE
     vector<Vector2D> new_velocity = simulate_velocity(timestep, external_forces);
-  
+
     // Copy over the new grid to existing grid
     this->density = new_density;
     this->velocity = new_velocity;
 }
 
-vector<double> Grid::simulate_density(const double timestep, const vector<Vector2D>& external_forces) {
+vector<double> Grid::simulate_density(const double timestep, const vector<Vector2D> &external_forces) {
     // (I) DENSITY UPDATE
     vector<double> combined_density(width * height, 0.0);
 
     // (2) Perform density advection using Stam's method.
     vector<double> advection_grid(width * height, 0.0);
     //advection_grid.assign(density.begin(), density.end());
-    for (int x = 0; x < width; ++x) {
-        for (int y = 0; y < height; ++y) {
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
             if (x + reverse_velocity[0] < 0 || x + reverse_velocity[0] > width - 2 || y + reverse_velocity[1] < 0 ||
                 y + reverse_velocity[1] > height - 2) { // TODO didn't care about boundary grids
@@ -132,13 +133,13 @@ vector<double> Grid::simulate_density(const double timestep, const vector<Vector
     return combined_density;
 }
 
-vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vector2D>& external_forces) {
+vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vector2D> &external_forces) {
     // (II) VELOCITY UPDATE
 
     // (3) Perform self advection of velocity
-    vector<Vector2D> self_advection_grid(width * height, Vector2D(0,0));
-    for (int x = 0; x < width; ++x) {
-        for (int y = 0; y < height; ++y) {
+    vector<Vector2D> self_advection_grid(width * height, Vector2D(0, 0));
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
             if (x + reverse_velocity[0] < 0 || x + reverse_velocity[0] > width - 2 || y + reverse_velocity[1] < 0 ||
                 y + reverse_velocity[1] > height - 2) { // TODO didn't care about boundary grids
@@ -178,21 +179,21 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
 
     // alpha and beta are hyperparameters
     /** COMPUTING EXPENSIVE PART **/
-    double alpha = 1 / (timestep*num_iter);
+    double alpha = 1 / (timestep * num_iter);
     double beta = 4 + alpha;
     for (int iter = 0; iter < num_iter; ++iter) {
-        for (int x = 0; x < width; ++x) {
-            for (int y = 0; y < height; ++y) {
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
                 // TODO didn't care about boundary grids
                 if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
                     viscous_velocity_grid[y * width + x] = tem[y * width + x];
                     continue;
                 }
-                Vector2D& l = tem[y * width + x - 1];
-                Vector2D& r = tem[y * width + x + 1];
-                Vector2D& u = tem[(y + 1) * width + x];
-                Vector2D& b = tem[(y - 1) * width + x];
-                Vector2D& center = tem[y * width + x];
+                Vector2D &l = tem[y * width + x - 1];
+                Vector2D &r = tem[y * width + x + 1];
+                Vector2D &u = tem[(y + 1) * width + x];
+                Vector2D &b = tem[(y - 1) * width + x];
+                Vector2D &center = tem[y * width + x];
 
                 Vector2D new_velocity = (l + r + u + b + alpha * center) / beta;
                 viscous_velocity_grid[y * width + x] = new_velocity;
@@ -206,38 +207,38 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
 
     // (5) Projection Step
     // Calculate the divergence
-    vector<double> divergence(width*height, 0.0);
+    vector<double> divergence(width * height, 0.0);
     double halfrdx = 0.5;
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
             Vector2D wL = getVelocity(x - 1, y);
             Vector2D wR = getVelocity(x + 1, y);
             Vector2D wB = getVelocity(x, y - 1);
             Vector2D wT = getVelocity(x, y + 1);
 
-            divergence[y*width + x] = halfrdx * ((wR[0] - wL[0]) + (wT[1] - wB[1]));
+            divergence[y * width + x] = halfrdx * ((wR[0] - wL[0]) + (wT[1] - wB[1]));
         }
     }
 
     // Calculate pressure through poisson equations
     /** COMPUTING EXPENSIVE PART **/
-    vector<double> pressure(width*height, 0.0);
-    vector<double> tem_2(width*height, 0.0);
+    vector<double> pressure(width * height, 0.0);
+    vector<double> tem_2(width * height, 0.0);
     alpha = -1;
     beta = 4;
     for (int iter = 0; iter < num_iter; ++iter) {
-        for (int x = 0; x < width; ++x) {
-            for (int y = 0; y < height; ++y) {
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
                 // TODO didn't care about boundary grids
                 if (x == 0 || x == width - 1 || y == 0 || y == height - 1) {
                     pressure[y * width + x] = tem_2[y * width + x];
                     continue;
                 }
-                double& l = tem_2[y * width + x - 1];
-                double& r = tem_2[y * width + x + 1];
-                double& u = tem_2[(y + 1) * width + x];
-                double& b = tem_2[(y - 1) * width + x];
-                double& center = divergence[y*width + x];
+                double &l = tem_2[y * width + x - 1];
+                double &r = tem_2[y * width + x + 1];
+                double &u = tem_2[(y + 1) * width + x];
+                double &b = tem_2[(y - 1) * width + x];
+                double &center = divergence[y * width + x];
 
                 double new_pressure = (l + r + u + b + alpha * center) / beta;
                 pressure[y * width + x] = new_pressure;
@@ -248,14 +249,14 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
     }
 
     // Subtract gradient from velocity field
-    for (int x = 0; x < width; ++x) {
-        for (int y = 0; y < height; ++y) {
-            double& pL = pressure[y*width + x-1];
-            double& pR = pressure[y*width + x+1];
-            double& pB = pressure[(y-1)*width + x];
-            double& pT = pressure[(y+1)*width + x];
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; ++x) {
+            double &pL = pressure[y * width + x - 1];
+            double &pR = pressure[y * width + x + 1];
+            double &pB = pressure[(y - 1) * width + x];
+            double &pT = pressure[(y + 1) * width + x];
 
-            viscous_velocity_grid[y*width + x] -= halfrdx * Vector2D(pR - pL, pT - pB);
+            viscous_velocity_grid[y * width + x] -= halfrdx * Vector2D(pR - pL, pT - pB);
         }
     }
     
