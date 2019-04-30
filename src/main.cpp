@@ -66,9 +66,7 @@ int main() {
     // These parameters effect the smoke that gets placed down with mouse clicks
     int size_smoke = 1;
     double amount_smoke = 50;
-    
-    vector<double> external_source_buffer(grid.width*grid.height, 0.0);
-  
+      
     GLFWwindow *window;
     // Initialize
     if (!glfwInit()) {
