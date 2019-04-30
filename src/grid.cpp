@@ -135,7 +135,6 @@ vector<double> Grid::simulate_density(const double timestep, const vector<Vector
 vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vector2D>& external_forces) {
     // (II) VELOCITY UPDATE
 
-    vector<Vector2D> combined_velocity(width * height, Vector2D(0,0));
     // (3) Perform self advection of velocity
     vector<Vector2D> self_advection_grid(width * height, Vector2D(0,0));
     for (int x = 0; x < width; ++x) {
@@ -170,6 +169,8 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
             }
         }
     }
+    
+    set_boundary_conditions(self_advection_grid);
 
     // (4) Perform viscosity diffusion using iterative solver
     vector<Vector2D> viscous_velocity_grid(width * height);
@@ -200,6 +201,8 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
         // speed up by avoiding copying
         tem.swap(viscous_velocity_grid);
     }
+    
+    set_boundary_conditions(viscous_velocity_grid);
 
     // (5) Projection Step
     // Calculate the divergence
@@ -255,8 +258,28 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
             viscous_velocity_grid[y*width + x] -= halfrdx * Vector2D(pR - pL, pT - pB);
         }
     }
+    
+    set_boundary_conditions(viscous_velocity_grid);
 
     return viscous_velocity_grid;
+}
+
+// Handle boundary conditions
+void Grid::set_boundary_conditions(vector<CGL::Vector2D> &vec) {
+    // Horizontal walls top/bot
+    for (int i = 1 ; i < width - 1; i++) {
+        vec[i] = Vector2D(vec[i][0], -vec[i][1]);
+        vec[((height-1)*width) + i] = Vector2D(vec[i][0], -vec[i][1]);
+    }
+    // Vertical walls left/right
+    for (int i = 1 ; i < height - 1; i++) {
+        vec[i*width] = Vector2D(-vec[i][0], vec[i][1]);
+        vec[i*width + width - 1] = Vector2D(-vec[i][0], vec[i][1]);
+    }
+    vec[0] = 0.5*(vec[1] + vec[width]);
+    vec[(height-1)*width] = 0.5*(vec[(height-1)*width + 1] + vec[(height-2)*width]);
+    vec[width-1] = 0.5*(vec[width - 2] + vec[width + width - 1]);
+    vec[(height-1)*width+width-1] = 0.5*(vec[(height-1)*width + width - 2] + vec[(height-2)*width + width - 1]);
 }
 
 // interpolates between d1 and d2 based on weight s (between 0 and 1)

@@ -59,14 +59,14 @@ void display(const Grid &grid) {
 }
 
 int main() {
-    grid = Grid(NUMCOL, NUMROW);
+    grid = Grid(NUMCOL + 2, NUMROW + 2);
   
     // Parameters of smoke simulation. Allow for adjusting later.
     vector<Vector2D> external_forces;
     external_forces.resize(grid.width * grid.height, Vector2D(0, 0.0));
     // These parameters effect the smoke that gets placed down with mouse clicks
-    int size_smoke = 1;
-    double amount_smoke = 50;
+    int size_smoke = 2;
+    double amount_smoke = 75;
       
     GLFWwindow *window;
     // Initialize
@@ -99,7 +99,7 @@ int main() {
           
             for (int y = row-size_smoke; y < row+size_smoke; y++) {
               for (int x = col-size_smoke; x < col+size_smoke; x++) {
-                if (y < 0 || y >= grid.height || x < 0 || x >= grid.width) {
+                if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1) {
                   continue;
                 }
                 double den = grid.getDensity(x, y);
