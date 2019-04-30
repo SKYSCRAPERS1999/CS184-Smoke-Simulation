@@ -493,6 +493,36 @@ header, .context-menu, .megamenu-content, footer{
 </style>
 </head>
 <body class='typora-export' >
-<div  id='write'  class = 'is-mac'><h2><a name='header-n2' class='md-header-anchor '></a><center>CS 184 Final Project: Smoke Simulation Milestone</h2><h3><a name='header-n4' class='md-header-anchor '></a><center>Eric Ying, Yuanhao Zhai, Fangzhou Lan</h3><hr /><h3><a name='header-n38' class='md-header-anchor '></a>Progression Summary</h3><p>In a word, currently, we are a little ahead of our planned goals, however, some bugs and edge conditions remain to be solved. </p><p>The functionalities we have accomplished so far include: density advection, velocity advection, viscous diffusion and external forces. For the GUI part, we are able to render a 2D grid to simulate the smoke, we also added mouse input to create smoke.</p><p>However, we did consider the interaction between smoke and boundary.</p><hr /><h3><a name='header-n10' class='md-header-anchor '></a>Preliminary Results</h3><p>We can launch a 2D grid in which the user can create smoke using mouse dragging. We take a simple screenshot to show the result.</p><p><img src='images/result.png' alt='result' referrerPolicy='no-referrer' /></p><hr /><h3><a name='header-n31' class='md-header-anchor '></a>Reflection</h3><p>In our project, the main challenge is to solve simulation equations, however, in our simulation, the processes to solve these equations outweigh the answer, because it is the processes that determine the amount of calculation, which further effect the fluency of our program.</p><hr /><h3><a name='header-n36' class='md-header-anchor '></a>Updated Work Plan</h3><ol><li>In this week, we are going to finish all the simulation part, namely add external force, temperature, take care of edge conditions, improve performance and fix potential bugs.</li><li>For the next week, we will mainly focus on adding more functionalities to the GUI, like adjust parameters using keyboard, add color to the smoke. What&#39;s more, we will   start the final project write-up.</li></ol></div>
+<div  id='write'  class = 'is-mac'><h2><a name='header-n2' class='md-header-anchor '></a><center>CS 184 Final Project: Smoke Simulation Milestone</h2><h3><a name='header-n4' class='md-header-anchor '></a><center>Eric Ying, Yuanhao Zhai, Fangzhou Lan</h3><hr />
+
+    <h3><a name='header-n38' class='md-header-anchor '></a>Progression Summary</h3>
+
+    <p>The functionalities we have accomplished so far include: density advection, velocity advection, viscous diffusion and velocity projection. For the GUI part, we were able to render a 2D grid to simulate the smoke, and we also added mouse input to create smoke.</p>
+
+    <p>Currently, we are a little ahead of our planned goals. However, some bugs and edge conditions remain to be solved. We still need to add interaction between the boundary and the smoke.</p>
+
+
+    <hr /><h3><a name='header-n10' class='md-header-anchor '></a>Preliminary Results</h3><p>We can launch a 2D grid in which the user can create smoke using mouse dragging. We take simple screenshots to show the result.</p>
+
+    <p><img src='images/result.png' alt='result' referrerPolicy='no-referrer' / width=80% height=80%></p><hr />
+    <p><img src='images/milestone-2.png' alt='result' referrerPolicy='no-referrer' / width=80% height=80%></p><hr />
+
+
+    <h3><a name='header-n31' class='md-header-anchor '></a>Reflection</h3>
+
+    <p>In our project, the main challenge was solving the incompressible fluid equations. We used this <a href="http://developer.download.nvidia.com/books/HTML/gpugems/gpugems_ch38.html"> website </a> as a resource for solving these equations. However, in our simulation, the process of solving these equations was also important, because these processes ultimately determined the amount of calculation in our program. Ideally, we want to keep the number of calculations as small as possible to make our simulation fast.</p>
+
+    <p>Although our basic simulation is working, we still have a lot of features to add. We need to include temperature into our system. We also need to add interaction between the boundary and the smoke. One additional functionality we want to add is the ability for the user to create their own custom velocity fields.</p>
+
+    <hr /><h3><a name='header-n36' class='md-header-anchor '></a>Updated Work Plan</h3>
+
+    <ol>
+        <li>In this week, we are going to finish the rest of the basic simulation, namely adding external force, temperature, taking care of edge conditions, and improving performance and fixing potential bugs.</li>
+        <li>For the next week, we will mainly focus on adding more functionalities to the GUI, like adjusting parameters using keyboard, adding color to the smoke. We also need to start on the final project write up.</li>
+    </ol></div>
+
+    <hr /><h3><a name='header-n36' class='md-header-anchor '></a>Milestone Video and Slide</h3>
+
+    <a href="https://docs.google.com/presentation/d/1xc8iehFo53Qi1BeaVvx_Hzys17sqds06qXdil4bO2HM/edit#slide=id.p">Milestone slides</a>
 </body>
 </html>
