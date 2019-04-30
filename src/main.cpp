@@ -59,70 +59,69 @@ void display(const Grid &grid) {
 }
 
 int main() {
-  grid = Grid(NUMCOL, NUMROW);
+    grid = Grid(NUMCOL, NUMROW);
+  
+    // Parameters of smoke simulation. Allow for adjusting later.
+    vector<Vector2D> external_forces;
+    external_forces.resize(grid.width * grid.height, Vector2D(0, 0.0));
+    // These parameters effect the smoke that gets placed down with mouse clicks
+    int size_smoke = 1;
+    double amount_smoke = 50;
+      
+    GLFWwindow *window;
+    // Initialize
+    if (!glfwInit()) {
+        return -1;
+    }
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
+    if (!window) {
+        glfwTerminate();
+        return -1;
+    }
 
-  // Parameters of smoke simulation. Allow for adjusting later.
-  vector<Vector2D> external_forces;
-  external_forces.resize(grid.width * grid.height, Vector2D(0, 0.0));
-  // These parameters effect the smoke that gets placed down with mouse clicks
-  int size_smoke = 1;
-  double amount_smoke = 0.15;
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1); // To prevent screen tearing
 
-  GLFWwindow *window;
-  // Initialize
-  if (!glfwInit()) {
-    return -1;
-  }
-  window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
-  if (!window) {
-    glfwTerminate();
-    return -1;
-  }
+    // Callback functions
+    glfwSetCursorPosCallback(window, cursor_position_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
 
-  glfwMakeContextCurrent(window);
-  glfwSwapInterval(1); // To prevent screen tearing
-
-  // Callback functions
-  glfwSetCursorPosCallback(window, cursor_position_callback);
-  glfwSetMouseButtonCallback(window, mouse_button_callback);
-
-  auto last_time = steady_clock::now();
-  while (!glfwWindowShouldClose(window)) {
-    auto cur_time = steady_clock::now();
-    auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
-
-    // Handle dragging of mouse to create a stream of smoke
-    if (mouse_down) {
-      double xpos = grid.cursor_pos[0];
-      double ypos = grid.cursor_pos[1];
-
-      int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
-      int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
-
-      for (int y = row - size_smoke; y < row + size_smoke; y++) {
-        for (int x = col - size_smoke; x < col + size_smoke; x++) {
-          if (y < 0 || y >= grid.height || x < 0 || x >= grid.width) {
-            continue;
-          }
-          double den = grid.getDensity(x, y);
-          grid.setDensity(x, y, max(den + amount_smoke, 100.0));
+    auto last_time = steady_clock::now();
+    while (!glfwWindowShouldClose(window)) {
+        auto cur_time = steady_clock::now();
+        auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
+        
+        // Handle dragging of mouse to create a stream of smoke
+        if (mouse_down) {
+            double xpos = grid.cursor_pos[0];
+            double ypos = grid.cursor_pos[1];
+            
+            int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
+            int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
+          
+            for (int y = row-size_smoke; y < row+size_smoke; y++) {
+              for (int x = col-size_smoke; x < col+size_smoke; x++) {
+                if (y < 0 || y >= grid.height || x < 0 || x >= grid.width) {
+                  continue;
+                }
+                double den = grid.getDensity(x, y);
+                grid.setDensity(x, y, min(den + amount_smoke, 100.0));
+              }
+            }
         }
-      }
+
+        if (FREQ * elapsed.count() >= 1000) {
+            //std::cout << "Update the grid" << std::endl;
+            last_time = cur_time;
+            grid.simulate(1, external_forces);
+            //randomize_grid(grid, 1, 5);
+            
+        }
+        display(grid);
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
-    if (FREQ * elapsed.count() >= 1000) {
-      //std::cout << "Update the grid" << std::endl;
-      last_time = cur_time;
-      grid.simulate(1, external_forces);
-      //randomize_grid(grid, 1, 5);
-
-      //grid.printGrid();
-    }
-    display(grid);
-    glfwSwapBuffers(window);
-    glfwPollEvents();
-  }
-
-  glfwTerminate();
-  return 0;
+    glfwTerminate();
+    return 0;
 }
