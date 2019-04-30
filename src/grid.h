@@ -57,7 +57,9 @@ private:
   double interpolate(double d1, double d2, double s);
   Vector2D interpolate(Vector2D d1, Vector2D d2, double s);
 
-  /** Number of iterations for viscous diffusion **/
+  void set_boundary_conditions(vector<Vector2D> &vec);
+
+    /** Number of iterations for viscous diffusion **/
   int num_iter;
 
   /** Properties of smoke **/
