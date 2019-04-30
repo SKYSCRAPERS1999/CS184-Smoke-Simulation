@@ -42,6 +42,7 @@ private:
   // simulate functions called by simulate()
   vector<Vector2D> simulate_velocity(double timestep, const vector<Vector2D>& external_forces);
   vector<double> simulate_density(double timestep, const vector<Vector2D>& external_forces);
+  void set_boundary_conditions(vector<Vector2D>& vec);
 
   // Number of iterations for viscous diffusion
   int num_iter;
