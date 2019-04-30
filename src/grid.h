@@ -15,7 +15,10 @@
 using namespace CGL;
 using namespace std;
 
-struct Grid {
+class Grid {
+
+public:
+
   Grid() {}
 
   Grid(int width, int height);
@@ -31,7 +34,15 @@ struct Grid {
   int height;
   int width;
   Vector2D cursor_pos;
-  
+
+  // Primary simulate function
+  void simulate(double timestep, const vector<Vector2D>& external_forces);
+
+private:
+  // simulate functions called by simulate()
+  vector<Vector2D> update_velocity(double timestep, const vector<Vector2D>& external_forces);
+  vector<double> update_density(double timestep, const vector<Vector2D>& external_forces);
+
   // Number of iterations for viscous diffusion
   int num_iter;
 
@@ -40,8 +51,8 @@ struct Grid {
   vector<double> temperature;
   vector<Vector2D> velocity;
 
-  // Primary simulate function
-  void simulate(double timestep, vector<Vector2D> external_forces);
+
+public:
 
   // Getter and setter methods
   double getDensity(int x, int y) const { return density[y * width + x]; }
@@ -64,14 +75,7 @@ struct Grid {
 
   void setTemperature(int x, int y, double temp);
   
-  
-
-  void possion(double alpha, double beta, Vector2D coords);
-
-  void copyGrid(Grid g);
-
   void printGrid();
-
 };
 
 
