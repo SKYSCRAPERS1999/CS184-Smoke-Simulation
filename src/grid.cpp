@@ -142,7 +142,7 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
             if (x + reverse_velocity[0] < 0 || x + reverse_velocity[0] > width - 2 || y + reverse_velocity[1] < 0 ||
                 y + reverse_velocity[1] > height - 2) { // TODO didn't care about boundary grids
-                continue;
+                self_advection_grid[y * width + x] = Vector2D(1,1);
             } else {
                 double newx = x + reverse_velocity[0];
                 double newy = y + reverse_velocity[1];
