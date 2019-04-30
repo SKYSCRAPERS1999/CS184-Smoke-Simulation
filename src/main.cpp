@@ -13,48 +13,49 @@ static std::random_device rd;
 static mt19937 rng(rd()); // random number generator in C++11
 
 Grid grid;
+bool mouse_down = false;
 
 // starts a smoke at a random location
 void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
-    uni_dis dis_x(0, NUMCOL - size); // uniform distribution in C++11
-    uni_dis dis_y(0, NUMROW - size); // uniform distribution in C++11
-    uni_dis dis_density(25, 75); // uniform distribution in C++11
-    uni_dis dis_size(1, size);
-    while (num_speckle--) {
-        int chosen_x = dis_x(rng);
-        int chosen_y = dis_y(rng);
-        int chosen_size = dis_size(rng);
-        double chosen_density = dis_density(rng);
-        for (int i = 0; i < chosen_size; ++i) {
-            for (int j = 0; j < chosen_size; ++j) {
-                grid.setDensity(chosen_x + i, chosen_y + j, grid.getDensity(chosen_x + i, chosen_y + j) + chosen_density);
-            }
-        }
+  uni_dis dis_x(0, NUMCOL - size); // uniform distribution in C++11
+  uni_dis dis_y(0, NUMROW - size); // uniform distribution in C++11
+  uni_dis dis_density(25, 75); // uniform distribution in C++11
+  uni_dis dis_size(1, size);
+  while (num_speckle--) {
+    int chosen_x = dis_x(rng);
+    int chosen_y = dis_y(rng);
+    int chosen_size = dis_size(rng);
+    double chosen_density = dis_density(rng);
+    for (int i = 0; i < chosen_size; ++i) {
+      for (int j = 0; j < chosen_size; ++j) {
+        grid.setDensity(chosen_x + i, chosen_y + j, grid.getDensity(chosen_x + i, chosen_y + j) + chosen_density);
+      }
     }
+  }
 }
 
 void display(const Grid &grid) {
-    glClear(GL_COLOR_BUFFER_BIT);
-    double width = 1 / (double) NUMCOL * 2;
-    double height = 1 / (double) NUMROW * 2;
+  glClear(GL_COLOR_BUFFER_BIT);
+  double width = 1 / (double) NUMCOL * 2;
+  double height = 1 / (double) NUMROW * 2;
 
-    for (int y = 0; y < NUMROW; ++y) {
-        for (int x = 0; x < NUMCOL; ++x) {
-            glColor3d(grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100);
+  for (int y = 0; y < NUMROW; ++y) {
+    for (int x = 0; x < NUMCOL; ++x) {
+      glColor3d(grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100);
 
-            glBegin(GL_QUADS);
-            double bottom_left_x = -1 + width * x;
-            double bottom_left_y = -1 + height * y;
+      glBegin(GL_QUADS);
+      double bottom_left_x = -1 + width * x;
+      double bottom_left_y = -1 + height * y;
 
-            glVertex2d(bottom_left_x, bottom_left_y);
-            glVertex2d(bottom_left_x + width, bottom_left_y);
-            glVertex2d(bottom_left_x + width, bottom_left_y + height);
-            glVertex2d(bottom_left_x, bottom_left_y + height);
-            glEnd();
-        }
+      glVertex2d(bottom_left_x, bottom_left_y);
+      glVertex2d(bottom_left_x + width, bottom_left_y);
+      glVertex2d(bottom_left_x + width, bottom_left_y + height);
+      glVertex2d(bottom_left_x, bottom_left_y + height);
+      glEnd();
     }
-    glEnd();
-    glFlush();
+  }
+  glEnd();
+  glFlush();
 }
 
 int main() {
