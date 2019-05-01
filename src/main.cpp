@@ -16,6 +16,7 @@ Grid grid;
 bool mouse_down = false;
 bool shift_pressed = false;
 int size_smoke = 2;
+double amount_smoke = 50;
 
 // starts a smoke at a random location
 void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
@@ -68,8 +69,6 @@ int main() {
     vector<Vector2D> external_forces;
     external_forces.resize(grid.width * grid.height, Vector2D(0.0, 0.0));
     // These parameters effect the smoke that gets placed down with mouse clicks
-
-    double amount_smoke = 50;
 
     GLFWwindow *window;
     // Initialize

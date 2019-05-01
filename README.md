@@ -11,3 +11,12 @@ make
 ./smoke_simulator
 ```
 
+### Keyboard Interaction
+
+| Key  | Function                  |
+| ---- | ------------------------- |
+| +    | Increase smoke size.      |
+| -    | Decrease smoke size.      |
+| [    | Decrease amount of smoke. |
+| ]    | Increase amount of smoke. |
+

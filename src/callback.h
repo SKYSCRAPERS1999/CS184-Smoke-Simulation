@@ -6,6 +6,7 @@ extern Grid grid;
 extern bool mouse_down;
 extern bool shift_pressed;
 extern int size_smoke;
+extern double amount_smoke;
 
 void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
     glfwGetCursorPos(window, &grid.cursor_pos[0], &grid.cursor_pos[1]);
@@ -13,7 +14,6 @@ void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
 
 // Handles mouse click to manually create smoke.
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
-
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         if (action == GLFW_PRESS) {
             mouse_down = true;
@@ -42,13 +42,23 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
                 shift_pressed = true;
                 break;
             case '=':
-                if (shift_pressed) {size_smoke = min(min(grid.width, grid.height), size_smoke + 1);}
+                if (shift_pressed) size_smoke = min(min(grid.width, grid.height), size_smoke + 1);
+                std::cout << "Size of smoke is " << size_smoke << std::endl;
                 break;
             case '-':
                 size_smoke = max(1, size_smoke - 1);
+                std::cout << "Size of smoke is " << size_smoke << std::endl;
+                break;
+            case '[':
+                amount_smoke = max(1.0, amount_smoke - 1.0);
+                std::cout << "Amount of smoke is " << amount_smoke << std::endl;
+                break;
+            case ']':
+                amount_smoke = min(100.0, amount_smoke + 1.0);
+                std::cout << "Amount of smoke is " << amount_smoke << std::endl;
                 break;
             default:
-                std::cout << key << " pressed" << std::endl;
+//                std::cout << key << " pressed" << std::endl;
                 break;
         }
     } else if (action == GLFW_RELEASE) {
@@ -60,7 +70,7 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
                 shift_pressed = false;
                 break;
             default:
-                std::cout << key << " released" << std::endl;
+//                std::cout << key << " released" << std::endl;
                 break;
         }
     }
