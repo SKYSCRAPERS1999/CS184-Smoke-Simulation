@@ -38,13 +38,16 @@ void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
   }
 }
 
-void display(const Grid &grid) {
+void display(const Grid &grid, int LIMIT = 3) {
   glClear(GL_COLOR_BUFFER_BIT);
   double width = 1 / (double) NUMCOL * 2;
   double height = 1 / (double) NUMROW * 2;
   for (int y = 0; y < NUMROW; ++y) {
     for (int x = 0; x < NUMCOL; ++x) {
-      glColor3d(grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100);
+      double density = grid.getDensity(x, y);
+      if (density <= LIMIT) continue;
+
+      glColor3d(density / 100, density / 100, density / 100);
 
       glBegin(GL_QUADS);
       double bottom_left_x = -1 + width * x;
