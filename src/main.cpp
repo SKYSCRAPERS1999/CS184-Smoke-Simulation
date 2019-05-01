@@ -39,7 +39,6 @@ void display(const Grid &grid) {
     glClear(GL_COLOR_BUFFER_BIT);
     double width = 1 / (double) NUMCOL * 2;
     double height = 1 / (double) NUMROW * 2;
-
     for (int y = 0; y < NUMROW; ++y) {
         for (int x = 0; x < NUMCOL; ++x) {
             glColor3d(grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100, grid.getDensity(x, y) / 100);
@@ -61,11 +60,12 @@ void display(const Grid &grid) {
 
 int main() {
 
-    int id;
-#pragma omp parallel private(id)
+    int rank, rankn;
+#pragma omp parallel private(rank)
     {
-        id = omp_get_thread_num();
-        printf("id = %d\n", id);
+        rank = omp_get_thread_num();
+        rankn = omp_get_num_threads();
+        printf("rank: %d / %d\n", rank, rankn);
     }
 
     grid = Grid(NUMCOL, NUMROW);
@@ -105,7 +105,6 @@ int main() {
 
             int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
             int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
-
             for (int y = row - size_smoke; y < row + size_smoke; ++y) {
                 for (int x = col - size_smoke; x < col + size_smoke; ++x) {
                     if (y < 0 || y >= grid.height || x < 0 || x >= grid.width) {
