@@ -27,7 +27,7 @@ Grid::Grid(int width, int height) {
     this->height = height;
     this->density.resize(width * height, 0.0);
     this->temperature.resize(width * height, 0.0);
-    this->num_iter = 16;
+    this->num_iter = 64;
 
     normal_distribution<double> dis_v(3, 5); // normal distribution in C++11
     this->velocity.resize(width * height, Vector2D(0, 0));

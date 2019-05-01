@@ -63,14 +63,6 @@ void display(const Grid &grid) {
 
 int main() {
 
-    int rank, rankn;
-#pragma omp parallel private(rank)
-    {
-        rank = omp_get_thread_num();
-        rankn = omp_get_num_threads();
-        printf("rank: %d / %d\n", rank, rankn);
-    }
-
     grid = Grid(NUMCOL, NUMROW);
 
     // Parameters of smoke simulation. Allow for adjusting later.
@@ -97,9 +89,18 @@ int main() {
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, keyboard_callback);
 
+#pragma omp parallel
+    {
+        int rank, rankn;
+        rank = omp_get_thread_num();
+        rankn = omp_get_num_threads();
+        printf("rank: %d / %d\n", rank, rankn);
+    }
+
     auto last_time = steady_clock::now();
     while (!glfwWindowShouldClose(window)) {
 
+        bool to_print = (rng() % 100) == 0;
         // Handle dragging of mouse to create a stream of smoke
         if (mouse_down) {
             double xpos = grid.cursor_pos[0];
@@ -121,17 +122,31 @@ int main() {
         auto cur_time = steady_clock::now();
         auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
 
-        if (rng() % 100 == 0) {
-            printf("timestep expected is %d, while timestep taken is %d\n", 1000 / FREQ, int(elapsed.count()));
+        if (FREQ * elapsed.count() >= 1000) {
+            last_time = cur_time;
+
+            auto start_time = steady_clock::now();
+
+            grid.simulate(1, external_forces);
+
+            auto end_time = steady_clock::now();
+            auto simulate_time = duration_cast<milliseconds>(end_time - start_time);
+
+            if (omp_get_thread_num() == 0 && to_print) {
+                printf("simulate_time = %lld mm\n", simulate_time.count());
+            }
         }
 
-        if (FREQ * elapsed.count() >= 1000) {
-            //std::cout << "Update the grid" << std::endl;
-            last_time = cur_time;
-            grid.simulate(1, external_forces);
-            //randomize_grid(grid, 1, 5);
-        }
+        auto start_time = steady_clock::now();
+
         display(grid);
+
+        auto end_time = steady_clock::now();
+        auto display_time = duration_cast<milliseconds>(end_time - start_time);
+        if (omp_get_thread_num() == 0 && to_print) {
+            printf("display_time = %lld mm\n", display_time.count());
+        }
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
