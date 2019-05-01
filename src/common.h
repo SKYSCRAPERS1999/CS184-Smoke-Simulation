@@ -1,6 +1,8 @@
 #ifndef common_h
 #define common_h
 
+#include "omp.h"
+
 using std::mt19937;
 using std::uniform_int_distribution;
 using uni_dis = uniform_int_distribution<int>;

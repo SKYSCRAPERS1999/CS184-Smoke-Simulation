@@ -60,6 +60,14 @@ void display(const Grid &grid) {
 }
 
 int main() {
+
+    int id;
+#pragma omp parallel private(id)
+    {
+        id = omp_get_thread_num();
+        printf("id = %d\n", id);
+    }
+
     grid = Grid(NUMCOL, NUMROW);
 
     // Parameters of smoke simulation. Allow for adjusting later.
