@@ -1,6 +1,12 @@
 # Smoke-Simulation
 Project for CS184, Berkeley
 
+### Pre Condition
+```
+brew install llvm
+brew install libomp 
+```
+
 ### Usage
 
 ```shell
