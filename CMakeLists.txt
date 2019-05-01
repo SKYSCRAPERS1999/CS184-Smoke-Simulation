@@ -9,6 +9,7 @@ project(HW0)
 #-------------------------------------------------------------------------------
 option(BUILD_DEBUG     "Build with debug settings"    OFF)
 option(BUILD_DOCS      "Build documentation"          OFF)
+option(BUILD_OPENMP    "Build openmp"                 ON)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_COMPILER "/usr/local/opt/llvm/bin/clang++")
@@ -24,7 +25,6 @@ if(APPLE)
 
   # Clang configuration
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-
     set(CLANG_CXX_FLAGS "-std=c++11 -m64 -fopenmp")
 
     if(BUILD_DEBUG)
