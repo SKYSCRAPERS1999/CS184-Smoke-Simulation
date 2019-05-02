@@ -244,12 +244,13 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
     
     // (5) Add buoyant forces from temperature
     Vector2D buoyant_direction = Vector2D(0, 1);
-    double tempature_param = 0.05;
+    double tempature_parameter = 0.05;
+    double smoke_density_parameter = 0.04;
     
     for (int y = 1; y < height - 1; ++y) {
         for (int x = 1; x < width - 1; ++x) {
             // Ignore boundaries for now
-            Vector2D buoyant_force = (getTemperature(x, y) - ambient_temperature)*buoyant_direction*timestep*tempature_param;
+            Vector2D buoyant_force = (-smoke_density_parameter * getDensity(x, y) + (getTemperature(x, y) - ambient_temperature)*timestep*tempature_parameter)*buoyant_direction;
             viscous_velocity_grid[y*width + x] += buoyant_force;
         }
     }

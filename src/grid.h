@@ -56,8 +56,8 @@ private:
   int num_iter;
 
   // Properties of smoke
-  vector<double> density;
-  vector<double> temperature;
+  vector<double> density; // 0-100
+  vector<double> temperature; // 0-100
   vector<Vector2D> velocity;
 
 

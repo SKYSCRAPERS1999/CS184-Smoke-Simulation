@@ -69,7 +69,7 @@ int main() {
     // These parameters effect the smoke that gets placed down with mouse clicks
     int size_smoke = 3;
     double amount_smoke = 50;
-    double amount_temp = 35;
+    double amount_temp = 50;
     double ambient_temperature = 0;
 
     GLFWwindow *window;
