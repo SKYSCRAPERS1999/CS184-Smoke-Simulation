@@ -1,7 +1,7 @@
 # Original file Copyright CMU462 Fall 2015: 
 # Kayvon Fatahalian, Keenan Crane,
 # Sky Gao, Bryce Summers, Michael Choquette.
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.9)
 project(HW0)
 
 #-------------------------------------------------------------------------------
@@ -9,7 +9,11 @@ project(HW0)
 #-------------------------------------------------------------------------------
 option(BUILD_DEBUG     "Build with debug settings"    OFF)
 option(BUILD_DOCS      "Build documentation"          OFF)
+option(BUILD_OPENMP    "Build openmp"                 ON)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_COMPILER "/usr/local/opt/llvm/bin/clang++")
+set(CMAKE_C_COMPILER "/usr/local/opt/llvm/bin/clang")
 #-------------------------------------------------------------------------------
 # Platform-specific settings
 #-------------------------------------------------------------------------------
@@ -21,8 +25,7 @@ if(APPLE)
 
   # Clang configuration
   if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-
-    set(CLANG_CXX_FLAGS "-std=c++11 -m64")
+    set(CLANG_CXX_FLAGS "-std=c++11 -m64 -fopenmp")
 
     if(BUILD_DEBUG)
       set(CMAKE_BUILD_TYPE Debug)
@@ -139,7 +142,8 @@ set(APPLICATION_SOURCE
         src/grid.cpp
         src/grid.h
         src/callback.h
-	src/common.h)
+	    src/common.h
+        src/omp.h)
 
 #-------------------------------------------------------------------------------
 # Set include directories
