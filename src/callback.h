@@ -60,7 +60,7 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
                 amount_smoke = min(100.0, amount_smoke + 1.0);
                 std::cout << "Amount of smoke is " << amount_smoke << std::endl;
                 break;
-            case GLFW_KEY_P:
+            case 'GLFW_KEY_P':
                 is_pause = !is_pause;
                 break;
             default:

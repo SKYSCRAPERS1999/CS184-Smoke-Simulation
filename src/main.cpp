@@ -92,19 +92,19 @@ int main() {
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, keyboard_callback);
     
-    #if defined(_OPENMP)
-    #pragma omp parallel
-    {
-        int rank, rankn;
-        rank = omp_get_thread_num();
-        rankn = omp_get_num_threads();
-        printf("rank: %d / %d\n", rank, rankn);
-    }
-    #endif
+//    #if defined(_OPENMP)
+//    #pragma omp parallel
+//    {
+//        int rank, rankn;
+//        rank = omp_get_thread_num();
+//        rankn = omp_get_num_threads();
+//        printf("rank: %d / %d\n", rank, rankn);
+//    }
+//    #endif
 
     auto last_time = steady_clock::now();
     while (!glfwWindowShouldClose(window)) {
-        bool to_print = ((rng() % 100) == 0) && (omp_get_thread_num() == 0);
+        //bool to_print = ((rng() % 100) == 0) && (omp_get_thread_num() == 0);
         
         // Handle dragging of mouse to create a stream of smoke
         if (mouse_down) {
@@ -129,20 +129,22 @@ int main() {
         }
         auto cur_time = steady_clock::now();
         auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
-
-        if (FREQ * elapsed.count() >= 1000) {
-            last_time = cur_time;
-            auto start_time = steady_clock::now();
-            grid.simulate(1, external_forces, ambient_temperature);
-            auto end_time = steady_clock::now();
-            auto simulate_time = duration_cast<milliseconds>(end_time - start_time);
-            
-            if (to_print) {
-                printf("simulate_time = %lld mm\n", simulate_time.count());
-            }
-        } else {
-            if (to_print) {
-                puts("no simulate_time");
+        
+        if (!is_pause) {
+            if (FREQ * elapsed.count() >= 1000) {
+                last_time = cur_time;
+                auto start_time = steady_clock::now();
+                grid.simulate(1, external_forces, ambient_temperature);
+                auto end_time = steady_clock::now();
+                auto simulate_time = duration_cast<milliseconds>(end_time - start_time);
+                
+    //            if (to_print) {
+    //                printf("simulate_time = %lld mm\n", simulate_time.count());
+    //            }
+            } else {
+    //            if (to_print) {
+    //                puts("no simulate_time");
+    //            }
             }
         }
 
@@ -150,9 +152,9 @@ int main() {
         display(grid);
         auto end_time = steady_clock::now();
         auto display_time = duration_cast<milliseconds>(end_time - start_time);
-        if (to_print) {
-            printf("display_time = %lld mm\n", display_time.count());
-        }
+//        if (to_print) {
+//            printf("display_time = %lld mm\n", display_time.count());
+//        }
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
