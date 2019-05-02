@@ -14,6 +14,7 @@ static mt19937 rng(rd()); // random number generator in C++11
 
 Grid grid;
 bool mouse_down = false;
+bool is_pause = false;
 
 // starts a smoke at a random location
 void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
@@ -60,14 +61,16 @@ void display(const Grid &grid) {
 }
 
 int main() {
-    grid = Grid(NUMCOL, NUMROW);
+    grid = Grid(NUMCOL + 2, NUMROW + 2);
 
     // Parameters of smoke simulation. Allow for adjusting later.
     vector<Vector2D> external_forces;
     external_forces.resize(grid.width * grid.height, Vector2D(0.0, 0.0));
     // These parameters effect the smoke that gets placed down with mouse clicks
-    int size_smoke = 2;
+    int size_smoke = 3;
     double amount_smoke = 50;
+    double amount_temp = 35;
+    double ambient_temperature = 0;
 
     GLFWwindow *window;
     // Initialize
@@ -86,10 +89,10 @@ int main() {
     // Callback functions
     glfwSetCursorPosCallback(window, cursor_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetKeyCallback(window, key_callback);
 
     auto last_time = steady_clock::now();
     while (!glfwWindowShouldClose(window)) {
-
         // Handle dragging of mouse to create a stream of smoke
         if (mouse_down) {
             double xpos = grid.cursor_pos[0];
@@ -100,11 +103,14 @@ int main() {
 
             for (int y = row - size_smoke; y < row + size_smoke; ++y) {
                 for (int x = col - size_smoke; x < col + size_smoke; ++x) {
-                    if (y < 0 || y >= grid.height || x < 0 || x >= grid.width) {
+                    if (y < 0 || y >= grid.height || x < 0 || x >= grid.width || (pow(y-row, 2.0) + pow(x-col, 2.0) > size_smoke*size_smoke)) {
                         continue;
                     }
                     double den = grid.getDensity(x, y);
+                    double temp = grid.getTemperature(x, y);
                     grid.setDensity(x, y, min(den + amount_smoke, 100.0));
+                    grid.setTemperature(x, y, min(temp + amount_temp, 100.0));
+
                 }
             }
         }
@@ -116,15 +122,16 @@ int main() {
             printf("timestep expected is %d, while timestep taken is %d\n", 1000 / FREQ, int(elapsed.count()));
         }
 
-        if (FREQ * elapsed.count() >= 1000) {
+        if (FREQ * elapsed.count() >= 1000 && !is_pause) {
             //std::cout << "Update the grid" << std::endl;
             last_time = cur_time;
-            grid.simulate(1, external_forces);
+            grid.simulate(1, external_forces, ambient_temperature);
             //randomize_grid(grid, 1, 5);
         }
         display(grid);
         glfwSwapBuffers(window);
         glfwPollEvents();
+
     }
 
     glfwTerminate();
