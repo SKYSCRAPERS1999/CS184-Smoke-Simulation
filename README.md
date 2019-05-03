@@ -1,7 +1,7 @@
 # Smoke-Simulation
 Project for CS184, Berkeley
 
-### Pre Condition
+### Precondition
 ```
 brew install llvm
 brew install libomp 
@@ -25,4 +25,5 @@ make
 | -    | Decrease smoke size.      |
 | [    | Decrease amount of smoke. |
 | ]    | Increase amount of smoke. |
+| p    | Pause/Resume simulation.  |
 
