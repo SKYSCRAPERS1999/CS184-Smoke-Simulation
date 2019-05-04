@@ -2,8 +2,13 @@
 #include <random>
 #include <chrono>
 #include <algorithm>
+
 #include <GLFW/glfw3.h>
+#include <nanogui/nanogui.h>
+
+//#include <OpenGL/gl.h>
 #include <OpenGL/OpenGL.h>
+#include <CGL/CGL.h>
 
 #include "grid.h"
 #include "common.h"
@@ -18,6 +23,7 @@ bool is_pause = false;
 bool shift_pressed = false;
 int size_smoke = 3;
 double amount_smoke = 50;
+nanogui::Screen *screen = nullptr;
 
 // starts a smoke at a random location
 void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
