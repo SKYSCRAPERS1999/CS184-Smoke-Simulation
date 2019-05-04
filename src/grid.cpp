@@ -320,10 +320,12 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
     return viscous_velocity_grid;
 }
 
+// boundary conditions for velocity
 void Grid::set_boundary_conditions(vector<Vector2D> &vec, int b) {
     // top/bot wall
     for (int i = 1; i < width - 1; i++) {
-        vec[cell(i, 0)] = b * vec[cell(i, 1)];
+        //vec[cell(i, 0)] = b * vec[cell(i, 1)];
+        vec[cell(i, 0)] = Vector2D(0, 1);
         vec[cell(i, height - 1)] = b * vec[cell(i, height - 2)];
     }
     // left/right wall
@@ -333,6 +335,7 @@ void Grid::set_boundary_conditions(vector<Vector2D> &vec, int b) {
     }
 }
 
+// boundary conditions for pressure
 void Grid::set_boundary_conditions(vector<double> &vec, int b) {
     // top/bot wall
     for (int i = 1; i < width - 1; i++) {
