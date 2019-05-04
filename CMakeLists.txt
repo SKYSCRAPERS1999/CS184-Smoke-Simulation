@@ -126,6 +126,9 @@ find_package(Freetype REQUIRED)
 add_subdirectory(CGL)
 include_directories(CGL/include)
 
+# imgui
+include_directories(imgui)
+
 
 
 # Original file Copyright CMU462 Fall 2015: 

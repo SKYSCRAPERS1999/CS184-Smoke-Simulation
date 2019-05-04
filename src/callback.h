@@ -53,11 +53,11 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
                 std::cout << "Size of smoke is " << size_smoke << std::endl;
                 break;
             case '[':
-                amount_smoke = max(1.0, amount_smoke - 1.0);
+                amount_smoke = max(1.0, amount_smoke - 2.0);
                 std::cout << "Amount of smoke is " << amount_smoke << std::endl;
                 break;
             case ']':
-                amount_smoke = min(100.0, amount_smoke + 1.0);
+                amount_smoke = min(100.0, amount_smoke + 2.0);
                 std::cout << "Amount of smoke is " << amount_smoke << std::endl;
                 break;
             case GLFW_KEY_P:
