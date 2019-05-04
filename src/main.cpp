@@ -89,19 +89,20 @@ int main() {
     if (!glfwInit()) {
         return -1;
     }
+    glfwSetTime(0);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 0);
+    glfwWindowHint(GLFW_RED_BITS, 8);
+    glfwWindowHint(GLFW_GREEN_BITS, 8);
+    glfwWindowHint(GLFW_BLUE_BITS, 8);
+    glfwWindowHint(GLFW_ALPHA_BITS, 8);
+    glfwWindowHint(GLFW_STENCIL_BITS, 8);
+    glfwWindowHint(GLFW_DEPTH_BITS, 24);
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
-//    glfwWindowHint(GLFW_SAMPLES, 0);
-//    glfwWindowHint(GLFW_RED_BITS, 8);
-//    glfwWindowHint(GLFW_GREEN_BITS, 8);
-//    glfwWindowHint(GLFW_BLUE_BITS, 8);
-//    glfwWindowHint(GLFW_ALPHA_BITS, 8);
-//    glfwWindowHint(GLFW_STENCIL_BITS, 8);
-//    glfwWindowHint(GLFW_DEPTH_BITS, 24);
-//    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
     window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
     if (!window) {
         glfwTerminate();
@@ -109,26 +110,29 @@ int main() {
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1); // To prevent screen tearing
+
 
     // Callback functions
     glfwSetCursorPosCallback(window, cursor_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, keyboard_callback);
 
-    // Create a nanogui screen
-    screen = new Screen();
-    screen->initialize(window, true);
-
-    // Create nanogui GUI
-    bool enabled = true;
-    FormHelper *gui = new FormHelper(screen);
-    nanogui::ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Form helper example");
-    gui->addGroup("Basic type");
-    gui->addVariable("string", strval);
+//    // Create a nanogui screen
+//    screen = new Screen();
+//    screen->initialize(window, true);
+//
+//    // Create nanogui GUI
+//    bool enabled = true;
+//    FormHelper *gui = new FormHelper(screen);
+//    nanogui::ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Form helper example");
+//    gui->addGroup("Basic type");
+//    gui->addVariable("string", strval);
 //    screen->setVisible(true);
 //    screen->performLayout();
 //    nanoguiWindow->center();
+
+    glfwSwapInterval(1); // To prevent screen tearing
+    glfwSwapBuffers(window);
     
 //    #if defined(_OPENMP)
 //    #pragma omp parallel
@@ -142,6 +146,7 @@ int main() {
 
     auto last_time = steady_clock::now();
     while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
         //bool to_print = ((rng() % 100) == 0) && (omp_get_thread_num() == 0);
         
         // Handle dragging of mouse to create a stream of smoke
@@ -194,7 +199,7 @@ int main() {
 //            printf("display_time = %lld mm\n", display_time.count());
 //        }
         glfwSwapBuffers(window);
-        glfwPollEvents();
+
     }
     glfwTerminate();
     return 0;
