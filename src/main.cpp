@@ -115,13 +115,17 @@ int main() {
             int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
             int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
 
-            for (int y = row - size_smoke; y < row + size_smoke; ++y) {
-                for (int x = col - size_smoke; x < col + size_smoke; ++x) {
+            for (int y = row - size_smoke; y <= row + size_smoke; ++y) {
+                for (int x = col - size_smoke; x <= col + size_smoke; ++x) {
                     if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 || (pow(y-row, 2.0) + pow(x-col, 2.0) > size_smoke*size_smoke)) {
                         continue;
                     }
+
                     double den = grid.getDensity(x, y);
                     double temp = grid.getTemperature(x, y);
+
+                    if (x == row && y == col) den *= 2, temp *= 2;
+
                     grid.setDensity(x, y, min(den + amount_smoke, 100.0));
                     grid.setTemperature(x, y, min(temp + amount_temp, 100.0));
 
