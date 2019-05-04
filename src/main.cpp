@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <GLFW/glfw3.h>
 #include <OpenGL/OpenGL.h>
-#include <imgui.h>
 
 #include "grid.h"
 #include "common.h"
@@ -109,8 +108,8 @@ int main() {
         
         // Handle dragging of mouse to create a stream of smoke
         if (mouse_down) {
-            double xpos = grid.cursor_pos[0];
-            double ypos = grid.cursor_pos[1];
+            double xpos = grid.cursor_pos.x;
+            double ypos = grid.cursor_pos.y;
 
             int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
             int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));

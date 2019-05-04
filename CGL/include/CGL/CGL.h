@@ -3,7 +3,7 @@
 
 #include "misc.h"
 
-// CMU462 Forward Declarations //
+// CGL Forward Declarations //
 
 namespace CGL {
 
@@ -21,8 +21,7 @@ class Color;
 class Spectrum;
 
 class Renderer;
-class OSDText;
-class Viewer;
+// class Viewer;
 class Timer;
 
 } // namespace CGL

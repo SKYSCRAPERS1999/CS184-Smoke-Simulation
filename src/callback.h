@@ -12,7 +12,7 @@ extern int size_smoke;
 extern double amount_smoke;
 
 void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
-    glfwGetCursorPos(window, &grid.cursor_pos[0], &grid.cursor_pos[1]);
+    glfwGetCursorPos(window, &grid.cursor_pos.x, &grid.cursor_pos.y);
 }
 
 // Handles mouse click to manually create smoke.
@@ -21,8 +21,8 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         if (action == GLFW_PRESS) {
             mouse_down = true;
 
-            double xpos = grid.cursor_pos[0];
-            double ypos = grid.cursor_pos[1];
+            double xpos = grid.cursor_pos.x;
+            double ypos = grid.cursor_pos.y;
 
             int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
             int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));

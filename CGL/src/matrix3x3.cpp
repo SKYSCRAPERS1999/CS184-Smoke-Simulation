@@ -61,8 +61,15 @@ namespace CGL {
     double* Aij = (double*) &A;
     const double* Bij = (const double*) &B;
 
-    for (int i = 0; i < 9; ++i)
-      Aij[i] += Bij[i];
+    *Aij++ += *Bij++;
+    *Aij++ += *Bij++;
+    *Aij++ += *Bij++;
+    *Aij++ += *Bij++;
+    *Aij++ += *Bij++;
+    *Aij++ += *Bij++;
+    *Aij++ += *Bij++;
+    *Aij++ += *Bij++;
+    *Aij++ += *Bij++;
   }
 
   Matrix3x3 Matrix3x3::operator-( const Matrix3x3& B ) const {
@@ -97,8 +104,15 @@ namespace CGL {
     const double* Aij = (const double*) &A;
     double* cAij = (double*) &cA;
 
-    for (int i = 0; i < 9; ++i)
-      cAij[i] = c * Aij[i];
+    *cAij++ = c * (*Aij++);
+    *cAij++ = c * (*Aij++);
+    *cAij++ = c * (*Aij++);
+    *cAij++ = c * (*Aij++);
+    *cAij++ = c * (*Aij++);
+    *cAij++ = c * (*Aij++);
+    *cAij++ = c * (*Aij++);
+    *cAij++ = c * (*Aij++);
+    *cAij++ = c * (*Aij++);
 
     return cA;
   }

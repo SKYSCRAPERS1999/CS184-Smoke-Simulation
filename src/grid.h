@@ -67,18 +67,18 @@ public:
   double getDensity(int x, int y) const { return density[y * width + x]; }
 
   double getDensity(Vector2D vec) const {
-    return density[vec[1] * width + vec[0]];
+    return density[vec.y * width + vec.x];
   };
 
   Vector2D getVelocity(int x, int y) const { return velocity[y * width + x]; }
     
   Vector2D getVelocity(Vector2D vec) const {
-      return velocity[vec[1] * width + vec[0]];
+      return velocity[vec.y * width + vec.x];
   };
 
   double getTemperature(int x, int y) const { return temperature[y * width + x]; }
 
-  double getTemperature(Vector2D vec) const { return temperature[vec[1] * width + vec[0]]; }
+  double getTemperature(Vector2D vec) const { return temperature[vec.y * width + vec.x]; }
 
   void setDensity(int x, int y, double den);
 

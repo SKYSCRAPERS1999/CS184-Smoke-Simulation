@@ -111,21 +111,21 @@ vector<double> Grid::simulate_density(const double timestep) {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
-            if (x + reverse_velocity[0] < 0 || x + reverse_velocity[0] > width - 2 || y + reverse_velocity[1] < 0 ||
-                y + reverse_velocity[1] > height - 2) {
+            if (x + reverse_velocity.x < 0 || x + reverse_velocity.x > width - 2 || y + reverse_velocity.y < 0 ||
+                y + reverse_velocity.y > height - 2) {
                 advection_grid[y * width + x] = 0.0;
             } else {
-                double newx = x + reverse_velocity[0];
-                double newy = y + reverse_velocity[1];
+                double newx = x + reverse_velocity.x;
+                double newy = y + reverse_velocity.y;
                 Vector2D newloc = Vector2D(newx, newy);
 
-                Vector2D bl = Vector2D(int(newloc[0]), int(newloc[1]));
+                Vector2D bl = Vector2D(int(newloc.x), int(newloc.y));
                 Vector2D br = bl + Vector2D{1, 0};
                 Vector2D tl = bl + Vector2D{0, 1};
                 Vector2D tr = bl + Vector2D{1, 1};
 
-                double s = newx - tl[0];
-                double t = newy - bl[1];
+                double s = newx - tl.x;
+                double t = newy - bl.y;
                 double tlerp = interpolate(getDensity(tl), getDensity(tr), s);
                 double blerp = interpolate(getDensity(bl), getDensity(br), s);
                 double vlerp = interpolate(blerp, tlerp, t);
@@ -147,21 +147,21 @@ vector<double> Grid::simulate_temperature(const double timestep) {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
-            if (x + reverse_velocity[0] < 0 || x + reverse_velocity[0] > width - 2 || y + reverse_velocity[1] < 0 ||
-                y + reverse_velocity[1] > height - 2) {
+            if (x + reverse_velocity.x < 0 || x + reverse_velocity.x > width - 2 || y + reverse_velocity.y < 0 ||
+                y + reverse_velocity.y > height - 2) {
                 advection_grid[y * width + x] = 0.0;
             } else {
-                double newx = x + reverse_velocity[0];
-                double newy = y + reverse_velocity[1];
+                double newx = x + reverse_velocity.x;
+                double newy = y + reverse_velocity.y;
                 Vector2D newloc = Vector2D(newx, newy);
                 
-                Vector2D bl = Vector2D(int(newloc[0]), int(newloc[1]));
+                Vector2D bl = Vector2D(int(newloc.x), int(newloc.y));
                 Vector2D br = bl + Vector2D{1, 0};
                 Vector2D tl = bl + Vector2D{0, 1};
                 Vector2D tr = bl + Vector2D{1, 1};
                 
-                double s = newx - tl[0];
-                double t = newy - bl[1];
+                double s = newx - tl.x;
+                double t = newy - bl.y;
                 double tlerp = interpolate(getTemperature(tl), getTemperature(tr), s);
                 double blerp = interpolate(getTemperature(bl), getTemperature(br), s);
                 double vlerp = interpolate(blerp, tlerp, t);
@@ -185,21 +185,21 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
         for (int x = 0; x < width; ++x) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
             // Generate velocities at the edges of the screen
-            if (x + reverse_velocity[0] < 0 || x + reverse_velocity[0] > width - 2 || y + reverse_velocity[1] < 0 ||
-                y + reverse_velocity[1] > height - 2) {
+            if (x + reverse_velocity.x < 0 || x + reverse_velocity.x > width - 2 || y + reverse_velocity.y < 0 ||
+                y + reverse_velocity.y > height - 2) {
                 continue;
             } else {
-                double newx = x + reverse_velocity[0];
-                double newy = y + reverse_velocity[1];
+                double newx = x + reverse_velocity.x;
+                double newy = y + reverse_velocity.y;
                 Vector2D newloc = Vector2D(newx, newy);
 
-                Vector2D bl = Vector2D(int(newloc[0]), int(newloc[1]));
+                Vector2D bl = Vector2D(int(newloc.x), int(newloc.y));
                 Vector2D br = bl + Vector2D{1, 0};
                 Vector2D tl = bl + Vector2D{0, 1};
                 Vector2D tr = bl + Vector2D{1, 1};
 
-                double s = newx - tl[0];
-                double t = newy - bl[1];
+                double s = newx - tl.x;
+                double t = newy - bl.y;
 
                 Vector2D tlerp = interpolate(getVelocity(tl), getVelocity(tr), s);
                 Vector2D blerp = interpolate(getVelocity(bl), getVelocity(br), s);
@@ -272,7 +272,7 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
             Vector2D wB = viscous_velocity_grid[x + (y-1)*width];
             Vector2D wT = viscous_velocity_grid[x + (y+1)*width];
 
-            divergence[y * width + x] = halfrdx * ((wR[0] - wL[0]) + (wT[1] - wB[1]));
+            divergence[y * width + x] = halfrdx * ((wR.x - wL.y) + (wT.x - wB.y));
         }
     }
 
