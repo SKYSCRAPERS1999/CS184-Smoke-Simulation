@@ -13,6 +13,8 @@
 #define NUMBER_DIRECTIONS 16
 #include <unsupported/Eigen/AdolcForward>
 
+int adtl::ADOLC_numDir;
+
 template<typename Vector>
 EIGEN_DONT_INLINE typename Vector::Scalar foo(const Vector& p)
 {
@@ -121,7 +123,7 @@ template<typename Func> void adolc_forward_jacobian(const Func& f)
 
 void test_forward_adolc()
 {
-  adtl::setNumDir(NUMBER_DIRECTIONS);
+  adtl::ADOLC_numDir = NUMBER_DIRECTIONS;
 
   for(int i = 0; i < g_repeat; i++) {
     CALL_SUBTEST(( adolc_forward_jacobian(TestFunc1<double,2,2>()) ));

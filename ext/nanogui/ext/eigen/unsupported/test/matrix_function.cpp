@@ -25,6 +25,7 @@ inline bool test_isApprox_abs(const Type1& a, const Type2& b)
 template<typename MatrixType>
 MatrixType randomMatrixWithRealEivals(const typename MatrixType::Index size)
 {
+  typedef typename MatrixType::Index Index;
   typedef typename MatrixType::Scalar Scalar;
   typedef typename MatrixType::RealScalar RealScalar;
   MatrixType diag = MatrixType::Zero(size, size);
@@ -50,6 +51,7 @@ struct randomMatrixWithImagEivals<MatrixType, 0>
 {
   static MatrixType run(const typename MatrixType::Index size)
   {
+    typedef typename MatrixType::Index Index;
     typedef typename MatrixType::Scalar Scalar;
     MatrixType diag = MatrixType::Zero(size, size);
     Index i = 0;
@@ -77,6 +79,7 @@ struct randomMatrixWithImagEivals<MatrixType, 1>
 {
   static MatrixType run(const typename MatrixType::Index size)
   {
+    typedef typename MatrixType::Index Index;
     typedef typename MatrixType::Scalar Scalar;
     typedef typename MatrixType::RealScalar RealScalar;
     const Scalar imagUnit(0, 1);
@@ -99,7 +102,7 @@ void testMatrixExponential(const MatrixType& A)
   typedef typename NumTraits<Scalar>::Real RealScalar;
   typedef std::complex<RealScalar> ComplexScalar;
 
-  VERIFY_IS_APPROX(A.exp(), A.matrixFunction(internal::stem_function_exp<ComplexScalar>));
+  VERIFY_IS_APPROX(A.exp(), A.matrixFunction(StdStemFunctions<ComplexScalar>::exp));
 }
 
 template<typename MatrixType>
@@ -110,8 +113,8 @@ void testMatrixLogarithm(const MatrixType& A)
 
   MatrixType scaledA;
   RealScalar maxImagPartOfSpectrum = A.eigenvalues().imag().cwiseAbs().maxCoeff();
-  if (maxImagPartOfSpectrum >= RealScalar(0.9L * EIGEN_PI))
-    scaledA = A * RealScalar(0.9L * EIGEN_PI) / maxImagPartOfSpectrum;
+  if (maxImagPartOfSpectrum >= 0.9 * M_PI)
+    scaledA = A * 0.9 * M_PI / maxImagPartOfSpectrum;
   else
     scaledA = A;
 
@@ -168,6 +171,7 @@ void testMatrixType(const MatrixType& m)
 {
   // Matrices with clustered eigenvalue lead to different code paths
   // in MatrixFunction.h and are thus useful for testing.
+  typedef typename MatrixType::Index Index;
 
   const Index size = m.rows();
   for (int i = 0; i < g_repeat; i++) {

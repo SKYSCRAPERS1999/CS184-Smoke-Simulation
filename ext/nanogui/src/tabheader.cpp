@@ -14,6 +14,7 @@
 #include <nanogui/tabheader.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
+#include <nanogui/entypo.h>
 #include <numeric>
 
 NAMESPACE_BEGIN(nanogui)
@@ -177,7 +178,7 @@ void TabHeader::addTab(int index, const std::string &label) {
 int TabHeader::removeTab(const std::string &label) {
     auto element = std::find_if(mTabButtons.begin(), mTabButtons.end(),
                                 [&](const TabButton& tb) { return label == tb.label(); });
-    int index = (int) std::distance(mTabButtons.begin(), element);
+    int index = std::distance(mTabButtons.begin(), element);
     if (element == mTabButtons.end())
         return -1;
     mTabButtons.erase(element);
@@ -203,7 +204,7 @@ int TabHeader::tabIndex(const std::string &label) {
                            [&](const TabButton& tb) { return label == tb.label(); });
     if (it == mTabButtons.end())
         return -1;
-    return (int) (it - mTabButtons.begin());
+    return it - mTabButtons.begin();
 }
 
 void TabHeader::ensureTabVisible(int index) {
@@ -251,8 +252,8 @@ void TabHeader::ensureTabVisible(int index) {
         ++last;
     }
 
-    mVisibleStart = (int) std::distance(mTabButtons.begin(), first);
-    mVisibleEnd = (int) std::distance(mTabButtons.begin(), last);
+    mVisibleStart = std::distance(mTabButtons.begin(), first);
+    mVisibleEnd = std::distance(mTabButtons.begin(), last);
 }
 
 std::pair<Vector2i, Vector2i> TabHeader::visibleButtonArea() const {
@@ -343,7 +344,7 @@ bool TabHeader::mouseButtonEvent(const Vector2i &p, int button, bool down, int m
                 return true;
 
             // Update the active tab and invoke the callback.
-            setActiveTab((int) std::distance(mTabButtons.begin(), firstInvisible));
+            setActiveTab(std::distance(mTabButtons.begin(), firstInvisible));
             return true;
         }
     }
@@ -397,7 +398,7 @@ void TabHeader::calculateVisibleEnd() {
         currentPosition += tb.size().x();
         return currentPosition > lastPosition;
     });
-    mVisibleEnd = (int) std::distance(mTabButtons.begin(), firstInvisible);
+    mVisibleEnd = std::distance(mTabButtons.begin(), firstInvisible);
 }
 
 void TabHeader::drawControls(NVGcontext* ctx) {
@@ -406,10 +407,10 @@ void TabHeader::drawControls(NVGcontext* ctx) {
 
     // Draw the arrow.
     nvgBeginPath(ctx);
-    auto iconLeft = utf8(mTheme->mTabHeaderLeftIcon);
+    auto iconLeft = utf8(ENTYPO_ICON_LEFT_BOLD);
     int fontSize = mFontSize == -1 ? mTheme->mButtonFontSize : mFontSize;
     float ih = fontSize;
-    ih *= icon_scale();
+    ih *= 1.5f;
     nvgFontSize(ctx, ih);
     nvgFontFace(ctx, "icons");
     NVGcolor arrowColor;
@@ -428,10 +429,10 @@ void TabHeader::drawControls(NVGcontext* ctx) {
     active = mVisibleEnd != tabCount();
     // Draw the arrow.
     nvgBeginPath(ctx);
-    auto iconRight = utf8(mTheme->mTabHeaderRightIcon);
+    auto iconRight = utf8(ENTYPO_ICON_RIGHT_BOLD);
     fontSize = mFontSize == -1 ? mTheme->mButtonFontSize : mFontSize;
     ih = fontSize;
-    ih *= icon_scale();
+    ih *= 1.5f;
     nvgFontSize(ctx, ih);
     nvgFontFace(ctx, "icons");
     float rightWidth = nvgTextBounds(ctx, 0, 0, iconRight.data(), nullptr, nullptr);
@@ -443,9 +444,8 @@ void TabHeader::drawControls(NVGcontext* ctx) {
     nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
     float yScaleRight = 0.5f;
     float xScaleRight = 1.0f - xScaleLeft - rightWidth / theme()->mTabControlWidth;
-    Vector2f rightIconPos = mPos.cast<float>() + Vector2f(mSize.cast<float>().x(), mSize.cast<float>().y()*yScaleRight) -
-                            Vector2f(xScaleRight*theme()->mTabControlWidth + rightWidth, 0);
-
+    auto leftControlsPos = mPos.cast<float>() + Vector2f(mSize.cast<float>().x() - theme()->mTabControlWidth, 0);
+    Vector2f rightIconPos = leftControlsPos + Vector2f(xScaleRight*theme()->mTabControlWidth, yScaleRight*mSize.cast<float>().y());
     nvgText(ctx, rightIconPos.x(), rightIconPos.y() + 1, iconRight.data(), nullptr);
 }
 

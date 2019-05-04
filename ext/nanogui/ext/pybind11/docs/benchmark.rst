@@ -31,7 +31,8 @@ Here is an example of the binding code for one class:
     };
     ...
 
-    PYBIND11_MODULE(example, m) {
+    PYBIND11_PLUGIN(example) {
+        py::module m("example");
         ...
         py::class_<cl034>(m, "cl034")
             .def("fn_000", &cl034::fn_000)
@@ -39,6 +40,7 @@ Here is an example of the binding code for one class:
             .def("fn_002", &cl034::fn_002)
             .def("fn_003", &cl034::fn_003)
         ...
+        return m.ptr();
     }
 
 The Boost.Python version looks almost identical except that a return value

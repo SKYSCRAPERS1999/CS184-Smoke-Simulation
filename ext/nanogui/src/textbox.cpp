@@ -17,6 +17,7 @@
 #include <nanogui/textbox.h>
 #include <nanogui/opengl.h>
 #include <nanogui/theme.h>
+#include <nanogui/entypo.h>
 #include <nanogui/serializer/core.h>
 #include <regex>
 #include <iostream>
@@ -45,7 +46,6 @@ TextBox::TextBox(Widget *parent,const std::string &value)
       mTextOffset(0),
       mLastClick(0) {
     if (mTheme) mFontSize = mTheme->mTextBoxFontSize;
-    mIconExtraScale = 0.8f;// widget override
 }
 
 void TextBox::setEditable(bool editable) {
@@ -151,14 +151,14 @@ void TextBox::draw(NVGcontext* ctx) {
         spinArrowsWidth = 14.f;
 
         nvgFontFace(ctx, "icons");
-        nvgFontSize(ctx, ((mFontSize < 0) ? mTheme->mButtonFontSize : mFontSize) * icon_scale());
+        nvgFontSize(ctx, ((mFontSize < 0) ? mTheme->mButtonFontSize : mFontSize) * 1.2f);
 
         bool spinning = mMouseDownPos.x() != -1;
 
         /* up button */ {
             bool hover = mMouseFocus && spinArea(mMousePos) == SpinArea::Top;
             nvgFillColor(ctx, (mEnabled && (hover || spinning)) ? mTheme->mTextColor : mTheme->mDisabledTextColor);
-            auto icon = utf8(mTheme->mTextBoxUpIcon);
+            auto icon = utf8(ENTYPO_ICON_CHEVRON_UP);
             nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
             Vector2f iconPos(mPos.x() + 4.f,
                              mPos.y() + mSize.y()/2.f - xSpacing/2.f);
@@ -168,7 +168,7 @@ void TextBox::draw(NVGcontext* ctx) {
         /* down button */ {
             bool hover = mMouseFocus && spinArea(mMousePos) == SpinArea::Bottom;
             nvgFillColor(ctx, (mEnabled && (hover || spinning)) ? mTheme->mTextColor : mTheme->mDisabledTextColor);
-            auto icon = utf8(mTheme->mTextBoxDownIcon);
+            auto icon = utf8(ENTYPO_ICON_CHEVRON_DOWN);
             nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
             Vector2f iconPos(mPos.x() + 4.f,
                              mPos.y() + mSize.y()/2.f + xSpacing/2.f + 1.5f);
@@ -195,9 +195,8 @@ void TextBox::draw(NVGcontext* ctx) {
     }
 
     nvgFontSize(ctx, fontSize());
-    nvgFillColor(ctx, mEnabled && (!mCommitted || !mValue.empty()) ?
-        mTheme->mTextColor :
-        mTheme->mDisabledTextColor);
+    nvgFillColor(ctx,
+                 mEnabled ? mTheme->mTextColor : mTheme->mDisabledTextColor);
 
     // clip visible text area
     float clipX = mPos.x() + xSpacing + spinArrowsWidth - 1.0f;
@@ -212,8 +211,7 @@ void TextBox::draw(NVGcontext* ctx) {
     drawPos.x() += mTextOffset;
 
     if (mCommitted) {
-        nvgText(ctx, drawPos.x(), drawPos.y(),
-            mValue.empty() ? mPlaceholder.c_str() : mValue.c_str(), nullptr);
+        nvgText(ctx, drawPos.x(), drawPos.y(), mValue.c_str(), nullptr);
     } else {
         const int maxGlyphs = 1024;
         NVGglyphPosition glyphs[maxGlyphs];
@@ -515,8 +513,6 @@ bool TextBox::checkFormat(const std::string &input, const std::string &format) {
 bool TextBox::copySelection() {
     if (mSelectionPos > -1) {
         Screen *sc = dynamic_cast<Screen *>(this->window()->parent());
-        if (!sc)
-            return false;
 
         int begin = mCursorPos;
         int end = mSelectionPos;
@@ -534,8 +530,6 @@ bool TextBox::copySelection() {
 
 void TextBox::pasteFromClipboard() {
     Screen *sc = dynamic_cast<Screen *>(this->window()->parent());
-    if (!sc)
-        return;
     const char* cbstr = glfwGetClipboardString(sc->glfwWindow());
     if (cbstr)
         mValueTemp.insert(mCursorPos, std::string(cbstr));

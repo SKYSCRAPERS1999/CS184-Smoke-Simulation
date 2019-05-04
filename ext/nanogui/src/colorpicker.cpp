@@ -22,31 +22,13 @@ ColorPicker::ColorPicker(Widget *parent, const Color& color) : PopupButton(paren
     Popup *popup = this->popup();
     popup->setLayout(new GroupLayout());
 
-    // initialize callback to do nothing; this is for users to hook into
-    // receiving a new color value
-    mCallback = [](const Color &) {};
-    mFinalCallback = [](const Color &) {};
-
-    // set the color wheel to the specified color
-    mColorWheel = new ColorWheel(popup, color);
-
-    // set the pick button to the specified color
+    mColorWheel = new ColorWheel(popup);
     mPickButton = new Button(popup, "Pick");
-    mPickButton->setBackgroundColor(color);
-    mPickButton->setTextColor(color.contrastingColor());
-    mPickButton->setFixedSize(Vector2i(100, 20));
-
-    // set the reset button to the specified color
-    mResetButton = new Button(popup, "Reset");
-    mResetButton->setBackgroundColor(color);
-    mResetButton->setTextColor(color.contrastingColor());
-    mResetButton->setFixedSize(Vector2i(100, 20));
+    mPickButton->setFixedSize(Vector2i(100, 25));
 
     PopupButton::setChangeCallback([&](bool) {
-        if (this->mPickButton->pushed()) {
-            setColor(backgroundColor());
-            mFinalCallback(backgroundColor());
-        }
+        setColor(backgroundColor());
+        mCallback(backgroundColor());
     });
 
     mColorWheel->setCallback([&](const Color &value) {
@@ -55,25 +37,11 @@ ColorPicker::ColorPicker(Widget *parent, const Color& color) : PopupButton(paren
         mCallback(value);
     });
 
-    mPickButton->setCallback([this]() {
-        if (mPushed) {
-            Color value = mColorWheel->color();
-            setPushed(false);
-            setColor(value);
-            mFinalCallback(value);
-        }
-    });
-
-    mResetButton->setCallback([this]() {
-        Color bg = this->mResetButton->backgroundColor();
-        Color fg = this->mResetButton->textColor();
-
-        mColorWheel->setColor(bg);
-        mPickButton->setBackgroundColor(bg);
-        mPickButton->setTextColor(fg);
-
-        mCallback(bg);
-        mFinalCallback(bg);
+    mPickButton->setCallback([&]() {
+        Color value = mColorWheel->color();
+        setPushed(false);
+        setColor(value);
+        mCallback(value);
     });
 }
 
@@ -88,12 +56,8 @@ void ColorPicker::setColor(const Color& color) {
         setBackgroundColor(color);
         setTextColor(fg);
         mColorWheel->setColor(color);
-
         mPickButton->setBackgroundColor(color);
         mPickButton->setTextColor(fg);
-
-        mResetButton->setBackgroundColor(color);
-        mResetButton->setTextColor(fg);
     }
 }
 

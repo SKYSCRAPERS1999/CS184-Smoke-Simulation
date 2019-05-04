@@ -8,10 +8,10 @@
 // with this file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 
-// import basic and product tests for deprecated DynamicSparseMatrix
+// import basic and product tests for deprectaed DynamicSparseMatrix
 #define EIGEN_NO_DEPRECATED_WARNING
-#include "sparse_product.cpp"
 #include "sparse_basic.cpp"
+#include "sparse_product.cpp"
 #include <Eigen/SparseExtra>
 
 template<typename SetterType,typename DenseType, typename Scalar, int Options>
@@ -49,6 +49,7 @@ bool test_random_setter(DynamicSparseMatrix<T>& sm, const DenseType& ref, const 
 
 template<typename SparseMatrixType> void sparse_extra(const SparseMatrixType& ref)
 {
+  typedef typename SparseMatrixType::Index Index;
   const Index rows = ref.rows();
   const Index cols = ref.cols();
   typedef typename SparseMatrixType::Scalar Scalar;

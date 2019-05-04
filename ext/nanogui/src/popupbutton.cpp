@@ -10,6 +10,7 @@
 */
 
 #include <nanogui/popupbutton.h>
+#include <nanogui/entypo.h>
 #include <nanogui/theme.h>
 #include <nanogui/opengl.h>
 #include <nanogui/serializer/core.h>
@@ -17,21 +18,14 @@
 NAMESPACE_BEGIN(nanogui)
 
 PopupButton::PopupButton(Widget *parent, const std::string &caption, int buttonIcon)
-    : Button(parent, caption, buttonIcon) {
-
-    mChevronIcon = mTheme->mPopupChevronRightIcon;
+    : Button(parent, caption, buttonIcon),
+      mChevronIcon(ENTYPO_ICON_CHEVRON_SMALL_RIGHT) {
 
     setFlags(Flags::ToggleButton | Flags::PopupButton);
 
     Window *parentWindow = window();
     mPopup = new Popup(parentWindow->parent(), window());
     mPopup->setSize(Vector2i(320, 250));
-    mPopup->setVisible(false);
-
-    mIconExtraScale = 0.8f;// widget override
-}
-
-PopupButton::~PopupButton() {
     mPopup->setVisible(false);
 }
 
@@ -51,7 +45,7 @@ void PopupButton::draw(NVGcontext* ctx) {
         NVGcolor textColor =
             mTextColor.w() == 0 ? mTheme->mTextColor : mTextColor;
 
-        nvgFontSize(ctx, (mFontSize < 0 ? mTheme->mButtonFontSize : mFontSize) * icon_scale());
+        nvgFontSize(ctx, (mFontSize < 0 ? mTheme->mButtonFontSize : mFontSize) * 1.5f);
         nvgFontFace(ctx, "icons");
         nvgFillColor(ctx, mEnabled ? textColor : mTheme->mDisabledTextColor);
         nvgTextAlign(ctx, NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
@@ -82,11 +76,11 @@ void PopupButton::performLayout(NVGcontext *ctx) {
 
 void PopupButton::setSide(Popup::Side side) {
     if (mPopup->side() == Popup::Right &&
-        mChevronIcon == mTheme->mPopupChevronRightIcon)
-        setChevronIcon(mTheme->mPopupChevronLeftIcon);
+        mChevronIcon == ENTYPO_ICON_CHEVRON_SMALL_RIGHT)
+        setChevronIcon(ENTYPO_ICON_CHEVRON_SMALL_LEFT);
     else if (mPopup->side() == Popup::Left &&
-             mChevronIcon == mTheme->mPopupChevronLeftIcon)
-        setChevronIcon(mTheme->mPopupChevronRightIcon);
+             mChevronIcon == ENTYPO_ICON_CHEVRON_SMALL_LEFT)
+        setChevronIcon(ENTYPO_ICON_CHEVRON_SMALL_RIGHT);
     mPopup->setSide(side);
 }
 

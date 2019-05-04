@@ -30,15 +30,13 @@ struct increment_if_fixed_size
 template<int Deg, typename POLYNOMIAL, typename SOLVER>
 bool aux_evalSolver( const POLYNOMIAL& pols, SOLVER& psolve )
 {
+  typedef typename POLYNOMIAL::Index Index;
   typedef typename POLYNOMIAL::Scalar Scalar;
 
   typedef typename SOLVER::RootsType    RootsType;
   typedef Matrix<Scalar,Deg,1>          EvalRootsType;
 
   const Index deg = pols.size()-1;
-
-  // Test template constructor from coefficient vector
-  SOLVER solve_constr (pols);
 
   psolve.compute( pols );
   const RootsType& roots( psolve.roots() );
@@ -120,7 +118,7 @@ void evalSolverSugarFunction( const POLYNOMIAL& pols, const ROOTS& roots, const 
       bool found = false;
       for( size_t j=0; j<calc_realRoots.size()&& !found; ++j )
       {
-        if( internal::isApprox( calc_realRoots[i], real_roots[j], psPrec ) ){
+        if( internal::isApprox( calc_realRoots[i], real_roots[j] ), psPrec ){
           found = true; }
       }
       VERIFY( found );
@@ -211,6 +209,5 @@ void test_polynomialsolver()
     CALL_SUBTEST_10((polynomialsolver<double,Dynamic>(
             internal::random<int>(9,13)
             )) );
-    CALL_SUBTEST_11((polynomialsolver<float,Dynamic>(1)) );
   }
 }

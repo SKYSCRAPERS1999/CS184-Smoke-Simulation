@@ -22,18 +22,11 @@
 # endif
 # include <windows.h>
 #elif defined(__APPLE__)
+#include <CoreServices/CoreServices.h>
 #include <mach/mach_time.h>
 #else
 # include <unistd.h>
 #endif
-
-static void escape(void *p) {
-  asm volatile("" : : "g"(p) : "memory");
-}
-
-static void clobber() {
-  asm volatile("" : : : "memory");
-}
 
 #include <Eigen/Core>
 
@@ -175,7 +168,6 @@ public:
         CODE; \
       } \
       TIMER.stop(); \
-      clobber(); \
     } \
   }
 

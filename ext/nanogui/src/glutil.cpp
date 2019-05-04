@@ -10,13 +10,6 @@
 */
 
 #include <nanogui/glutil.h>
-
-#if defined(WIN32)
-#  if !defined(__clang__)
-#    include <malloc.h>
-#  endif
-#endif
-
 #include <iostream>
 #include <fstream>
 #include <Eigen/Geometry>
@@ -182,7 +175,7 @@ void GLShader::uploadAttrib(const std::string &name, size_t size, int dim,
         Buffer &buffer = it->second;
         bufferID = it->second.id;
         buffer.version = version;
-        buffer.size = (GLuint) size;
+        buffer.size = size;
         buffer.compSize = compSize;
     } else {
         glGenBuffers(1, &bufferID);
@@ -191,7 +184,7 @@ void GLShader::uploadAttrib(const std::string &name, size_t size, int dim,
         buffer.glType = glType;
         buffer.dim = dim;
         buffer.compSize = compSize;
-        buffer.size = (GLuint) size;
+        buffer.size = size;
         buffer.version = version;
         mBufferObjects[name] = buffer;
     }
@@ -301,15 +294,6 @@ void GLShader::free() {
     glDeleteShader(mVertexShader);   mVertexShader = 0;
     glDeleteShader(mFragmentShader); mFragmentShader = 0;
     glDeleteShader(mGeometryShader); mGeometryShader = 0;
-}
-
-const GLShader::Buffer &GLShader::attribBuffer(const std::string &name) {
-    for (auto &pair : mBufferObjects) {
-        if (pair.first == name)
-            return pair.second;
-    }
-
-    throw std::runtime_error(mName + ": attribBuffer: " + name + " not found!");
 }
 
 //  ----------------------------------------------------

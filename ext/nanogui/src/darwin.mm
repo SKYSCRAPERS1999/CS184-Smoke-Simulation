@@ -3,14 +3,10 @@
 
 NAMESPACE_BEGIN(nanogui)
 
-std::vector<std::string> file_dialog(const std::vector<std::pair<std::string, std::string>> &filetypes, bool save, bool multiple) {
-    if (save && multiple) {
-        throw std::invalid_argument("save and multiple must not both be true.");
-    }
-
-    std::vector<std::string> result;
+std::string file_dialog(const std::vector<std::pair<std::string, std::string>> &filetypes, bool save) {
+    std::string path = "";
     if (save) {
-        NSSavePanel *saveDlg = [NSSavePanel savePanel];
+        NSSavePanel *saveDlg = [[NSSavePanel savePanel] retain];
 
         NSMutableArray *types = [NSMutableArray new];
         for (size_t idx = 0; idx < filetypes.size(); ++idx)
@@ -19,13 +15,13 @@ std::vector<std::string> file_dialog(const std::vector<std::pair<std::string, st
         [saveDlg setAllowedFileTypes: types];
 
         if ([saveDlg runModal] == NSModalResponseOK)
-            result.emplace_back([[[saveDlg URL] path] UTF8String]);
+            path = [[[saveDlg URL] path] UTF8String];
     } else {
-        NSOpenPanel *openDlg = [NSOpenPanel openPanel];
+        NSOpenPanel *openDlg = [[NSOpenPanel openPanel] retain];
 
         [openDlg setCanChooseFiles:YES];
         [openDlg setCanChooseDirectories:NO];
-        [openDlg setAllowsMultipleSelection:multiple];
+        [openDlg setAllowsMultipleSelection:NO];
         NSMutableArray *types = [NSMutableArray new];
         for (size_t idx = 0; idx < filetypes.size(); ++idx)
             [types addObject: [NSString stringWithUTF8String: filetypes[idx].first.c_str()]];
@@ -34,11 +30,12 @@ std::vector<std::string> file_dialog(const std::vector<std::pair<std::string, st
 
         if ([openDlg runModal] == NSModalResponseOK) {
             for (NSURL* url in [openDlg URLs]) {
-                result.emplace_back((char*) [[url path] UTF8String]);
+                path = std::string((char*) [[url path] UTF8String]);
+                break;
             }
         }
     }
-    return result;
+    return path;
 }
 
 void chdir_to_bundle_parent() {

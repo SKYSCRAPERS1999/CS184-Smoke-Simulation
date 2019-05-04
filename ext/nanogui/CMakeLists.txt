@@ -1,10 +1,5 @@
 cmake_minimum_required (VERSION 2.8.12)
 
-if (POLICY CMP0048)
-  # cmake warns if loaded from a min-3.0-required parent dir, so silence the warning:
-  cmake_policy(SET CMP0048 NEW)
-endif()
-
 project("NanoGUI")
 
 if (POLICY CMP0058)
@@ -24,10 +19,10 @@ else()
 endif()
 
 option(NANOGUI_BUILD_EXAMPLE "Build NanoGUI example application?" OFF)
-option(NANOGUI_BUILD_SHARED  "Build NanoGUI as a shared library?" OFF)
+option(NANOGUI_BUILD_SHARED  "Build NanoGUI as a shared library?" ON)
 option(NANOGUI_BUILD_PYTHON  "Build a Python plugin for NanoGUI?" OFF)
 option(NANOGUI_USE_GLAD      "Use Glad OpenGL loader library?" ${NANOGUI_USE_GLAD_DEFAULT})
-option(NANOGUI_INSTALL       "Install NanoGUI on `make install`?" OFF)
+option(NANOGUI_INSTALL       "Install NanoGUI on `make install`?" ON)
 
 set(NANOGUI_PYTHON_VERSION "" CACHE STRING "Python version to use for compiling the Python plugin")
 
@@ -79,12 +74,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw" "ext_build/glfw")
-# Two targets have now been defined: `glfw_objects`, which will be merged into
-# NanoGUI at the end, and `glfw`.  The `glfw` target is the library itself
-# (e.g., libglfw.so), but can be skipped as we do not need to link against it
-# (because we merge `glfw_objects` into NanoGUI).  Skipping is required for
-# XCode, but preferable for all build systems (reduces build artifacts).
-set_target_properties(glfw PROPERTIES EXCLUDE_FROM_ALL 1 EXCLUDE_FROM_DEFAULT_BUILD 1)
 
 # Python support: add NANOGUI_PYTHON flag to all targets
 if (NANOGUI_BUILD_PYTHON)
@@ -300,11 +289,6 @@ if (APPLE OR CMAKE_SYSTEM MATCHES "Linux")
   list(APPEND LIBNANOGUI_PYTHON_EXTRA_SOURCE ext/coro/coro.c)
 endif()
 
-if (APPLE)
-  # Use automatic reference counting for Objective-C portions
-  add_compile_options(-fobjc-arc)
-endif()
-
 add_definitions(${NANOGUI_EXTRA_DEFS})
 
 # Compile main NanoGUI library
@@ -352,32 +336,17 @@ add_library(nanogui-obj OBJECT
   src/serializer.cpp
 )
 
-# XCode has a serious bug where the XCode project produces an invalid target
-# that will not get linked if it consists only of objects from object libraries,
-# it will not generate any products (executables, libraries). The only work
-# around is to add a dummy source file to the library definition. This is an
-# XCode, not a CMake bug. See: https://itk.org/Bug/view.php?id=14044
-if (CMAKE_GENERATOR STREQUAL Xcode)
-  set(XCODE_DUMMY ${CMAKE_CURRENT_BINARY_DIR}/xcode_dummy.cpp)
-  file(WRITE ${XCODE_DUMMY} "")
-  add_library(nanogui ${NANOGUI_LIBRARY_TYPE}
-    ${XCODE_DUMMY}
-    $<TARGET_OBJECTS:nanogui-obj>
-    $<TARGET_OBJECTS:glfw_objects>
-  )
-else()
-  add_library(nanogui ${NANOGUI_LIBRARY_TYPE}
-    $<TARGET_OBJECTS:nanogui-obj>
-    $<TARGET_OBJECTS:glfw_objects>
-  )
-endif()
+add_library(nanogui ${NANOGUI_LIBRARY_TYPE}
+  $<TARGET_OBJECTS:nanogui-obj>
+  $<TARGET_OBJECTS:glfw_objects>
+)
 
 if (NANOGUI_BUILD_SHARED)
   set_property(TARGET nanogui-obj PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
 # Compile/link flags for NanoGUI
-set_property(TARGET nanogui-obj APPEND PROPERTY COMPILE_DEFINITIONS "NANOGUI_BUILD;NVG_BUILD")
+set_property(TARGET nanogui-obj APPEND PROPERTY COMPILE_DEFINITIONS "NANOGUI_BUILD")
 
 if (NANOGUI_USE_GLAD AND NANOGUI_BUILD_SHARED)
   set_property(TARGET nanogui-obj APPEND PROPERTY COMPILE_DEFINITIONS
@@ -399,7 +368,7 @@ endif()
 
 if (NANOGUI_BUILD_SHARED)
   # When GLFW is merged into the NanoGUI library, this flag must be specified
-  set_property(TARGET nanogui-obj APPEND PROPERTY COMPILE_DEFINITIONS "_GLFW_BUILD_DLL;NVG_SHARED")
+  set_property(TARGET nanogui-obj APPEND PROPERTY COMPILE_DEFINITIONS "_GLFW_BUILD_DLL")
 endif()
 
 if (NANOGUI_BUILD_SHARED AND NOT ${U_CMAKE_BUILD_TYPE} MATCHES DEB)
@@ -420,18 +389,23 @@ elseif(MSVC)
   set_source_files_properties(ext/nanovg/src/nanovg.c PROPERTIES COMPILE_FLAGS "/wd4005 /wd4456 /wd4457")
 endif()
 
+if (NANOGUI_BUILD_SHARED)
+  set_source_files_properties(ext/nanovg/src/nanovg.c PROPERTIES COMPILE_DEFINITIONS "NVG_BUILD;NVG_SHARED")
+else()
+  set_source_files_properties(ext/nanovg/src/nanovg.c PROPERTIES COMPILE_DEFINITIONS "NVG_BUILD")
+endif()
+
+
 # Build example application if desired
 if(NANOGUI_BUILD_EXAMPLE)
-  add_executable(example1      src/example1.cpp)
-  add_executable(example2      src/example2.cpp)
-  add_executable(example3      src/example3.cpp)
-  add_executable(example4      src/example4.cpp)
-  add_executable(example_icons src/example_icons.cpp)
-  target_link_libraries(example1      nanogui ${NANOGUI_EXTRA_LIBS})
-  target_link_libraries(example2      nanogui ${NANOGUI_EXTRA_LIBS})
-  target_link_libraries(example3      nanogui ${NANOGUI_EXTRA_LIBS})
-  target_link_libraries(example4      nanogui ${NANOGUI_EXTRA_LIBS})
-  target_link_libraries(example_icons nanogui ${NANOGUI_EXTRA_LIBS})
+  add_executable(example1 src/example1.cpp)
+  add_executable(example2 src/example2.cpp)
+  add_executable(example3 src/example3.cpp)
+  add_executable(example4 src/example4.cpp)
+  target_link_libraries(example1 nanogui ${NANOGUI_EXTRA_LIBS})
+  target_link_libraries(example2 nanogui ${NANOGUI_EXTRA_LIBS})
+  target_link_libraries(example3 nanogui ${NANOGUI_EXTRA_LIBS})
+  target_link_libraries(example4 nanogui ${NANOGUI_EXTRA_LIBS})
 
   # Copy icons for example application
   file(COPY resources/icons DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
@@ -461,8 +435,7 @@ if (NANOGUI_BUILD_PYTHON)
   include_directories("ext/pybind11/include" ${PYTHON_INCLUDE_DIR})
   add_library(nanogui-python-obj OBJECT
     python/main.cpp
-    python/constants_glfw.cpp
-    python/constants_entypo.cpp
+    python/constants.cpp
     python/eigen.cpp
     python/widget.cpp
     python/layout.cpp
@@ -558,8 +531,6 @@ else()
     list(APPEND MKDOC_CXX_FLAGS_LIST -I${value})
   endforeach()
 
-  # Make sure platform specific code gets kept in py_doc.h (specifically __doc_nanogui_chdir_to_bundle_parent)
-  list(APPEND MKDOC_COMPILE_DEFINITIONS "DOXYGEN_DOCUMENTATION_BUILD")
   foreach (value ${MKDOC_COMPILE_DEFINITIONS})
     list(APPEND MKDOC_CXX_FLAGS_LIST -D${value})
   endforeach()

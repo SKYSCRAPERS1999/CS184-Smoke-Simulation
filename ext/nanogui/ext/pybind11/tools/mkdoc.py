@@ -56,19 +56,26 @@ CPP_OPERATORS = OrderedDict(
 job_count = cpu_count()
 job_semaphore = Semaphore(job_count)
 
-output = []
+registered_names = dict()
+
 
 def d(s):
     return s.decode('utf8')
 
 
 def sanitize_name(name):
+    global registered_names
     name = re.sub(r'type-parameter-0-([0-9]+)', r'T\1', name)
     for k, v in CPP_OPERATORS.items():
         name = name.replace('operator%s' % k, 'operator_%s' % v)
     name = re.sub('<.*>', '', name)
     name = ''.join([ch if ch.isalnum() else '_' for ch in name])
     name = re.sub('_$', '', re.sub('_+', '_', name))
+    if name in registered_names:
+        registered_names[name] += 1
+        name += '_' + str(registered_names[name])
+    else:
+        registered_names[name] = 1
     return '__doc_' + name
 
 
@@ -182,7 +189,8 @@ def process_comment(comment):
     return result.rstrip().lstrip('\n')
 
 
-def extract(filename, node, prefix):
+def extract(filename, node, prefix, output):
+    num_extracted = 0
     if not (node.location.file is None or
             os.path.samefile(d(node.location.file.name), filename)):
         return 0
@@ -193,7 +201,9 @@ def extract(filename, node, prefix):
                 sub_prefix += '_'
             sub_prefix += d(node.spelling)
         for i in node.get_children():
-            extract(filename, i, sub_prefix)
+            num_extracted += extract(filename, i, sub_prefix, output)
+        if num_extracted == 0:
+            return 0
     if node.kind in PRINT_LIST:
         comment = d(node.raw_comment) if node.raw_comment is not None else ''
         comment = process_comment(comment)
@@ -202,15 +212,18 @@ def extract(filename, node, prefix):
             sub_prefix += '_'
         if len(node.spelling) > 0:
             name = sanitize_name(sub_prefix + d(node.spelling))
-            global output
-            output.append((name, filename, comment))
+            output.append('\nstatic const char *%s =%sR"doc(%s)doc";' %
+                (name, '\n' if '\n' in comment else ' ', comment))
+            num_extracted += 1
+    return num_extracted
 
 
 class ExtractionThread(Thread):
-    def __init__(self, filename, parameters):
+    def __init__(self, filename, parameters, output):
         Thread.__init__(self)
         self.filename = filename
         self.parameters = parameters
+        self.output = output
         job_semaphore.acquire()
 
     def run(self):
@@ -219,7 +232,7 @@ class ExtractionThread(Thread):
             index = cindex.Index(
                 cindex.conf.lib.clang_createIndex(False, True))
             tu = index.parse(self.filename, self.parameters)
-            extract(self.filename, tu.cursor, '')
+            extract(self.filename, tu.cursor, '', self.output)
         finally:
             job_semaphore.release()
 
@@ -276,26 +289,18 @@ if __name__ == '__main__':
 #endif
 ''')
 
-    output.clear()
+    output = []
     for filename in filenames:
-        thr = ExtractionThread(filename, parameters)
+        thr = ExtractionThread(filename, parameters, output)
         thr.start()
 
     print('Waiting for jobs to finish ..', file=sys.stderr)
     for i in range(job_count):
         job_semaphore.acquire()
 
-    name_ctr = 1
-    name_prev = None
-    for name, _, comment in list(sorted(output, key=lambda x: (x[0], x[1]))):
-        if name == name_prev:
-            name_ctr += 1
-            name = name + "_%i" % name_ctr
-        else:
-            name_prev = name
-            name_ctr = 1
-        print('\nstatic const char *%s =%sR"doc(%s)doc";' %
-              (name, '\n' if '\n' in comment else ' ', comment))
+    output.sort()
+    for l in output:
+        print(l)
 
     print('''
 #if defined(__GNUG__)

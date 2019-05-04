@@ -27,7 +27,6 @@ MANIFEST
 *.py[co]
 *.egg-info
 *~
-.*.swp
 .DS_Store
 /dist
 /build
