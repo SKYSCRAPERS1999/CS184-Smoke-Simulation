@@ -25,8 +25,8 @@ public:
 
   Grid(const Grid& grid);
   Grid& operator=(const Grid& grid);
-  Grid(Grid&& grid) noexcept;
-  Grid& operator=(Grid&& grid) noexcept;
+  Grid(Grid&& grid);
+  Grid& operator=(Grid&& grid);
 
   ~Grid() {}
 

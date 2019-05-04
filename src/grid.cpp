@@ -60,7 +60,7 @@ Grid &Grid::operator=(const Grid &grid) {
     return *this;
 }
 
-Grid::Grid(Grid &&grid) noexcept {
+Grid::Grid(Grid &&grid) {
     height = grid.height;
     width = grid.width;
     density = move(grid.density);
@@ -71,7 +71,7 @@ Grid::Grid(Grid &&grid) noexcept {
 //  cout << "move" << endl;
 }
 
-Grid &Grid::operator=(Grid &&grid) noexcept {
+Grid &Grid::operator=(Grid &&grid) {
     height = grid.height;
     width = grid.width;
     density = move(grid.density);
@@ -120,9 +120,9 @@ vector<double> Grid::simulate_density(const double timestep) {
                 Vector2D newloc = Vector2D(newx, newy);
 
                 Vector2D bl = Vector2D(int(newloc.x), int(newloc.y));
-                Vector2D br = bl + Vector2D{1, 0};
-                Vector2D tl = bl + Vector2D{0, 1};
-                Vector2D tr = bl + Vector2D{1, 1};
+                Vector2D br = bl + Vector2D(1, 0);
+                Vector2D tl = bl + Vector2D(0, 1);
+                Vector2D tr = bl + Vector2D(1, 1);
 
                 double s = newx - tl.x;
                 double t = newy - bl.y;
@@ -156,9 +156,9 @@ vector<double> Grid::simulate_temperature(const double timestep) {
                 Vector2D newloc = Vector2D(newx, newy);
                 
                 Vector2D bl = Vector2D(int(newloc.x), int(newloc.y));
-                Vector2D br = bl + Vector2D{1, 0};
-                Vector2D tl = bl + Vector2D{0, 1};
-                Vector2D tr = bl + Vector2D{1, 1};
+                Vector2D br = bl + Vector2D(1, 0);
+                Vector2D tl = bl + Vector2D(0, 1);
+                Vector2D tr = bl + Vector2D(1, 1);
                 
                 double s = newx - tl.x;
                 double t = newy - bl.y;
@@ -194,9 +194,9 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
                 Vector2D newloc = Vector2D(newx, newy);
 
                 Vector2D bl = Vector2D(int(newloc.x), int(newloc.y));
-                Vector2D br = bl + Vector2D{1, 0};
-                Vector2D tl = bl + Vector2D{0, 1};
-                Vector2D tr = bl + Vector2D{1, 1};
+                Vector2D br = bl + Vector2D(1, 0);
+                Vector2D tl = bl + Vector2D(0, 1);
+                Vector2D tr = bl + Vector2D(1, 1);
 
                 double s = newx - tl.x;
                 double t = newy - bl.y;
@@ -272,7 +272,7 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
             Vector2D wB = viscous_velocity_grid[x + (y-1)*width];
             Vector2D wT = viscous_velocity_grid[x + (y+1)*width];
 
-            divergence[y * width + x] = halfrdx * ((wR.x - wL.y) + (wT.x - wB.y));
+            divergence[y * width + x] = halfrdx * ((wR.x - wL.x) + (wT.y - wB.y));
         }
     }
 
