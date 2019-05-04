@@ -62,10 +62,14 @@ add_library(glfw $<TARGET_OBJECTS:glfw_objects>)
 
 set_target_properties(glfw PROPERTIES
                       OUTPUT_NAME ${GLFW_LIB_NAME}
-                      VERSION ${GLFW_VERSION}
-                      SOVERSION ${GLFW_VERSION_MAJOR}
-                      POSITION_INDEPENDENT_CODE ON
-                      FOLDER "GLFW3")
+                      # VERSION ${GLFW_VERSION}
+                      # SOVERSION ${GLFW_VERSION_MAJOR}
+)
+
+if (BUILD_SHARED_LIBS)
+   set_target_properties(glfw PROPERTIES POSITION_INDEPENDENT_CODE ON
+                         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+endif()
 
 target_compile_definitions(glfw_objects PRIVATE -D_GLFW_USE_CONFIG_H)
 target_include_directories(glfw_objects PUBLIC

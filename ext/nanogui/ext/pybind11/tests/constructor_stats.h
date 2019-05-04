@@ -24,7 +24,7 @@ function calls to constructors:
         ...
     }
 
-You can find various examples of these in several of the existing example .cpp files.  (Of course
+You can find various examples of these in several of the existing testing .cpp files.  (Of course
 you don't need to add any of the above constructors/operators that you don't actually have, except
 for the destructor).
 
@@ -41,7 +41,7 @@ value constructor) for all of the above methods which will be included in the ou
 For testing, each of these also keeps track the created instances and allows you to check how many
 of the various constructors have been invoked from the Python side via code such as:
 
-    from example import ConstructorStats
+    from pybind11_tests import ConstructorStats
     cstats = ConstructorStats.get(MyClass)
     print(cstats.alive())
     print(cstats.default_constructions)
@@ -169,7 +169,7 @@ public:
         auto &internals = py::detail::get_internals();
         const std::type_index *t1 = nullptr, *t2 = nullptr;
         try {
-            auto *type_info = internals.registered_types_py.at(class_.ptr());
+            auto *type_info = internals.registered_types_py.at((PyTypeObject *) class_.ptr()).at(0);
             for (auto &p : internals.registered_types_cpp) {
                 if (p.second == type_info) {
                     if (t1) {

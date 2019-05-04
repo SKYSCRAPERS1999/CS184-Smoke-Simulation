@@ -63,16 +63,12 @@ code?
         std::shared_ptr<Child> child;
     };
 
-    PYBIND11_PLUGIN(example) {
-        py::module m("example");
-
+    PYBIND11_MODULE(example, m) {
         py::class_<Child, std::shared_ptr<Child>>(m, "Child");
 
         py::class_<Parent, std::shared_ptr<Parent>>(m, "Parent")
            .def(py::init<>())
            .def("get_child", &Parent::get_child);
-
-        return m.ptr();
     }
 
 The following Python code will cause undefined behavior (and likely a
@@ -148,6 +144,27 @@ situation where ``true`` should be passed is when the ``T`` instances use
 *intrusive* reference counting.
 
 Please take a look at the :ref:`macro_notes` before using this feature.
+
+By default, pybind11 assumes that your custom smart pointer has a standard
+interface, i.e. provides a ``.get()`` member function to access the underlying
+raw pointer. If this is not the case, pybind11's ``holder_helper`` must be
+specialized:
+
+.. code-block:: cpp
+
+    // Always needed for custom holder types
+    PYBIND11_DECLARE_HOLDER_TYPE(T, SmartPtr<T>);
+
+    // Only needed if the type's `.get()` goes by another name
+    namespace pybind11 { namespace detail {
+        template <typename T>
+        struct holder_helper<SmartPtr<T>> { // <-- specialization
+            static const T *get(const SmartPtr<T> &p) { return p.getPointer(); }
+        };
+    }}
+
+The above specialization informs pybind11 that the custom ``SmartPtr`` class
+provides ``.get()`` functionality via ``.getPointer()``.
 
 .. seealso::
 

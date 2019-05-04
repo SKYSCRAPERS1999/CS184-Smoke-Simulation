@@ -14,6 +14,9 @@
 #include "common.h"
 #include "callback.h"
 
+using namespace nanogui;
+using namespace std;
+
 static std::random_device rd;
 static mt19937 rng(rd()); // random number generator in C++11
 
@@ -23,7 +26,10 @@ bool is_pause = false;
 bool shift_pressed = false;
 int size_smoke = 3;
 double amount_smoke = 50;
-nanogui::Screen *screen = nullptr;
+
+GLFWwindow *window = nullptr;
+Screen *screen = nullptr;
+std::string strval = "A string";
 
 // starts a smoke at a random location
 void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
@@ -79,11 +85,23 @@ int main() {
     double amount_temp = 50;
     double ambient_temperature = 0;
 
-    GLFWwindow *window;
     // Initialize
     if (!glfwInit()) {
         return -1;
     }
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+//    glfwWindowHint(GLFW_SAMPLES, 0);
+//    glfwWindowHint(GLFW_RED_BITS, 8);
+//    glfwWindowHint(GLFW_GREEN_BITS, 8);
+//    glfwWindowHint(GLFW_BLUE_BITS, 8);
+//    glfwWindowHint(GLFW_ALPHA_BITS, 8);
+//    glfwWindowHint(GLFW_STENCIL_BITS, 8);
+//    glfwWindowHint(GLFW_DEPTH_BITS, 24);
+//    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
     window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
     if (!window) {
         glfwTerminate();
@@ -97,6 +115,20 @@ int main() {
     glfwSetCursorPosCallback(window, cursor_position_callback);
     glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetKeyCallback(window, keyboard_callback);
+
+    // Create a nanogui screen
+    screen = new Screen();
+    screen->initialize(window, true);
+
+    // Create nanogui GUI
+    bool enabled = true;
+    FormHelper *gui = new FormHelper(screen);
+    nanogui::ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Form helper example");
+    gui->addGroup("Basic type");
+    gui->addVariable("string", strval);
+//    screen->setVisible(true);
+//    screen->performLayout();
+//    nanoguiWindow->center();
     
 //    #if defined(_OPENMP)
 //    #pragma omp parallel

@@ -20,10 +20,14 @@
 #include <iostream>
 
 #if defined(_WIN32)
-#  define NOMINMAX
+#  ifndef NOMINMAX
+#    define NOMINMAX
+#  endif
 #  undef APIENTRY
 
-#  define WIN32_LEAN_AND_MEAN
+#  ifndef WIN32_LEAN_AND_MEAN
+#    define WIN32_LEAN_AND_MEAN
+#  endif
 #  include <windows.h>
 
 #  define GLFW_EXPOSE_NATIVE_WGL
@@ -47,7 +51,21 @@ static bool gladInitialized = false;
 static float get_pixel_ratio(GLFWwindow *window) {
 #if defined(_WIN32)
     HWND hWnd = glfwGetWin32Window(window);
-    HMONITOR monitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+    HMONITOR monitor = nullptr;
+    #if defined(MONITOR_DEFAULTTONEAREST)
+        monitor = MonitorFromWindow(hWnd, MONITOR_DEFAULTTONEAREST);
+    #else
+        static HMONITOR (WINAPI *MonitorFromWindow_)(HWND, DWORD) = nullptr;
+        static bool MonitorFromWindow_tried = false;
+        if (!MonitorFromWindow_tried) {
+            auto user32 = LoadLibrary(TEXT("user32"));
+            if (user32)
+                MonitorFromWindow_ = (decltype(MonitorFromWindow_)) GetProcAddress(user32, "MonitorFromWindow");
+            MonitorFromWindow_tried = true;
+        }
+        if (MonitorFromWindow_)
+            monitor = MonitorFromWindow_(hWnd, 2);
+    #endif  // defined(MONITOR_DEFAULTTONEAREST)
     /* The following function only exists on Windows 8.1+, but we don't want to make that a dependency */
     static HRESULT (WINAPI *GetDpiForMonitor_)(HMONITOR, UINT, UINT*, UINT*) = nullptr;
     static bool GetDpiForMonitor_tried = false;
@@ -59,28 +77,41 @@ static float get_pixel_ratio(GLFWwindow *window) {
         GetDpiForMonitor_tried = true;
     }
 
-    if (GetDpiForMonitor_) {
+    if (GetDpiForMonitor_ && monitor) {
         uint32_t dpiX, dpiY;
         if (GetDpiForMonitor_(monitor, 0 /* effective DPI */, &dpiX, &dpiY) == S_OK)
-            return std::round(dpiX / 96.0);
+            return dpiX / 96.0;
     }
     return 1.f;
 #elif defined(__linux__)
     (void) window;
 
-    /* Try to read the pixel ratio from GTK */
-    FILE *fp = popen("gsettings get org.gnome.desktop.interface scaling-factor", "r");
-    if (!fp)
-        return 1;
+    float ratio = 1.0f;
+    FILE *fp;
+    /* Try to read the pixel ratio from KDEs config */
+    auto currentDesktop = std::getenv("XDG_CURRENT_DESKTOP");
+    if (currentDesktop && currentDesktop == std::string("KDE")) {
+        fp = popen("kreadconfig5 --group KScreen --key ScaleFactor", "r");
+        if (!fp)
+            return 1;
 
-    int ratio = 1;
-    if (fscanf(fp, "uint32 %i", &ratio) != 1)
-        return 1;
+        if (fscanf(fp, "%f", &ratio) != 1)
+            return 1;
+    } else {
+        /* Try to read the pixel ratio from GTK */
+        fp = popen("gsettings get org.gnome.desktop.interface scaling-factor", "r");
+        if (!fp)
+            return 1;
 
+        int ratioInt = 1;
+        if (fscanf(fp, "uint32 %i", &ratioInt) != 1)
+            return 1;
+        ratio = ratioInt;
+    }
     if (pclose(fp) != 0)
         return 1;
-
     return ratio >= 1 ? ratio : 1;
+
 #else
     Vector2i fbSize, size;
     glfwGetFramebufferSize(window, &fbSize[0], &fbSize[1]);
@@ -242,16 +273,29 @@ Screen::Screen(const Vector2i &size, const std::string &caption, bool resizable,
        a window from a Retina-capable screen to a normal
        screen on Mac OS X */
     glfwSetFramebufferSizeCallback(mGLFWWindow,
-        [](GLFWwindow* w, int width, int height) {
+        [](GLFWwindow *w, int width, int height) {
             auto it = __nanogui_screens.find(w);
             if (it == __nanogui_screens.end())
                 return;
-            Screen* s = it->second;
+            Screen *s = it->second;
 
             if (!s->mProcessEvents)
                 return;
 
             s->resizeCallbackEvent(width, height);
+        }
+    );
+
+    // notify when the screen has lost focus (e.g. application switch)
+    glfwSetWindowFocusCallback(mGLFWWindow,
+        [](GLFWwindow *w, int focused) {
+            auto it = __nanogui_screens.find(w);
+            if (it == __nanogui_screens.end())
+                return;
+
+            Screen *s = it->second;
+            // focused: 0 when false, 1 when true
+            s->focusEvent(focused != 0);
         }
     );
 
@@ -376,8 +420,8 @@ void Screen::drawWidgets() {
     glfwGetWindowSize(mGLFWWindow, &mSize[0], &mSize[1]);
 
 #if defined(_WIN32) || defined(__linux__)
-    mSize = (mSize / mPixelRatio).cast<int>();
-    mFBSize = (mSize * mPixelRatio).cast<int>();
+    mSize = (mSize.cast<float>() / mPixelRatio).cast<int>();
+    mFBSize = (mSize.cast<float>() * mPixelRatio).cast<int>();
 #else
     /* Recompute pixel ratio on OSX */
     if (mSize[0])
@@ -472,7 +516,7 @@ bool Screen::cursorPosCallbackEvent(double x, double y) {
     Vector2i p((int) x, (int) y);
 
 #if defined(_WIN32) || defined(__linux__)
-    p /= mPixelRatio;
+    p = (p.cast<float>() / mPixelRatio).cast<int>();
 #endif
 
     bool ret = false;
@@ -607,10 +651,10 @@ bool Screen::resizeCallbackEvent(int, int) {
     glfwGetWindowSize(mGLFWWindow, &size[0], &size[1]);
 
 #if defined(_WIN32) || defined(__linux__)
-    size /= mPixelRatio;
+    size = (size.cast<float>() / mPixelRatio).cast<int>();
 #endif
 
-    if (mFBSize == Vector2i(0, 0) || size == Vector2i(0, 0))
+    if (fbSize == Vector2i(0, 0) || size == Vector2i(0, 0))
         return false;
 
     mFBSize = fbSize; mSize = size;

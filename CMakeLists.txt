@@ -1,7 +1,9 @@
 # Original file Copyright CMU462 Fall 2015: 
 # Kayvon Fatahalian, Keenan Crane,
 # Sky Gao, Bryce Summers, Michael Choquette.
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1.3)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(HW0)
 
 #-------------------------------------------------------------------------------
@@ -40,6 +42,7 @@ if (APPLE)
             set(CLANG_CXX_FLAGS "${CLANG_CXX_FLAGS} -funroll-loops")
             set(CLANG_CXX_FLAGS "${CLANG_CXX_FLAGS} -Wno-narrowing")
             set(CLANG_CXX_FLAGS "${CLANG_CXX_FLAGS} -Wno-deprecated-register")
+#            set(CLANG_CXX_FLASG "${CLANG_CXX_FLAGS} -Wdeprecated-declarations")
         endif (BUILD_DEBUG)
 
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CLANG_CXX_FLAGS}")
@@ -261,3 +264,6 @@ if (APPLE)
     set_property(TARGET smoke_simulator APPEND_STRING PROPERTY COMPILE_FLAGS
             "-Wno-deprecated-declarations -Wno-c++11-extensions")
 endif (APPLE)
+
+set(CMAKE_INSTALL_PREFIX "${HW0_SOURCE_DIR}/")
+install(TARGETS smoke_simulator DESTINATION ${HW0_SOURCE_DIR})
