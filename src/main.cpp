@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <GLFW/glfw3.h>
 #include <OpenGL/OpenGL.h>
+#include <imgui.h>
 
 #include "grid.h"
 #include "common.h"
@@ -14,8 +15,9 @@ static mt19937 rng(rd()); // random number generator in C++11
 
 Grid grid;
 bool mouse_down = false;
+bool is_pause = false;
 bool shift_pressed = false;
-int size_smoke = 2;
+int size_smoke = 3;
 double amount_smoke = 50;
 
 // starts a smoke at a random location
@@ -65,101 +67,105 @@ void display(const Grid &grid, int LIMIT = 3) {
 }
 
 int main() {
+    grid = Grid(NUMCOL + 2, NUMROW + 2);
 
-  grid = Grid(NUMCOL, NUMROW);
+    // Parameters of smoke simulation. Allow for adjusting later.
+    vector<Vector2D> external_forces;
+    external_forces.resize(grid.width * grid.height, Vector2D(0.0, 0.0));
+    
+    // These parameters effect the smoke that gets placed down with mouse clicks
+    double amount_temp = 50;
+    double ambient_temperature = 0;
 
-  // Parameters of smoke simulation. Allow for adjusting later.
-  vector<Vector2D> external_forces;
-  external_forces.resize(grid.width * grid.height, Vector2D(0.0, 0.0));
-  // These parameters effect the smoke that gets placed down with mouse clicks
+    GLFWwindow *window;
+    // Initialize
+    if (!glfwInit()) {
+        return -1;
+    }
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
+    if (!window) {
+        glfwTerminate();
+        return -1;
+    }
 
-  GLFWwindow *window;
-  // Initialize
-  if (!glfwInit()) {
-    return -1;
-  }
-  window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
-  if (!window) {
-    glfwTerminate();
-    return -1;
-  }
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1); // To prevent screen tearing
 
-  glfwMakeContextCurrent(window);
-  glfwSwapInterval(1); // To prevent screen tearing
+    // Callback functions
+    glfwSetCursorPosCallback(window, cursor_position_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetKeyCallback(window, keyboard_callback);
+    
+//    #if defined(_OPENMP)
+//    #pragma omp parallel
+//    {
+//        int rank, rankn;
+//        rank = omp_get_thread_num();
+//        rankn = omp_get_num_threads();
+//        printf("rank: %d / %d\n", rank, rankn);
+//    }
+//    #endif
 
-  // Callback functions
-  glfwSetCursorPosCallback(window, cursor_position_callback);
-  glfwSetMouseButtonCallback(window, mouse_button_callback);
-  glfwSetKeyCallback(window, keyboard_callback);
+    auto last_time = steady_clock::now();
+    while (!glfwWindowShouldClose(window)) {
+        //bool to_print = ((rng() % 100) == 0) && (omp_get_thread_num() == 0);
+        
+        // Handle dragging of mouse to create a stream of smoke
+        if (mouse_down) {
+            double xpos = grid.cursor_pos[0];
+            double ypos = grid.cursor_pos[1];
 
-#if defined(_OPENMP)
-#pragma omp parallel
-  {
-    int rank, rankn;
-    rank = omp_get_thread_num();
-    rankn = omp_get_num_threads();
-    printf("rank: %d / %d\n", rank, rankn);
-  }
-#endif
+            int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
+            int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
 
-  auto last_time = steady_clock::now();
-  while (!glfwWindowShouldClose(window)) {
+            for (int y = row - size_smoke; y <= row + size_smoke; ++y) {
+                for (int x = col - size_smoke; x <= col + size_smoke; ++x) {
+                    if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 || (pow(y-row, 2.0) + pow(x-col, 2.0) > size_smoke*size_smoke)) {
+                        continue;
+                    }
 
-    bool to_print = ((rng() % 100) == 0) && (omp_get_thread_num() == 0);
-    // Handle dragging of mouse to create a stream of smoke
-    if (mouse_down) {
-      double xpos = grid.cursor_pos[0];
-      double ypos = grid.cursor_pos[1];
+                    double den = grid.getDensity(x, y);
+                    double temp = grid.getTemperature(x, y);
 
-      int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
-      int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
-      for (int y = row - size_smoke; y < row + size_smoke; ++y) {
-        for (int x = col - size_smoke; x < col + size_smoke; ++x) {
-          if (y < 0 || y >= grid.height || x < 0 || x >= grid.width) {
-            continue;
-          }
-          double den = grid.getDensity(x, y);
-          grid.setDensity(x, y, min(den + amount_smoke, 100.0));
+                    if (x == row && y == col) den *= 2, temp *= 2;
+
+                    grid.setDensity(x, y, min(den + amount_smoke, 100.0));
+                    grid.setTemperature(x, y, min(temp + amount_temp, 100.0));
+
+                }
+            }
         }
-      }
+        auto cur_time = steady_clock::now();
+        auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
+        
+        if (!is_pause) {
+            if (FREQ * elapsed.count() >= 1000) {
+                last_time = cur_time;
+                auto start_time = steady_clock::now();
+                grid.simulate(1, external_forces, ambient_temperature);
+                auto end_time = steady_clock::now();
+                auto simulate_time = duration_cast<milliseconds>(end_time - start_time);
+                
+    //            if (to_print) {
+    //                printf("simulate_time = %lld mm\n", simulate_time.count());
+    //            }
+            } else {
+    //            if (to_print) {
+    //                puts("no simulate_time");
+    //            }
+            }
+        }
+
+        auto start_time = steady_clock::now();
+        display(grid);
+        auto end_time = steady_clock::now();
+        auto display_time = duration_cast<milliseconds>(end_time - start_time);
+//        if (to_print) {
+//            printf("display_time = %lld mm\n", display_time.count());
+//        }
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
-
-    auto cur_time = steady_clock::now();
-    auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
-
-    if (FREQ * elapsed.count() >= 1000) {
-      last_time = cur_time;
-
-      auto start_time = steady_clock::now();
-
-      grid.simulate(1, external_forces);
-
-      auto end_time = steady_clock::now();
-      auto simulate_time = duration_cast<milliseconds>(end_time - start_time);
-
-      if (to_print) {
-        printf("simulate_time = %lld mm\n", simulate_time.count());
-      }
-    } else {
-      if (to_print) {
-        puts("no simulate_time");
-      }
-    }
-
-    auto start_time = steady_clock::now();
-
-    display(grid);
-
-    auto end_time = steady_clock::now();
-    auto display_time = duration_cast<milliseconds>(end_time - start_time);
-    if (to_print) {
-      printf("display_time = %lld mm\n", display_time.count());
-    }
-
-    glfwSwapBuffers(window);
-    glfwPollEvents();
-  }
-
-  glfwTerminate();
-  return 0;
+    glfwTerminate();
+    return 0;
 }

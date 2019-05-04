@@ -36,19 +36,28 @@ public:
   Vector2D cursor_pos;
 
   // Primary simulate function
-  void simulate(double timestep, const vector<Vector2D>& external_forces);
+  void simulate(double timestep, const vector<Vector2D>& external_forces, const double ambient_temperature);
 
 private:
   // simulate functions called by simulate()
-  vector<Vector2D> simulate_velocity(double timestep, const vector<Vector2D>& external_forces);
-  vector<double> simulate_density(double timestep, const vector<Vector2D>& external_forces);
+  vector<Vector2D> simulate_velocity(double timestep, const vector<Vector2D>& external_forces, const double ambient_temperature);
+  vector<double> simulate_density(double timestep);
+  vector<double> simulate_temperature(double timestep);
+    
+  // boundary conditions
+  void set_boundary_conditions(vector<Vector2D> &vec, int b);
+  void set_boundary_conditions(vector<double> &vec, int b);
+
+    
+  // helper function
+  int cell(int x, int y);
 
   // Number of iterations for viscous diffusion
   int num_iter;
 
   // Properties of smoke
-  vector<double> density;
-  vector<double> temperature;
+  vector<double> density; // 0-100
+  vector<double> temperature; // 0-100
   vector<Vector2D> velocity;
 
 
@@ -68,6 +77,8 @@ public:
   };
 
   double getTemperature(int x, int y) const { return temperature[y * width + x]; }
+
+  double getTemperature(Vector2D vec) const { return temperature[vec[1] * width + vec[0]]; }
 
   void setDensity(int x, int y, double den);
 
