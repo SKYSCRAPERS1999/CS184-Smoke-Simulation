@@ -116,7 +116,7 @@ int main() {
 
             for (int y = row - size_smoke; y < row + size_smoke; ++y) {
                 for (int x = col - size_smoke; x < col + size_smoke; ++x) {
-                    if (y < 0 || y >= grid.height || x < 0 || x >= grid.width || (pow(y-row, 2.0) + pow(x-col, 2.0) > size_smoke*size_smoke)) {
+                    if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 || (pow(y-row, 2.0) + pow(x-col, 2.0) > size_smoke*size_smoke)) {
                         continue;
                     }
                     double den = grid.getDensity(x, y);
