@@ -62,7 +62,6 @@ void Grid::display(int LIMIT = 3) {
     double height = 1 / (double) NUMROW * 2;
     for (int y = 0; y < NUMROW; ++y) {
         for (int x = 0; x < NUMCOL; ++x) {
-
             double density = this->getDensity(x, y);
             double temperature = this->getTemperature(x, y);
             if (density <= LIMIT) continue;
@@ -164,20 +163,20 @@ int main() {
     );
 
     glfwSetCharCallback(window, [](GLFWwindow *, unsigned int codepoint) {
-                            screen->charCallbackEvent(codepoint);
-                        });
+        screen->charCallbackEvent(codepoint);
+    });
 
     glfwSetDropCallback(window, [](GLFWwindow *, int count, const char **filenames) {
-                            screen->dropCallbackEvent(count, filenames);
-                        });
+        screen->dropCallbackEvent(count, filenames);
+    });
 
     glfwSetScrollCallback(window, [](GLFWwindow *, double x, double y) {
-                              screen->scrollCallbackEvent(x, y);
-                          });
+        screen->scrollCallbackEvent(x, y);
+    });
 
     glfwSetFramebufferSizeCallback(window, [](GLFWwindow *, int width, int height) {
-                                       screen->resizeCallbackEvent(width, height);
-                                   });
+        screen->resizeCallbackEvent(width, height);
+    });
 
 #if defined(_OPENMP)
 #pragma omp parallel
@@ -198,6 +197,7 @@ int main() {
         //bool to_print = ((rng() % 100) == 0) && (omp_get_thread_num() == 0);
 
         // Handle dragging of mouse to create a stream of smoke
+
         if (mouse_down) {
             double xpos = grid.cursor_pos.x;
             double ypos = grid.cursor_pos.y;
@@ -219,12 +219,13 @@ int main() {
 
                     double den = grid.getDensity(x, y);
                     double temp = grid.getTemperature(x, y);
-
                     grid.setDensity(x, y, min(den + amount_smoke * fall_off, 100.0));
                     grid.setTemperature(x, y, min(temp + amount_temp * fall_off, 100.0));
 
                 }
             }
+//            randomize_grid(grid);
+            grid.printGrid();
         }
         auto cur_time = steady_clock::now();
         auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
@@ -236,14 +237,7 @@ int main() {
                 grid.simulate(1, external_forces, ambient_temperature);
                 auto end_time = steady_clock::now();
                 auto simulate_time = duration_cast<milliseconds>(end_time - start_time);
-
-                //            if (to_print) {
-                //                printf("simulate_time = %lld mm\n", simulate_time.count());
-                //            }
             } else {
-                //            if (to_print) {
-                //                puts("no simulate_time");
-                //            }
             }
         }
 
