@@ -63,7 +63,9 @@ private:
 
 public:
 
-  // Getter and setter methods
+  void display(int LIMIT);
+
+    // Getter and setter methods
   double getDensity(int x, int y) const { return density[y * width + x]; }
 
   double getDensity(Vector2D vec) const {
