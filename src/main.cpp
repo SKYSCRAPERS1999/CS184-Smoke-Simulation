@@ -22,8 +22,6 @@ static std::random_device rd;
 
 static mt19937 rng(rd()); // random number generator in C++11
 
-bool debug = false;
-
 Grid grid;
 bool mouse_down = false;
 bool is_pause = false;
@@ -76,7 +74,7 @@ void generate_vertices_array() {
             int index = (y * NUMCOL + x) * 2;
             glBindVertexArray(VAOs[index]);
             glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(up_left_triangle_vertices), up_left_triangle_vertices, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(up_left_triangle_vertices), up_left_triangle_vertices, GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
             glEnableVertexAttribArray(0);
             // setup seconde triangle
@@ -87,7 +85,7 @@ void generate_vertices_array() {
             };
             glBindVertexArray(VAOs[index + 1]);
             glBindBuffer(GL_ARRAY_BUFFER, VBOs[index + 1]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(bottom_right_triangle_vertices), bottom_right_triangle_vertices, GL_STATIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(bottom_right_triangle_vertices), bottom_right_triangle_vertices, GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
             glEnableVertexAttribArray(0);
 
@@ -95,34 +93,60 @@ void generate_vertices_array() {
     }
 }
 
-void display(GLuint shader_program, int LIMIT = 3) {
-    for (int y = 0; y < NUMROW; ++y) {
-        for (int x = 0; x < NUMCOL; ++x) {
-            double density = grid.getDensity(x, y);
-            double temperature = grid.getTemperature(x, y);
-            if (density <= LIMIT) continue;
+void set_callback() {
+    glfwSetKeyCallback(window, [](GLFWwindow *, int key, int scancode, int action, int mods) {
+                           screen->keyCallbackEvent(key, scancode, action, mods);
+                       }
+    );
 
-            // [0, 100] -> [360, 300]
-            double hue = 360 - temperature * 0.6;
-            // [0, 100]
-            double saturate = 100.0;
-            // [0, 100] -> [0, 100]
-            double value = density;
+    glfwSetCharCallback(window, [](GLFWwindow *, unsigned int codepoint) {
+        screen->charCallbackEvent(codepoint);
+    });
 
-            Vector3D rgb = hsv2rgb({hue, saturate, value});
+    glfwSetDropCallback(window, [](GLFWwindow *, int count, const char **filenames) {
+        screen->dropCallbackEvent(count, filenames);
+    });
 
-            int index = (y * NUMCOL + x) * 2;
-            glUseProgram(shader_program);
-            int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
-            glUniform4f(vertexColorLocation, 0.0f, 0.5f, 0.0f, 1.0f);
-            glBindVertexArray(VAOs[index]);
-            glDrawArrays(GL_TRIANGLES, 0, 3);
-            glUniform4f(vertexColorLocation, 0.5f, 0.0f, 0.0f, 1.0f);
-            glBindVertexArray(VAOs[index + 1]);
-            glDrawArrays(GL_TRIANGLES, 0, 3);
-        }
-    }
+    glfwSetScrollCallback(window, [](GLFWwindow *, double x, double y) {
+        screen->scrollCallbackEvent(x, y);
+    });
+
+    glfwSetFramebufferSizeCallback(window, [](GLFWwindow *, int width, int height) {
+        screen->resizeCallbackEvent(width, height);
+    });
+    glfwSetCursorPosCallback(window, cursor_position_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetKeyCallback(window, keyboard_callback);
 }
+
+//void display(GLuint shader_program, int LIMIT = 3) {
+//    for (int y = 0; y < NUMROW; ++y) {
+//        for (int x = 0; x < NUMCOL; ++x) {
+//            double density = grid.getDensity(x, y);
+//            double temperature = grid.getTemperature(x, y);
+//            if (density <= LIMIT) continue;
+//
+//            // [0, 100] -> [360, 300]
+//            double hue = 360 - temperature * 0.6;
+//            // [0, 100]
+//            double saturate = 100.0;
+//            // [0, 100] -> [0, 100]
+//            double value = density;
+//
+//            Vector3D rgb = hsv2rgb({hue, saturate, value});
+//
+//            int index = (y * NUMCOL + x) * 2;
+//            glUseProgram(shader_program);
+//            int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
+//            glUniform4f(vertexColorLocation, 0.0f, 0.5f, 0.0f, 1.0f);
+//            glBindVertexArray(VAOs[index]);
+//            glDrawArrays(GL_TRIANGLES, 0, 3);
+//            glUniform4f(vertexColorLocation, 0.5f, 0.0f, 0.0f, 1.0f);
+//            glBindVertexArray(VAOs[index + 1]);
+//            glDrawArrays(GL_TRIANGLES, 0, 3);
+//        }
+//    }
+//}
 
 GLuint build_shader_program() {
     // vertex shader
@@ -187,12 +211,6 @@ int main() {
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #endif
-    glfwWindowHint(GLFW_SAMPLES, 0);
-    glfwWindowHint(GLFW_RED_BITS, 8);
-    glfwWindowHint(GLFW_GREEN_BITS, 8);
-    glfwWindowHint(GLFW_BLUE_BITS, 8);
-    glfwWindowHint(GLFW_ALPHA_BITS, 8);
-    glfwWindowHint(GLFW_STENCIL_BITS, 8);
 
     window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
     if (!window) {
@@ -229,26 +247,9 @@ int main() {
     screen->performLayout();
     nanoguiWindow->center();
 
-    glfwSetKeyCallback(window, [](GLFWwindow *, int key, int scancode, int action, int mods) {
-                           screen->keyCallbackEvent(key, scancode, action, mods);
-                       }
-    );
+    set_callback();
 
-    glfwSetCharCallback(window, [](GLFWwindow *, unsigned int codepoint) {
-        screen->charCallbackEvent(codepoint);
-    });
 
-    glfwSetDropCallback(window, [](GLFWwindow *, int count, const char **filenames) {
-        screen->dropCallbackEvent(count, filenames);
-    });
-
-    glfwSetScrollCallback(window, [](GLFWwindow *, double x, double y) {
-        screen->scrollCallbackEvent(x, y);
-    });
-
-    glfwSetFramebufferSizeCallback(window, [](GLFWwindow *, int width, int height) {
-        screen->resizeCallbackEvent(width, height);
-    });
 
 #if defined(_OPENMP)
 #pragma omp parallel
@@ -259,10 +260,6 @@ int main() {
         printf("rank: %d / %d\n", rank, rankn);
     }
 #endif
-    // Callback functions
-    glfwSetCursorPosCallback(window, cursor_position_callback);
-    glfwSetMouseButtonCallback(window, mouse_button_callback);
-    glfwSetKeyCallback(window, keyboard_callback);
 
 
     glfwSwapInterval(1); // To prevent screen tearing
