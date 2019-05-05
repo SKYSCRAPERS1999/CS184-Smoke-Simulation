@@ -75,6 +75,7 @@ void Grid::display(int LIMIT = 3) {
 
             Vector3D rgb = hsv2rgb({hue, saturate, value});
 
+
             glColor3d(rgb.x, rgb.y, rgb.z);
 //      glColor3d(density / 100, density / 100, density / 100);
 
@@ -130,6 +131,9 @@ int main() {
     }
 
     glfwMakeContextCurrent(window);
+
+
+
     glGetError();
     if (debug) {
         glClearColor(0.2f, 0.25f, 0.3f, 1.0f);
@@ -199,32 +203,32 @@ int main() {
         // Handle dragging of mouse to create a stream of smoke
 
         if (mouse_down) {
-            double xpos = grid.cursor_pos.x;
-            double ypos = grid.cursor_pos.y;
-
-            int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
-            int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
-
-            for (int y = row - size_smoke; y <= row + size_smoke; ++y) {
-                for (int x = col - size_smoke; x <= col + size_smoke; ++x) {
-                    double dis2 = pow(y - row, 2.0) + pow(x - col, 2.0);
-
-                    if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 ||
-                        (dis2 > size_smoke * size_smoke)) {
-                        continue;
-                    }
-
-                    // What type of function should fall off be?
-                    double fall_off = 2 * 1.0 / max(dis2, 1.0);
-
-                    double den = grid.getDensity(x, y);
-                    double temp = grid.getTemperature(x, y);
-                    grid.setDensity(x, y, min(den + amount_smoke * fall_off, 100.0));
-                    grid.setTemperature(x, y, min(temp + amount_temp * fall_off, 100.0));
-
-                }
-            }
-//            randomize_grid(grid);
+//            double xpos = grid.cursor_pos.x;
+//            double ypos = grid.cursor_pos.y;
+//
+//            int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
+//            int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
+//
+//            for (int y = row - size_smoke; y <= row + size_smoke; ++y) {
+//                for (int x = col - size_smoke; x <= col + size_smoke; ++x) {
+//                    double dis2 = pow(y - row, 2.0) + pow(x - col, 2.0);
+//
+//                    if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 ||
+//                        (dis2 > size_smoke * size_smoke)) {
+//                        continue;
+//                    }
+//
+//                    // What type of function should fall off be?
+//                    double fall_off = 2 * 1.0 / max(dis2, 1.0);
+//
+//                    double den = grid.getDensity(x, y);
+//                    double temp = grid.getTemperature(x, y);
+//                    grid.setDensity(x, y, min(den + amount_smoke * fall_off, 100.0));
+//                    grid.setTemperature(x, y, min(temp + amount_temp * fall_off, 100.0));
+//
+//                }
+//            }
+            randomize_grid(grid);
             grid.printGrid();
         }
         auto cur_time = steady_clock::now();
