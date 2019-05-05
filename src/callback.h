@@ -10,16 +10,24 @@ extern bool is_pause;
 extern bool shift_pressed;
 extern int size_smoke;
 extern double amount_smoke;
+extern nanogui::Screen *screen;
 
 void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
+    screen->cursorPosCallbackEvent(xpos, ypos);
     glfwGetCursorPos(window, &grid.cursor_pos.x, &grid.cursor_pos.y);
+}
+
+void error_callback(int error, const char* description) {
+    puts(description);
 }
 
 // Handles mouse click to manually create smoke.
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
+    screen->mouseButtonCallbackEvent(button, action, mods);
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         if (action == GLFW_PRESS) {
             mouse_down = true;
+            std::cout<<"Mouse Down!"<<std::endl;
         } else if (action == GLFW_RELEASE) {
             mouse_down = false;
         }
@@ -27,6 +35,7 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 }
 
 void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+    screen->keyCallbackEvent(key, scancode, action, mods);
     if (action == GLFW_PRESS) {
         switch (key) {
             case GLFW_KEY_LEFT_SHIFT :
