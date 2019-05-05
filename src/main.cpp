@@ -3,11 +3,11 @@
 #include <chrono>
 #include <algorithm>
 #include <math.h>
-#include <GLFW/glfw3.h>
+//#include <GLFW/glfw3.h>
 #include <nanogui/nanogui.h>
 
-#include <OpenGL/gl.h>
-#include <OpenGL/OpenGL.h>
+//#include <OpenGL/gl.h>
+//#include <OpenGL/OpenGL.h>
 #include <CGL/CGL.h>
 
 #include "grid.h"
@@ -22,7 +22,7 @@ static std::random_device rd;
 
 static mt19937 rng(rd()); // random number generator in C++11
 
-bool debug = true;
+bool debug = false;
 
 Grid grid;
 bool mouse_down = false;
@@ -57,41 +57,41 @@ void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
 }
 
 void Grid::display(int LIMIT = 3) {
-    glClear(GL_COLOR_BUFFER_BIT);
-    double width = 1 / (double) NUMCOL * 2;
-    double height = 1 / (double) NUMROW * 2;
-    for (int y = 0; y < NUMROW; ++y) {
-        for (int x = 0; x < NUMCOL; ++x) {
-            double density = this->getDensity(x, y);
-            double temperature = this->getTemperature(x, y);
-            if (density <= LIMIT) continue;
-
-            // [0, 100] -> [360, 300]
-            double hue = 360 - temperature * 0.6;
-            // [0, 100]
-            double saturate = 100.0;
-            // [0, 100] -> [0, 100]
-            double value = density;
-
-            Vector3D rgb = hsv2rgb({hue, saturate, value});
-
-
-            glColor3d(rgb.x, rgb.y, rgb.z);
-//      glColor3d(density / 100, density / 100, density / 100);
-
-            glBegin(GL_QUADS);
-            double bottom_left_x = -1 + width * x;
-            double bottom_left_y = -1 + height * y;
-
-            glVertex2d(bottom_left_x, bottom_left_y);
-            glVertex2d(bottom_left_x + width, bottom_left_y);
-            glVertex2d(bottom_left_x + width, bottom_left_y + height);
-            glVertex2d(bottom_left_x, bottom_left_y + height);
-            glEnd();
-        }
-    }
-    glEnd();
-    glFlush();
+//    glClear(GL_COLOR_BUFFER_BIT);
+//    double width = 1 / (double) NUMCOL * 2;
+//    double height = 1 / (double) NUMROW * 2;
+//    for (int y = 0; y < NUMROW; ++y) {
+//        for (int x = 0; x < NUMCOL; ++x) {
+//            double density = this->getDensity(x, y);
+//            double temperature = this->getTemperature(x, y);
+//            if (density <= LIMIT) continue;
+//
+//            // [0, 100] -> [360, 300]
+//            double hue = 360 - temperature * 0.6;
+//            // [0, 100]
+//            double saturate = 100.0;
+//            // [0, 100] -> [0, 100]
+//            double value = density;
+//
+//            Vector3D rgb = hsv2rgb({hue, saturate, value});
+//
+//
+//            glColor3d(rgb.x, rgb.y, rgb.z);
+////      glColor3d(density / 100, density / 100, density / 100);
+//
+//            glBegin(GL_QUADS);
+//            double bottom_left_x = -1 + width * x;
+//            double bottom_left_y = -1 + height * y;
+//
+//            glVertex2d(bottom_left_x, bottom_left_y);
+//            glVertex2d(bottom_left_x + width, bottom_left_y);
+//            glVertex2d(bottom_left_x + width, bottom_left_y + height);
+//            glVertex2d(bottom_left_x, bottom_left_y + height);
+//            glEnd();
+//        }
+//    }
+//    glEnd();
+//    glFlush();
 }
 
 int main() {
@@ -131,8 +131,11 @@ int main() {
     }
 
     glfwMakeContextCurrent(window);
-
-
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
 
     glGetError();
     if (debug) {
@@ -203,33 +206,33 @@ int main() {
         // Handle dragging of mouse to create a stream of smoke
 
         if (mouse_down) {
-//            double xpos = grid.cursor_pos.x;
-//            double ypos = grid.cursor_pos.y;
-//
-//            int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
-//            int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
-//
-//            for (int y = row - size_smoke; y <= row + size_smoke; ++y) {
-//                for (int x = col - size_smoke; x <= col + size_smoke; ++x) {
-//                    double dis2 = pow(y - row, 2.0) + pow(x - col, 2.0);
-//
-//                    if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 ||
-//                        (dis2 > size_smoke * size_smoke)) {
-//                        continue;
-//                    }
-//
-//                    // What type of function should fall off be?
-//                    double fall_off = 2 * 1.0 / max(dis2, 1.0);
-//
-//                    double den = grid.getDensity(x, y);
-//                    double temp = grid.getTemperature(x, y);
-//                    grid.setDensity(x, y, min(den + amount_smoke * fall_off, 100.0));
-//                    grid.setTemperature(x, y, min(temp + amount_temp * fall_off, 100.0));
-//
-//                }
-//            }
-            randomize_grid(grid);
-            grid.printGrid();
+            double xpos = grid.cursor_pos.x;
+            double ypos = grid.cursor_pos.y;
+
+            int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
+            int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
+
+            for (int y = row - size_smoke; y <= row + size_smoke; ++y) {
+                for (int x = col - size_smoke; x <= col + size_smoke; ++x) {
+                    double dis2 = pow(y - row, 2.0) + pow(x - col, 2.0);
+
+                    if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 ||
+                        (dis2 > size_smoke * size_smoke)) {
+                        continue;
+                    }
+
+                    // What type of function should fall off be?
+                    double fall_off = 2 * 1.0 / max(dis2, 1.0);
+
+                    double den = grid.getDensity(x, y);
+                    double temp = grid.getTemperature(x, y);
+                    grid.setDensity(x, y, min(den + amount_smoke * fall_off, 100.0));
+                    grid.setTemperature(x, y, min(temp + amount_temp * fall_off, 100.0));
+
+                }
+            }
+//            randomize_grid(grid);
+//            grid.printGrid();
         }
         auto cur_time = steady_clock::now();
         auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
