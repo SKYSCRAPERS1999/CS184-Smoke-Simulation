@@ -64,7 +64,6 @@ void generate_vertices_array() {
     double height = 1 / (double) NUMROW * 2;
     for (int y = 0; y < NUMROW; ++y) {
         for (int x = 0; x < NUMCOL; ++x) {
-
             double bottom_left_x = -1 + width * x;
             double bottom_left_y = -1 + height * y;
 
@@ -89,7 +88,7 @@ void generate_vertices_array() {
             glBindVertexArray(VAOs[index + 1]);
             glBindBuffer(GL_ARRAY_BUFFER, VBOs[index + 1]);
             glBufferData(GL_ARRAY_BUFFER, sizeof(bottom_right_triangle_vertices), bottom_right_triangle_vertices, GL_STATIC_DRAW);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0); // TODO is 0 correct?
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
             glEnableVertexAttribArray(0);
 
         }
@@ -123,42 +122,6 @@ void display(GLuint shader_program, int LIMIT = 3) {
             glDrawArrays(GL_TRIANGLES, 0, 3);
         }
     }
-
-//    glClear(GL_COLOR_BUFFER_BIT);
-//    double width = 1 / (double) NUMCOL * 2;
-//    double height = 1 / (double) NUMROW * 2;
-//    for (int y = 0; y < NUMROW; ++y) {
-//        for (int x = 0; x < NUMCOL; ++x) {
-//            double density = this->getDensity(x, y);
-//            double temperature = this->getTemperature(x, y);
-//            if (density <= LIMIT) continue;
-//
-//            // [0, 100] -> [360, 300]
-//            double hue = 360 - temperature * 0.6;
-//            // [0, 100]
-//            double saturate = 100.0;
-//            // [0, 100] -> [0, 100]
-//            double value = density;
-//
-//            Vector3D rgb = hsv2rgb({hue, saturate, value});
-//
-//
-//            glColor3d(rgb.x, rgb.y, rgb.z);
-////      glColor3d(density / 100, density / 100, density / 100);
-//
-//            glBegin(GL_QUADS);
-//            double bottom_left_x = -1 + width * x;
-//            double bottom_left_y = -1 + height * y;
-//
-//            glVertex2d(bottom_left_x, bottom_left_y);
-//            glVertex2d(bottom_left_x + width, bottom_left_y);
-//            glVertex2d(bottom_left_x + width, bottom_left_y + height);
-//            glVertex2d(bottom_left_x, bottom_left_y + height);
-//            glEnd();
-//        }
-//    }
-//    glEnd();
-//    glFlush();
 }
 
 GLuint build_shader_program() {
@@ -224,14 +187,12 @@ int main() {
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #endif
-//    glfwWindowHint(GLFW_SAMPLES, 0);
-//    glfwWindowHint(GLFW_RED_BITS, 8);
-//    glfwWindowHint(GLFW_GREEN_BITS, 8);
-//    glfwWindowHint(GLFW_BLUE_BITS, 8);
-//    glfwWindowHint(GLFW_ALPHA_BITS, 8);
-//    glfwWindowHint(GLFW_STENCIL_BITS, 8);
-//    glfwWindowHint(GLFW_DEPTH_BITS, 24);
-//    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+    glfwWindowHint(GLFW_SAMPLES, 0);
+    glfwWindowHint(GLFW_RED_BITS, 8);
+    glfwWindowHint(GLFW_GREEN_BITS, 8);
+    glfwWindowHint(GLFW_BLUE_BITS, 8);
+    glfwWindowHint(GLFW_ALPHA_BITS, 8);
+    glfwWindowHint(GLFW_STENCIL_BITS, 8);
 
     window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
     if (!window) {
@@ -250,23 +211,23 @@ int main() {
     glGenVertexArrays(NUMCOL * NUMROW * 2, VAOs);
     glGenBuffers(NUMCOL * NUMROW * 2, VBOs);
     generate_vertices_array();
-//    // Create a nanogui screen
-//    screen = new Screen();
-//    screen->initialize(window, true);
-//    int width, height;
-//    glfwGetFramebufferSize(window, &width, &height);
-//    glViewport(0, 0, width, height);
-//
-//    // Create nanogui GUI
-//    bool enabled = true;
-//    FormHelper *gui = new FormHelper(screen);
-//    nanogui::ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Form helper example");
-//    gui->addGroup("Basic type");
-//    gui->addVariable("string", strval);
-//    gui->addVariable("bool", test);
-//    screen->setVisible(true);
-//    screen->performLayout();
-//    nanoguiWindow->center();
+    // Create a nanogui screen
+    screen = new Screen();
+    screen->initialize(window, true);
+    int width, height;
+    glfwGetFramebufferSize(window, &width, &height);
+    glViewport(0, 0, width, height);
+
+    // Create nanogui GUI
+    bool enabled = true;
+    FormHelper *gui = new FormHelper(screen);
+    nanogui::ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Form helper example");
+    gui->addGroup("Basic type");
+    gui->addVariable("string", strval);
+    gui->addVariable("bool", test);
+    screen->setVisible(true);
+    screen->performLayout();
+    nanoguiWindow->center();
 
     glfwSetKeyCallback(window, [](GLFWwindow *, int key, int scancode, int action, int mods) {
                            screen->keyCallbackEvent(key, scancode, action, mods);
@@ -309,37 +270,34 @@ int main() {
     auto last_time = steady_clock::now();
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        //bool to_print = ((rng() % 100) == 0) && (omp_get_thread_num() == 0);
-        randomize_grid(grid);
         // Handle dragging of mouse to create a stream of smoke
+        if (mouse_down) {
+            double xpos = grid.cursor_pos.x;
+            double ypos = grid.cursor_pos.y;
 
-//        if (mouse_down) {
-//            double xpos = grid.cursor_pos.x;
-//            double ypos = grid.cursor_pos.y;
-//
-//            int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
-//            int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
-//
-//            for (int y = row - size_smoke; y <= row + size_smoke; ++y) {
-//                for (int x = col - size_smoke; x <= col + size_smoke; ++x) {
-//                    double dis2 = pow(y - row, 2.0) + pow(x - col, 2.0);
-//
-//                    if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 ||
-//                        (dis2 > size_smoke * size_smoke)) {
-//                        continue;
-//                    }
-//
-//                    // What type of function should fall off be?
-//                    double fall_off = 2 * 1.0 / max(dis2, 1.0);
-//
-//                    double den = grid.getDensity(x, y);
-//                    double temp = grid.getTemperature(x, y);
-//                    grid.setDensity(x, y, min(den + amount_smoke * fall_off, 100.0));
-//                    grid.setTemperature(x, y, min(temp + amount_temp * fall_off, 100.0));
-//
-//                }
-//            }
-//        }
+            int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
+            int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
+
+            for (int y = row - size_smoke; y <= row + size_smoke; ++y) {
+                for (int x = col - size_smoke; x <= col + size_smoke; ++x) {
+                    double dis2 = pow(y - row, 2.0) + pow(x - col, 2.0);
+
+                    if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 ||
+                        (dis2 > size_smoke * size_smoke)) {
+                        continue;
+                    }
+
+                    // What type of function should fall off be?
+                    double fall_off = 2 * 1.0 / max(dis2, 1.0);
+
+                    double den = grid.getDensity(x, y);
+                    double temp = grid.getTemperature(x, y);
+                    grid.setDensity(x, y, min(den + amount_smoke * fall_off, 100.0));
+                    grid.setTemperature(x, y, min(temp + amount_temp * fall_off, 100.0));
+
+                }
+            }
+        }
         auto cur_time = steady_clock::now();
         auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
 
@@ -355,9 +313,7 @@ int main() {
         }
 
         auto start_time = steady_clock::now();
-//        grid.display();
-//        display(shader_program);
-
+        glUseProgram(shader_program);
         for (int y = 0; y < NUMROW; ++y) {
             for (int x = 0; x < NUMCOL; ++x) {
                 double density = grid.getDensity(x, y);
@@ -373,12 +329,11 @@ int main() {
                 Vector3D rgb = hsv2rgb({hue, saturate, value});
 
                 int index = (y * NUMCOL + x) * 2;
-                glUseProgram(shader_program);
+
                 int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
                 glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
                 glBindVertexArray(VAOs[index]);
                 glDrawArrays(GL_TRIANGLES, 0, 3);
-                glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
                 glBindVertexArray(VAOs[index + 1]);
                 glDrawArrays(GL_TRIANGLES, 0, 3);
             }
@@ -388,8 +343,8 @@ int main() {
 //        if (to_print) {
 //            printf("display_time = %lld mm\n", display_time.count());
 //        }
-//        screen->drawContents();
-//        screen->drawWidgets();
+        screen->drawContents();
+        screen->drawWidgets();
 
 
         glfwSwapBuffers(window);
