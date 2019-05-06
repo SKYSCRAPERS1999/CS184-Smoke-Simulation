@@ -423,8 +423,8 @@ int main() {
         glfwSwapBuffers(window);
 
     }
-    glDeleteVertexArrays(NUMCOL * NUMROW * 2, VAOs);
-    glDeleteBuffers(NUMCOL * NUMROW * 2, VBOs);
+    glDeleteVertexArrays(NUMCOL * NUMROW, VAOs);
+    glDeleteBuffers(NUMCOL * NUMROW, VBOs);
     glfwTerminate();
     return 0;
 }
