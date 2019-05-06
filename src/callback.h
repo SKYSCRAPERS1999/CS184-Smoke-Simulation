@@ -7,6 +7,7 @@ extern bool mouse_down;
 extern bool is_pause;
 extern bool shift_pressed;
 extern bool is_modify_vf;
+extern bool reset;
 extern Vector2D enter_cell;
 extern Vector2D exit_cell;
 extern int size_smoke;
@@ -66,6 +67,9 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
                 break;
             case GLFW_KEY_M:
                 is_modify_vf = !is_modify_vf;
+                break;
+            case GLFW_KEY_R:
+                reset = true;
                 break;
             default:
 //                std::cout << key << " pressed" << std::endl;

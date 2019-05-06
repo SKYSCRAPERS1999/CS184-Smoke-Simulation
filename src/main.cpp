@@ -27,6 +27,7 @@ bool mouse_down = false;
 bool is_pause = false;
 bool shift_pressed = false;
 bool is_modify_vf = false;
+bool reset = false;
 Vector2D enter_cell = Vector2D(0,0);
 Vector2D exit_cell = Vector2D(0,0);
 
@@ -36,7 +37,7 @@ double amount_smoke = 90;
 double amount_temperature = 50;
 double ambient_temperature = 0;
 
-int size_mouse = 7;
+int size_mouse = 3;
 
 bool test = true;
 
@@ -275,6 +276,12 @@ int main() {
     // Core while loop for simulation
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
+        
+        // If the velocity field is reset, reset external forces
+        if (reset) {
+            reset = false;
+            fill(external_forces.begin(), external_forces.end(), Vector2D(0, 1));
+        }
         
         // If modifying the vector field, continuously update the current location of the mouse if not pressed
         if (is_modify_vf && !mouse_down) {
