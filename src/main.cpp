@@ -323,8 +323,8 @@ int main() {
                 double density = grid.getDensity(x, y);
                 double temperature = grid.getTemperature(x, y);
 
-                // [0, 100] -> [360, 300]
-                double hue = ((int)(400.0 - temperature * 0.6)) % 360;
+                // [0, 100] -> [420, 320]
+                double hue = ((int)(450.0 - temperature * 1)) % 360;
                 // [0, 100]
                 double saturate = 100.0;
                 // [0, 100] -> [0, 100]
