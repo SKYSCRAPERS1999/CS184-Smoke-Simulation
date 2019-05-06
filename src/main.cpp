@@ -380,14 +380,12 @@ int main() {
                     
                     Vector3D rgb = hsv2rgb({hue, saturate, value});
                     
-                    int index = (y * NUMCOL + x) * 2;
-                    
+                    int index = y * NUMCOL + x;
+
                     int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
                     glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
                     glBindVertexArray(VAOs[index]);
-                    glDrawArrays(GL_TRIANGLES, 0, 3);
-                    glBindVertexArray(VAOs[index + 1]);
-                    glDrawArrays(GL_TRIANGLES, 0, 3);
+                    glDrawArrays(GL_TRIANGLES, 0, 6);
                 }
             }
         } else {
@@ -405,14 +403,12 @@ int main() {
 
                     Vector3D rgb = hsv2rgb({hue, saturate, value});
 
-                    int index = (y * NUMCOL + x) * 2;
+                    int index = y * NUMCOL + x;
 
                     int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
                     glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
                     glBindVertexArray(VAOs[index]);
-                    glDrawArrays(GL_TRIANGLES, 0, 3);
-                    glBindVertexArray(VAOs[index + 1]);
-                    glDrawArrays(GL_TRIANGLES, 0, 3);
+                    glDrawArrays(GL_TRIANGLES, 0, 6);
                 }
             }
         }
