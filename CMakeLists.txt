@@ -10,6 +10,7 @@ project(HW0)
 option(BUILD_LIBCGL "Build with libCGL" ON)
 option(BUILD_DEBUG "Build with debug settings" OFF)
 option(BUILD_DOCS "Build documentation" OFF)
+option(OpenMP "Set OpenMP" OFF)
 #-------------------------------------------------------------------------------
 # Platform-specific settings
 #-------------------------------------------------------------------------------
@@ -29,8 +30,11 @@ if (APPLE)
 
     # Clang configuration
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-
-        set(CLANG_CXX_FLAGS "-std=c++11 -m64")
+        if (OpenMP)
+            set(CLANG_CXX_FLAGS "-std=c++11 -m64 -fopenmp")
+        else(OpenMP)
+            set(CLANG_CXX_FLAGS "-std=c++11 -m64")
+        endif(OpenMP)
 
         if (BUILD_DEBUG)
             set(CMAKE_BUILD_TYPE Debug)
