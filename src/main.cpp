@@ -26,9 +26,15 @@ Grid grid;
 bool mouse_down = false;
 bool is_pause = false;
 bool shift_pressed = false;
+
+// Adjustable parameters for nanogui
 int size_smoke = 5;
-double amount_smoke = 50;
+double amount_smoke = 75;
+double amount_temperature = 50;
+double ambient_temperature = 0;
+
 bool test = true;
+
 
 // Vertex Array Object and Vertex Buffer Object
 GLuint VBOs[NUMCOL * NUMROW * 2], VAOs[NUMCOL * NUMROW * 2];
@@ -197,8 +203,7 @@ int main() {
     external_forces.resize(grid.width * grid.height, Vector2D(0.0, 0.0));
 
     // These parameters effect the smoke that gets placed down with mouse clicks
-    double amount_temp = 50;
-    double ambient_temperature = 0;
+
     glfwSetErrorCallback(error_callback);
     // Initialize
     if (!glfwInit()) {
@@ -239,16 +244,18 @@ int main() {
     // Create nanogui GUI
     bool enabled = true;
     FormHelper *gui = new FormHelper(screen);
-    nanogui::ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Form helper example");
-    gui->addGroup("Basic type");
-    gui->addVariable("string", strval);
-    gui->addVariable("bool", test);
+    nanogui::ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Adjustable parameters");
+    gui->addGroup("Smoke");
+    gui->addVariable("Size of smoke (1 to 20)", size_smoke);
+    gui->addVariable("Density of smoke (0 to 100)", amount_smoke);
+    gui->addVariable("Temperature of smoke (0 to 100)", amount_temperature);
+    gui->addVariable("Ambient temperature (0 to 100)", ambient_temperature);
+    
     screen->setVisible(true);
     screen->performLayout();
     nanoguiWindow->center();
 
     set_callback();
-
 
 
 #if defined(_OPENMP)
@@ -290,7 +297,7 @@ int main() {
                     double den = grid.getDensity(x, y);
                     double temp = grid.getTemperature(x, y);
                     grid.setDensity(x, y, min(den + amount_smoke * fall_off, 100.0));
-                    grid.setTemperature(x, y, min(temp + amount_temp * fall_off, 100.0));
+                    grid.setTemperature(x, y, min(temp + amount_temperature * fall_off, 100.0));
 
                 }
             }
@@ -317,7 +324,7 @@ int main() {
                 double temperature = grid.getTemperature(x, y);
 
                 // [0, 100] -> [360, 300]
-                double hue = 360 - temperature * 0.6;
+                double hue = ((int)(400.0 - temperature * 0.6)) % 360;
                 // [0, 100]
                 double saturate = 100.0;
                 // [0, 100] -> [0, 100]
@@ -342,7 +349,6 @@ int main() {
 //        }
         screen->drawContents();
         screen->drawWidgets();
-
 
         glfwSwapBuffers(window);
 

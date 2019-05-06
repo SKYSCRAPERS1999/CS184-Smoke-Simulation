@@ -27,7 +27,7 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         if (action == GLFW_PRESS) {
             mouse_down = true;
-            std::cout<<"Mouse Down!"<<std::endl;
+            //std::cout<<"Mouse Down!"<<std::endl;
         } else if (action == GLFW_RELEASE) {
             mouse_down = false;
         }
