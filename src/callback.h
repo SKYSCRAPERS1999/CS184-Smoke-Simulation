@@ -2,12 +2,13 @@
 #define callback_h
 
 extern Grid grid;
-// global mouse_down variable used in main.cpp
+// global variables to control simulation in main.cpp
 extern bool mouse_down;
-// global is_pause variable used in main.cpp
 extern bool is_pause;
-// global variables to control size of smoke
 extern bool shift_pressed;
+extern bool is_modify_vf;
+extern Vector2D enter_cell;
+extern Vector2D exit_cell;
 extern int size_smoke;
 extern double amount_smoke;
 extern nanogui::Screen *screen;
@@ -62,6 +63,9 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
                 break;
             case GLFW_KEY_P:
                 is_pause = !is_pause;
+                break;
+            case GLFW_KEY_M:
+                is_modify_vf = !is_modify_vf;
                 break;
             default:
 //                std::cout << key << " pressed" << std::endl;

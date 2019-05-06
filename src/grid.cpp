@@ -252,6 +252,8 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
     
     for (int y = 1; y < height - 1; ++y) {
         for (int x = 1; x < width - 1; ++x) {
+            // Have buoyant direction be modifiable by the user
+            buoyant_direction = external_forces[y*width + x];
             // Ignore boundaries for now
             Vector2D buoyant_force = (-smoke_density_parameter * getDensity(x, y) + (getTemperature(x, y) - ambient_temperature)*timestep*tempature_parameter)*buoyant_direction;
             viscous_velocity_grid[y*width + x] += buoyant_force;
