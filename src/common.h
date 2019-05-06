@@ -8,10 +8,10 @@ using std::uniform_int_distribution;
 using uni_dis = uniform_int_distribution<int>;
 using namespace std::chrono;
 
-const int NUMROW = 100;
-const int NUMCOL = 100;
+const int NUMROW = 110;
+const int NUMCOL = 125;
 const int FREQ   = 20;
-const int WINDOW_WIDTH = 640; // x is WIDTH
+const int WINDOW_WIDTH = 700; // x is WIDTH
 const int WINDOW_HEIGHT = 640; // y is HEIGHT
 
 const char *vertexShaderSource = "#version 330 core\n"
