@@ -9,8 +9,6 @@
 #include "CGL/vector4D.h"
 
 using namespace CGL;
-using std::min;
-using std::max;
 
 // may be used later if we change to another method,
 // not used for the current hsv2rgb
@@ -20,7 +18,9 @@ template <typename T> int sgn(T val) {
 }
 
 static inline Vector3D clamp(Vector3D col, double mi, double mx) {
-  return Vector3D(min(max(mi, col.x), mx), min(max(mi, col.y), mx), min(max(mi, col.z), mx));
+  return Vector3D(std::min(std::max(mi, col.x), mx),
+                  std::min(std::max(mi, col.y), mx),
+                  std::min(std::max(mi, col.z), mx));
 }
 
 static inline Vector3D mix(Vector3D x, Vector3D y, double a) {
