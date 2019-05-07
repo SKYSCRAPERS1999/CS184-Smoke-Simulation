@@ -32,12 +32,12 @@ Vector2D enter_cell = Vector2D(0,0);
 Vector2D exit_cell = Vector2D(0,0);
 
 // Adjustable parameters for nanogui
-int size_smoke = 5;
+int size_smoke = 5 * 2;
 double amount_smoke = 90;
 double amount_temperature = 50;
 double ambient_temperature = 0;
 
-int size_mouse = 3;
+int size_mouse = 3 * 2;
 
 bool test = true;
 
@@ -243,10 +243,10 @@ int main() {
     FormHelper *gui = new FormHelper(screen);
     nanogui::ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Adjustable parameters");
     gui->addGroup("Smoke");
-    gui->addVariable("Size of smoke (1 to 20)", size_smoke);
-    gui->addVariable("Density of smoke (0 to 100)", amount_smoke);
-    gui->addVariable("Temperature of smoke (0 to 100)", amount_temperature);
-    gui->addVariable("Ambient temperature (0 to 100)", ambient_temperature);
+    gui->addVariable("Size(1 to 20)", size_smoke);
+    gui->addVariable("Density(0 to 100)", amount_smoke);
+    gui->addVariable("Heat(0 to 100)", amount_temperature);
+    gui->addVariable("Ambient(0 to 100)", ambient_temperature);
 
     screen->setVisible(true);
     screen->performLayout();
@@ -328,8 +328,10 @@ int main() {
                             continue;
                         }
 
+
                         // What type of function should fall off be?
-                        double fall_off = 2 * 1.0 / max(dis2, 1.0);
+                        dis2 /= pow((NUMCOL / 100.0), 2.0);
+                        double fall_off = 2.0 / max(dis2, 1.0);
 
                         double den = grid.getDensity(x, y);
                         double temp = grid.getTemperature(x, y);
@@ -351,7 +353,6 @@ int main() {
                 grid.simulate(1, external_forces, ambient_temperature);
                 auto end_time = steady_clock::now();
                 auto simulate_time = duration_cast<milliseconds>(end_time - start_time);
-            } else {
             }
         }
 
@@ -363,23 +364,42 @@ int main() {
         if (is_modify_vf) {
             for (int y = 0; y < NUMROW; ++y) {
                 for (int x = 0; x < NUMCOL; ++x) {
-                    Vector2D accumulated_direction = Vector2D(0.0,0.0);
-                    for (int ys = y; ys < y + 2; ys++) {
-                        for (int xs = x; xs < x + 2; xs++) {
+                    Vector2D accumulated_direction = Vector2D(0.0, 0.0);
+                    int count = 0;
+                    for (int ys = -1 + y; ys <= y + 1; ys++) {
+                        for (int xs = -1 + x; xs <= x + 1; xs++) {
                             if (ys >= 0 && xs >= 0 && ys < NUMROW && xs < NUMCOL) {
                                 accumulated_direction += external_forces[ys*grid.width + xs];
+                                ++count;
                             }
                         }
                     }
+                    double len = accumulated_direction.norm() / double(count);
+
                     accumulated_direction = accumulated_direction.unit();
-                    double angle = accumulated_direction.y >= 0 ? acos(accumulated_direction.x) : acos(accumulated_direction.x) + PI;
-                    angle = angle * 180 / PI;
+
+                    double& x_cor = accumulated_direction.x;
+                    double& y_cor = accumulated_direction.y;
+                    if (abs(x_cor) < EPS) x_cor += sgn(x_cor) * EPS;
+
+                    double angle = atan(y_cor / x_cor);
+
+                    angle = angle * 2 * 180 / PI;
+//                    double angle = accumulated_direction.y >= 0 ? acos(accumulated_direction.x) : acos(accumulated_direction.x) + PI;
+
                     double hue = angle;
                     double saturate = 100;
                     double value = 100;
-                    
+
+                    if (len < 1.0 + EPS) {
+                        hue = 0.0;
+                        saturate = 0.0;
+                        value = 100.0;
+                    }
+
                     Vector3D rgb = hsv2rgb({hue, saturate, value});
-                    
+//                    printf("len = %f: %f %f %f\n", len, rgb.x, rgb.y, rgb.z);
+
                     int index = y * NUMCOL + x;
 
                     int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
@@ -414,9 +434,9 @@ int main() {
         }
         auto end_time = steady_clock::now();
         auto display_time = duration_cast<milliseconds>(end_time - start_time);
-//        if (to_print) {
-//            printf("display_time = %lld mm\n", display_time.count());
-//        }
+        if (rng() % 50 == 0) {
+            printf("display_time = %lld mm\n", display_time.count());
+        }
         screen->drawContents();
         screen->drawWidgets();
 

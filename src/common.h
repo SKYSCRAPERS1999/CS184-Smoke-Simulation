@@ -8,11 +8,15 @@ using std::uniform_int_distribution;
 using uni_dis = uniform_int_distribution<int>;
 using namespace std::chrono;
 
-const int NUMROW = 110;
-const int NUMCOL = 125;
-const int FREQ   = 20;
+const int NUMCOL = 200;
+const int NUMROW = 200;
+//const int NUMROW = 110;
+//const int NUMCOL = 125;
+//const int FREQ   = 20;
+const int FREQ   = 30;
 const int WINDOW_WIDTH = 700; // x is WIDTH
 const int WINDOW_HEIGHT = 640; // y is HEIGHT
+const double EPS = 1e-3;
 
 const char *vertexShaderSource = "#version 330 core\n"
                                  "layout (location = 0) in vec3 aPos;\n"
