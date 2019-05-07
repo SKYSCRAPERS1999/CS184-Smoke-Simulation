@@ -42,7 +42,7 @@ int size_mouse = 3 * 2;
 bool test = true;
 
 // Vertex Array Object and Vertex Buffer Object
-GLuint VBOs[NUMCOL * NUMROW], VAOs[NUMCOL * NUMROW], EBOs[NUMCOL * NUMROW];
+GLuint VBOs[NUMCOL * NUMROW], VAOs[NUMCOL * NUMROW], EBO[NUMCOL * NUMROW];
 
 GLFWwindow *window = nullptr;
 Screen *screen = nullptr;
@@ -68,12 +68,12 @@ void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
 }
 
 void generate_vertices_array() {
-    double width = 1 / (double) NUMCOL * 2;
-    double height = 1 / (double) NUMROW * 2;
     GLuint elements[] = {
             0, 1, 2,
             2, 3, 0
     };
+    double width = 1 / (double) NUMCOL * 2;
+    double height = 1 / (double) NUMROW * 2;
     for (int y = 0; y < NUMROW; ++y) {
         for (int x = 0; x < NUMCOL; ++x) {
             double bottom_left_x = -1 + width * x;
@@ -84,19 +84,24 @@ void generate_vertices_array() {
                     bottom_left_x, bottom_left_y + height, 0, // top left
                     bottom_left_x + width, bottom_left_y + height, 0, // top right
                     bottom_left_x + width, bottom_left_y, 0, // bottom right
-                    bottom_left_x + width, bottom_left_y, 0, // bottom right
+//                    bottom_left_x + width, bottom_left_y, 0, // bottom right
                     bottom_left_x, bottom_left_y, 0, // bottom left
-                    bottom_left_x, bottom_left_y + height, 0, // top left
+//                    bottom_left_x, bottom_left_y + height, 0, // top left
             };
             int index = y * NUMCOL + x;
             glBindVertexArray(VAOs[index]);
             glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
             glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle_vertices), rectangle_vertices,
                          GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[index]);
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
             glEnableVertexAttribArray(0);
         }
     }
+    glBindVertexArray(0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void set_callback() {
@@ -229,7 +234,7 @@ int main() {
     GLuint shader_program = build_shader_program();
     glGenVertexArrays(NUMCOL * NUMROW, VAOs);
     glGenBuffers(NUMCOL * NUMROW, VBOs);
-    glGenBuffers(NUMCOL * NUMROW, EBOs);
+    glGenBuffers(NUMCOL * NUMROW, EBO);
     generate_vertices_array();
     // Create a nanogui screen
     screen = new Screen();
@@ -272,7 +277,7 @@ int main() {
     // Core while loop for simulation
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        
+        glClear(GL_COLOR_BUFFER_BIT);
         // If the velocity field is reset, reset external forces
         if (reset) {
             reset = false;
@@ -418,7 +423,8 @@ int main() {
                     int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
                     glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
                     glBindVertexArray(VAOs[index]);
-                    glDrawArrays(GL_TRIANGLES, 0, 6);
+                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//                    glDrawArrays(GL_TRIANGLES, 0, 6);
                 }
             }
         }
@@ -435,6 +441,8 @@ int main() {
     }
     glDeleteVertexArrays(NUMCOL * NUMROW, VAOs);
     glDeleteBuffers(NUMCOL * NUMROW, VBOs);
+    glDeleteBuffers(NUMCOL * NUMROW, EBO);
+
     glfwTerminate();
     return 0;
 }
