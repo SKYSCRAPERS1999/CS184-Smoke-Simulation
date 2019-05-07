@@ -130,6 +130,7 @@ void set_callback() {
   glfwSetCursorPosCallback(window, cursor_position_callback);
   glfwSetMouseButtonCallback(window, mouse_button_callback);
   glfwSetKeyCallback(window, keyboard_callback);
+    glfwSetWindowSizeCallback(window, window_size_callback);
 }
 
 //void display(GLuint shader_program, int LIMIT = 3) {
