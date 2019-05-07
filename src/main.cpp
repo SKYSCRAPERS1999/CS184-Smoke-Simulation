@@ -38,6 +38,7 @@ double amount_smoke = 90;
 double amount_temperature = 50;
 double ambient_temperature = 0;
 Vector3D global_rgb;
+extern Vector3D picked_rgb;
 
 int size_mouse = 3 * 2;
 
@@ -145,7 +146,7 @@ void set_callback() {
 //            // [0, 100] -> [0, 100]
 //            double value = density;
 //
-//            Vector3D rgb = hsv2rgb({hue, saturate, value});
+//            Vector3D global_rgb = hsv2rgb({hue, saturate, value});
 //
 //            int index = (y * NUMCOL + x) * 2;
 //            glUseProgram(shader_program);
@@ -351,6 +352,7 @@ int main() {
     if (is_modify_vf) {
       for (int y = 0; y < NUMROW; ++y) {
         for (int x = 0; x < NUMCOL; ++x) {
+
           Vector2D accumulated_direction = Vector2D(0.0, 0.0);
           int count = 0;
           for (int ys = -1 + y; ys <= y + 1; ys++) {
@@ -376,7 +378,6 @@ int main() {
           }
 
           global_rgb = hsv2rgb({hue, saturate, value});
-//                    printf("len = %f: %f %f %f\n", len, rgb.x, rgb.y, rgb.z);
 
           int index = y * NUMCOL + x;
 
@@ -393,19 +394,27 @@ int main() {
           double density = grid.getDensity(x, y);
           double temperature = grid.getTemperature(x, y);
 
-          // [0, 100] -> [420, 320]
-          double hue = ((int) (450.0 - temperature * 1)) % 360;
+          double hue_center = 400;
+          double hue_halfspan = 50;
+          if (picked_rgb.norm() > EPS) {
+            Vector3D picked_hsv = rgb2hsv(picked_rgb);
+            hue_center = picked_hsv.x;
+          }
+
+          // [0, 100] -> [450, 350]
+//          double hue = ((int) (450.0 - temperature * 1)) % 360;
+          double hue = (int) (hue_center - (temperature - hue_halfspan)) % 360;
           // [0, 100]
           double saturate = 100.0;
           // [0, 100] -> [0, 100]
           double value = density;
 
-          Vector3D rgb = hsv2rgb({hue, saturate, value});
+          global_rgb = hsv2rgb({hue, saturate, value});
 
           int index = y * NUMCOL + x;
 
           int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
-          glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
+          glUniform4f(vertexColorLocation, global_rgb.x, global_rgb.y, global_rgb.z, 1.0f);
           glBindVertexArray(VAOs[index]);
           glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 //                    glDrawArrays(GL_TRIANGLES, 0, 6);
