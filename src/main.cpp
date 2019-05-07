@@ -37,7 +37,7 @@ double amount_smoke = 90;
 double amount_temperature = 50;
 double ambient_temperature = 0;
 
-int size_mouse = 3;
+int size_mouse = 1;
 
 bool test = true;
 
@@ -198,7 +198,7 @@ int main() {
     grid = Grid(NUMCOL + 2, NUMROW + 2);
 
     // Initialize the initial vector field for buoyant forces to point upwards (gravity)
-    vector<Vector2D> external_forces(grid.width*grid.height, Vector2D(0, 1));
+    vector<Vector2D> external_forces(grid.width*grid.height, Vector2D(0, 0));
     
     // Initialize window and gui elements
     glfwSetErrorCallback(error_callback);
@@ -276,7 +276,7 @@ int main() {
         // If the velocity field is reset, reset external forces
         if (reset) {
             reset = false;
-            fill(external_forces.begin(), external_forces.end(), Vector2D(0, 1));
+            fill(external_forces.begin(), external_forces.end(), Vector2D(0, 0));
         }
         
         // If modifying the vector field, continuously update the current location of the mouse if not pressed
@@ -307,7 +307,7 @@ int main() {
                             if (y < 1 || x < 1 || y >= grid.height - 1 || x >= grid.width - 1) {
                                 continue;
                             }
-                            external_forces[y*grid.width + x] = direction_mouse_drag;
+                            external_forces[y*grid.width + x] = direction_mouse_drag.unit();
                         }
                     }
                     enter_cell = exit_cell;
@@ -364,19 +364,24 @@ int main() {
             for (int y = 0; y < NUMROW; ++y) {
                 for (int x = 0; x < NUMCOL; ++x) {
                     Vector2D accumulated_direction = Vector2D(0.0,0.0);
-                    for (int ys = y; ys < y + 2; ys++) {
-                        for (int xs = x; xs < x + 2; xs++) {
+                    for (int ys = y; ys < y + 1; ys++) {
+                        for (int xs = x; xs < x + 1; xs++) {
                             if (ys >= 0 && xs >= 0 && ys < NUMROW && xs < NUMCOL) {
                                 accumulated_direction += external_forces[ys*grid.width + xs];
                             }
                         }
                     }
-                    accumulated_direction = accumulated_direction.unit();
-                    double angle = accumulated_direction.y >= 0 ? acos(accumulated_direction.x) : acos(accumulated_direction.x) + PI;
-                    angle = angle * 180 / PI;
-                    double hue = angle;
+                    double hue = 0;
                     double saturate = 100;
                     double value = 100;
+                    if (accumulated_direction.x == 0 && accumulated_direction.y == 0) {
+                        value = 0;
+                    } else {
+                        accumulated_direction = accumulated_direction.unit();
+                        double angle = accumulated_direction.y >= 0 ? acos(accumulated_direction.x) : acos(accumulated_direction.x) + PI;
+                        angle = angle * 180 / PI;
+                        hue = angle;
+                    }
                     
                     Vector3D rgb = hsv2rgb({hue, saturate, value});
                     
