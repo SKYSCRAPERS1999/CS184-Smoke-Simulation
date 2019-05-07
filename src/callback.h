@@ -2,12 +2,14 @@
 #define callback_h
 
 extern Grid grid;
-// global mouse_down variable used in main.cpp
+// global variables to control simulation in main.cpp
 extern bool mouse_down;
-// global is_pause variable used in main.cpp
 extern bool is_pause;
-// global variables to control size of smoke
 extern bool shift_pressed;
+extern bool is_modify_vf;
+extern bool reset;
+extern Vector2D enter_cell;
+extern Vector2D exit_cell;
 extern int size_smoke;
 extern double amount_smoke;
 extern nanogui::Screen *screen;
@@ -27,7 +29,7 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         if (action == GLFW_PRESS) {
             mouse_down = true;
-            std::cout<<"Mouse Down!"<<std::endl;
+            //std::cout<<"Mouse Down!"<<std::endl;
         } else if (action == GLFW_RELEASE) {
             mouse_down = false;
         }
@@ -62,6 +64,12 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
                 break;
             case GLFW_KEY_P:
                 is_pause = !is_pause;
+                break;
+            case GLFW_KEY_M:
+                is_modify_vf = !is_modify_vf;
+                break;
+            case GLFW_KEY_R:
+                reset = true;
                 break;
             default:
 //                std::cout << key << " pressed" << std::endl;

@@ -245,20 +245,25 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
     set_boundary_conditions(viscous_velocity_grid, -1);
     
     
-    // (5) Add buoyant forces from temperature
+    // (5) Add buoyant forces from temperature and external forces
     Vector2D buoyant_direction = Vector2D(0, 1);
     double tempature_parameter = 0.05;
-    double smoke_density_parameter = 0.04;
+    double smoke_density_parameter = 0.02;
+    double external_forces_parameter = 2;
     
     for (int y = 1; y < height - 1; ++y) {
         for (int x = 1; x < width - 1; ++x) {
+            // Have buoyant direction be modifiable by the user
+            //buoyant_direction = external_forces[y*width + x];
             // Ignore boundaries for now
             Vector2D buoyant_force = (-smoke_density_parameter * getDensity(x, y) + (getTemperature(x, y) - ambient_temperature)*timestep*tempature_parameter)*buoyant_direction;
             viscous_velocity_grid[y*width + x] += buoyant_force;
+            viscous_velocity_grid[y*width + x] += external_forces_parameter * external_forces[y*width + x];
         }
     }
     
     set_boundary_conditions(viscous_velocity_grid, -1);
+    
 
     // (6) Projection Step
     // Calculate the divergence
@@ -326,12 +331,15 @@ void Grid::set_boundary_conditions(vector<Vector2D> &vec, int b) {
     for (int i = 1; i < width - 1; i++) {
         //vec[cell(i, 0)] = b * vec[cell(i, 1)];
         vec[cell(i, 0)] = Vector2D(0, 1);
-        vec[cell(i, height - 1)] = b * vec[cell(i, height - 2)];
+        //vec[cell(i, height - 1)] = b * vec[cell(i, height - 2)];
+        vec[cell(i, height - 1)] = Vector2D(0, 1);
     }
     // left/right wall
     for (int i = 1; i < height - 1; i++) {
-        vec[cell(0, i)] = b * vec[cell(1, i)];
-        vec[cell(width - 1, i)] = b * vec[cell(width - 2, i)];
+        //vec[cell(0, i)] = b * vec[cell(1, i)];
+        vec[cell(0, i)] = Vector2D(0, 1);
+        //vec[cell(width - 1, i)] = b * vec[cell(width - 2, i)];
+        vec[cell(width - 1, i)] = Vector2D(0, 1);
     }
 }
 

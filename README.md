@@ -43,4 +43,6 @@ brew install libomp
 | [    | Decrease amount of smoke. |
 | ]    | Increase amount of smoke. |
 | p    | Pause/Resume simulation.  |
+| m   | Modify the vector field.  |
+| r   | Reset the vector field. (All vectors point up) |
 
