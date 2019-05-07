@@ -8,12 +8,12 @@ using std::uniform_int_distribution;
 using uni_dis = uniform_int_distribution<int>;
 using namespace std::chrono;
 
-const int NUMCOL = 100;
-const int NUMROW = 100;
+const int NUMCOL = 130;
+const int NUMROW = 130;
 //const int NUMROW = 110;
 //const int NUMCOL = 125;
 //const int FREQ   = 20;
-const int FREQ   = 20;
+const int FREQ   = 30;
 int WINDOW_WIDTH = 700; // x is WIDTH
 int WINDOW_HEIGHT = 640; // y is HEIGHT
 const double EPS = 1e-3;

@@ -84,11 +84,11 @@ void generate_vertices_array() {
 
       // setup first triangle
       float rectangle_vertices[] = {
-          bottom_left_x, bottom_left_y + height, 0, // top left
-          bottom_left_x + width, bottom_left_y + height, 0, // top right
-          bottom_left_x + width, bottom_left_y, 0, // bottom right
+          bottom_left_x, bottom_left_y + height, // top left
+          bottom_left_x + width, bottom_left_y + height, // top right
+          bottom_left_x + width, bottom_left_y, // bottom right
 //                    bottom_left_x + width, bottom_left_y, 0, // bottom right
-          bottom_left_x, bottom_left_y, 0, // bottom left
+          bottom_left_x, bottom_left_y, // bottom left
 //                    bottom_left_x, bottom_left_y + height, 0, // top left
       };
       int index = y * NUMCOL + x;
@@ -98,7 +98,7 @@ void generate_vertices_array() {
                    GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[index]);
       glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+      glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
       glEnableVertexAttribArray(0);
     }
   }
@@ -393,6 +393,7 @@ int main() {
       for (int y = 0; y < NUMROW; ++y) {
         for (int x = 0; x < NUMCOL; ++x) {
           double density = grid.getDensity(x, y);
+          if (density <= 3) continue;
           double temperature = grid.getTemperature(x, y);
 
           double hue_center = 400;
