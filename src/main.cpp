@@ -198,7 +198,7 @@ int main() {
     grid = Grid(NUMCOL + 2, NUMROW + 2);
 
     // Initialize the initial vector field for buoyant forces to point upwards (gravity)
-    vector<Vector2D> external_forces(grid.width*grid.height, Vector2D(0, 1));
+    vector<Vector2D> external_forces(grid.width*grid.height, Vector2D(0, 0));
     
     // Initialize window and gui elements
     glfwSetErrorCallback(error_callback);
@@ -276,7 +276,7 @@ int main() {
         // If the velocity field is reset, reset external forces
         if (reset) {
             reset = false;
-            fill(external_forces.begin(), external_forces.end(), Vector2D(0, 1));
+            fill(external_forces.begin(), external_forces.end(), Vector2D(0, 0));
         }
         
         // If modifying the vector field, continuously update the current location of the mouse if not pressed
@@ -307,7 +307,7 @@ int main() {
                             if (y < 1 || x < 1 || y >= grid.height - 1 || x >= grid.width - 1) {
                                 continue;
                             }
-                            external_forces[y*grid.width + x] = direction_mouse_drag;
+                            external_forces[y*grid.width + x] = direction_mouse_drag.unit();
                         }
                     }
                     enter_cell = exit_cell;
@@ -374,29 +374,19 @@ int main() {
                             }
                         }
                     }
-                    double len = accumulated_direction.norm() / double(count);
 
-                    accumulated_direction = accumulated_direction.unit();
-
-                    double& x_cor = accumulated_direction.x;
-                    double& y_cor = accumulated_direction.y;
-                    if (abs(x_cor) < EPS) x_cor += sgn(x_cor) * EPS;
-
-                    double angle = atan(y_cor / x_cor);
-
-                    angle = angle * 2 * 180 / PI;
-//                    double angle = accumulated_direction.y >= 0 ? acos(accumulated_direction.x) : acos(accumulated_direction.x) + PI;
-
-                    double hue = angle;
+                    double hue = 0;
                     double saturate = 100;
                     double value = 100;
-
-                    if (len < 1.0 + EPS) {
-                        hue = 0.0;
-                        saturate = 0.0;
-                        value = 100.0;
+                    if (accumulated_direction.x == 0 && accumulated_direction.y == 0) {
+                        value = 0;
+                    } else {
+                        accumulated_direction = accumulated_direction.unit();
+                        double angle = accumulated_direction.y >= 0 ? acos(accumulated_direction.x) : acos(accumulated_direction.x) + PI;
+                        angle = angle * 180 / PI;
+                        hue = angle;
                     }
-
+                    
                     Vector3D rgb = hsv2rgb({hue, saturate, value});
 //                    printf("len = %f: %f %f %f\n", len, rgb.x, rgb.y, rgb.z);
 
