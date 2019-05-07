@@ -42,7 +42,7 @@ int size_mouse = 1;
 bool test = true;
 
 // Vertex Array Object and Vertex Buffer Object
-GLuint VBOs[NUMCOL * NUMROW * 2], VAOs[NUMCOL * NUMROW * 2];
+GLuint VBOs[NUMCOL * NUMROW], VAOs[NUMCOL * NUMROW], EBOs[NUMCOL * NUMROW];
 
 GLFWwindow *window = nullptr;
 Screen *screen = nullptr;
@@ -70,44 +70,39 @@ void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
 void generate_vertices_array() {
     double width = 1 / (double) NUMCOL * 2;
     double height = 1 / (double) NUMROW * 2;
+    GLuint elements[] = {
+            0, 1, 2,
+            2, 3, 0
+    };
     for (int y = 0; y < NUMROW; ++y) {
         for (int x = 0; x < NUMCOL; ++x) {
             double bottom_left_x = -1 + width * x;
             double bottom_left_y = -1 + height * y;
 
             // setup first triangle
-            float up_left_triangle_vertices[] = {
-                    bottom_left_x, bottom_left_y, 0,
-                    bottom_left_x, bottom_left_y + height, 0,
-                    bottom_left_x + width, bottom_left_y + height, 0,
+            float rectangle_vertices[] = {
+                    bottom_left_x, bottom_left_y + height, 0, // top left
+                    bottom_left_x + width, bottom_left_y + height, 0, // top right
+                    bottom_left_x + width, bottom_left_y, 0, // bottom right
+                    bottom_left_x + width, bottom_left_y, 0, // bottom right
+                    bottom_left_x, bottom_left_y, 0, // bottom left
+                    bottom_left_x, bottom_left_y + height, 0, // top left
             };
-            int index = (y * NUMCOL + x) * 2;
+            int index = y * NUMCOL + x;
             glBindVertexArray(VAOs[index]);
             glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(up_left_triangle_vertices), up_left_triangle_vertices, GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle_vertices), rectangle_vertices,
+                         GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
             glEnableVertexAttribArray(0);
-            // setup seconde triangle
-            float bottom_right_triangle_vertices[] = {
-                    bottom_left_x, bottom_left_y, 0,
-                    bottom_left_x + width, bottom_left_y + height, 0,
-                    bottom_left_x + width, bottom_left_y, 0,
-            };
-            glBindVertexArray(VAOs[index + 1]);
-            glBindBuffer(GL_ARRAY_BUFFER, VBOs[index + 1]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(bottom_right_triangle_vertices), bottom_right_triangle_vertices, GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
-            glEnableVertexAttribArray(0);
-
         }
     }
 }
 
 void set_callback() {
     glfwSetKeyCallback(window, [](GLFWwindow *, int key, int scancode, int action, int mods) {
-                           screen->keyCallbackEvent(key, scancode, action, mods);
-                       }
-    );
+        screen->keyCallbackEvent(key, scancode, action, mods);
+    });
 
     glfwSetCharCallback(window, [](GLFWwindow *, unsigned int codepoint) {
         screen->charCallbackEvent(codepoint);
@@ -232,8 +227,9 @@ int main() {
     }
 
     GLuint shader_program = build_shader_program();
-    glGenVertexArrays(NUMCOL * NUMROW * 2, VAOs);
-    glGenBuffers(NUMCOL * NUMROW * 2, VBOs);
+    glGenVertexArrays(NUMCOL * NUMROW, VAOs);
+    glGenBuffers(NUMCOL * NUMROW, VBOs);
+    glGenBuffers(NUMCOL * NUMROW, EBOs);
     generate_vertices_array();
     // Create a nanogui screen
     screen = new Screen();
@@ -251,7 +247,7 @@ int main() {
     gui->addVariable("Density of smoke (0 to 100)", amount_smoke);
     gui->addVariable("Temperature of smoke (0 to 100)", amount_temperature);
     gui->addVariable("Ambient temperature (0 to 100)", ambient_temperature);
-    
+
     screen->setVisible(true);
     screen->performLayout();
     nanoguiWindow->center();
@@ -362,6 +358,7 @@ int main() {
         // Display the current state of the simulation
         auto start_time = steady_clock::now();
         glUseProgram(shader_program);
+      
         // If modifying the vector field, display vector field. Otherwise, display the smoke.
         if (is_modify_vf) {
             for (int y = 0; y < NUMROW; ++y) {
@@ -388,14 +385,12 @@ int main() {
                     
                     Vector3D rgb = hsv2rgb({hue, saturate, value});
                     
-                    int index = (y * NUMCOL + x) * 2;
-                    
+                    int index = y * NUMCOL + x;
+
                     int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
                     glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
                     glBindVertexArray(VAOs[index]);
-                    glDrawArrays(GL_TRIANGLES, 0, 3);
-                    glBindVertexArray(VAOs[index + 1]);
-                    glDrawArrays(GL_TRIANGLES, 0, 3);
+                    glDrawArrays(GL_TRIANGLES, 0, 6);
                 }
             }
         } else {
@@ -413,14 +408,12 @@ int main() {
 
                     Vector3D rgb = hsv2rgb({hue, saturate, value});
 
-                    int index = (y * NUMCOL + x) * 2;
+                    int index = y * NUMCOL + x;
 
                     int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
                     glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
                     glBindVertexArray(VAOs[index]);
-                    glDrawArrays(GL_TRIANGLES, 0, 3);
-                    glBindVertexArray(VAOs[index + 1]);
-                    glDrawArrays(GL_TRIANGLES, 0, 3);
+                    glDrawArrays(GL_TRIANGLES, 0, 6);
                 }
             }
         }
@@ -435,8 +428,8 @@ int main() {
         glfwSwapBuffers(window);
 
     }
-    glDeleteVertexArrays(NUMCOL * NUMROW * 2, VAOs);
-    glDeleteBuffers(NUMCOL * NUMROW * 2, VBOs);
+    glDeleteVertexArrays(NUMCOL * NUMROW, VAOs);
+    glDeleteBuffers(NUMCOL * NUMROW, VBOs);
     glfwTerminate();
     return 0;
 }
