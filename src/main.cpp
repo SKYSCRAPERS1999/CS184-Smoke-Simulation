@@ -46,7 +46,7 @@ int size_mouse = 3 * 2;
 bool test = true;
 
 // Vertex Array Object and Vertex Buffer Object
-GLuint VBOs[NUMCOL * NUMROW], VAOs[NUMCOL * NUMROW], EBO[NUMCOL * NUMROW];
+GLuint VBOs[NUMCOL * NUMROW], VAOs[NUMCOL * NUMROW], EBO;
 
 GLFWwindow *window = nullptr;
 Screen *screen = nullptr;
@@ -97,7 +97,7 @@ void generate_vertices_array() {
             glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
             glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle_vertices), rectangle_vertices,
                          GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[index]);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
             glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
             glEnableVertexAttribArray(0);
@@ -239,7 +239,7 @@ int main() {
     GLuint shader_program = build_shader_program();
     glGenVertexArrays(NUMCOL * NUMROW, VAOs);
     glGenBuffers(NUMCOL * NUMROW, VBOs);
-    glGenBuffers(NUMCOL * NUMROW, EBO);
+    glGenBuffers(1, &EBO);
     generate_vertices_array();
     // Create a nanogui screen
     screen = new SmokeScreen(window);
@@ -258,7 +258,7 @@ int main() {
     glfwSwapInterval(1); // To prevent screen tearing
     glfwSwapBuffers(window);
     auto last_time = steady_clock::now();
-    steady_clock::time_point rendering_start_time, rendering_end_time, simulation_start_time, simulation_end_time;
+    steady_clock::time_point rendering_start_time, rendering_end_time, simulation_start_time, simulation_end_time, cur_time;
     long long rendering_time, simulation_time;
     // Core while loop for simulation
     while (!glfwWindowShouldClose(window)) {
@@ -333,19 +333,14 @@ int main() {
                 }
             }
         }
-        auto cur_time = steady_clock::now();
+        cur_time = steady_clock::now();
         auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
 
         // Advance one step in the simulation
         if (debug) simulation_start_time = steady_clock::now();
-        if (!is_pause) {
-            if (FREQ * elapsed.count() >= 1000) {
-                last_time = cur_time;
-                auto start_time = steady_clock::now();
-                grid.simulate(1, external_forces, ambient_temperature);
-                auto end_time = steady_clock::now();
-                auto simulate_time = duration_cast<milliseconds>(end_time - start_time);
-            }
+        if (!is_pause && (FREQ * elapsed.count() >= 1000)) {
+            last_time = cur_time;
+            grid.simulate(1, external_forces, ambient_temperature);
         }
 
         // Display the current state of the simulation
@@ -359,14 +354,11 @@ int main() {
         if (is_modify_vf) {
             for (int y = 0; y < NUMROW; ++y) {
                 for (int x = 0; x < NUMCOL; ++x) {
-
                     Vector2D accumulated_direction = Vector2D(0.0, 0.0);
-                    int count = 0;
-                    for (int ys = -1 + y; ys <= y + 1; ys++) {
-                        for (int xs = -1 + x; xs <= x + 1; xs++) {
+                    for (int ys = -1 + y; ys <= y + 1; ++ys) {
+                        for (int xs = -1 + x; xs <= x + 1; ++xs) {
                             if (ys >= 0 && xs >= 0 && ys < NUMROW && xs < NUMCOL) {
                                 accumulated_direction += external_forces[ys * grid.width + xs];
-                                ++count;
                             }
                         }
                     }
@@ -400,7 +392,7 @@ int main() {
             for (int y = 0; y < NUMROW; ++y) {
                 for (int x = 0; x < NUMCOL; ++x) {
                     double density = grid.getDensity(x, y);
-                    if (density <= 3) continue;
+                    if (density <= 1) continue;
                     double temperature = grid.getTemperature(x, y);
 
                     double hue_center = 400;
@@ -430,7 +422,7 @@ int main() {
                 }
             }
         }
-        if(debug) {
+        if (debug) {
             rendering_end_time = steady_clock::now();
             rendering_time = duration_cast<milliseconds>(rendering_end_time - rendering_start_time).count();
             simulation_time = duration_cast<milliseconds>(simulation_end_time - simulation_start_time).count();
@@ -447,7 +439,7 @@ int main() {
     }
     glDeleteVertexArrays(NUMCOL * NUMROW, VAOs);
     glDeleteBuffers(NUMCOL * NUMROW, VBOs);
-    glDeleteBuffers(NUMCOL * NUMROW, EBO);
+    glDeleteBuffers(1, &EBO);
 
     glfwTerminate();
     return 0;

@@ -8,8 +8,8 @@ using std::uniform_int_distribution;
 using uni_dis = uniform_int_distribution<int>;
 using namespace std::chrono;
 
-const int NUMCOL = 150;
-const int NUMROW = 150;
+const int NUMCOL = 200;
+const int NUMROW = 200;
 //const int NUMROW = 110;
 //const int NUMCOL = 125;
 //const int FREQ   = 20;
