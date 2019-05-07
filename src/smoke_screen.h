@@ -29,7 +29,9 @@ public:
     // Create nanogui GUI
     bool enabled = true;
     FormHelper *gui = new FormHelper(this);
-    nanogui::ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Adjustable parameters");
+    nanogui::ref<Window> window = gui->addWindow(Eigen::Vector2i(WINDOW_WIDTH - margin, margin),
+        "Adjustable parameters");
+
     gui->addGroup("Smoke");
     gui->addVariable("Size(1 to 20)", size_smoke);
     gui->addVariable("Density(0 to 100)", amount_smoke);
@@ -38,13 +40,13 @@ public:
 
 
     // Color Wheel
-    TabWidget *tabWidget = this->add<TabWidget>();
-    Widget *layer = tabWidget->createTab("Color Wheel");
-    layer->setLayout(new GroupLayout(8));
+    nanogui::ref<TabWidget> tabWidget = this->add<TabWidget>();
+    nanogui::ref<Widget> layer = tabWidget->createTab("Color Wheel");
+    layer->setLayout(new GroupLayout(margin));
 
     // Use overloaded variadic add to fill the tab widget with Different tabs.
     layer->add<Label>("Color wheel widget", "sans-bold");
-    ColorWheel* color_wheel = layer->add<ColorWheel>();
+    nanogui::ref<ColorWheel> color_wheel = layer->add<ColorWheel>();
     color_wheel->setCallback([&](const nanogui::Color& color){
         picked_rgb = Vector3D(color.r(), color.g(), color.b());
     });
@@ -52,9 +54,11 @@ public:
 
     this->setVisible(true);
     this->performLayout();
-    nanoguiWindow->center();
+
+    // set parameter window's postion to the right margin
+    window->setPosition(window->position() - Vector2i(window->width(), 0));
   }
 
 private:
-
+    double margin = 10;
 };
