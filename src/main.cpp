@@ -400,7 +400,8 @@ int main() {
                     int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
                     glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
                     glBindVertexArray(VAOs[index]);
-                    glDrawArrays(GL_TRIANGLES, 0, 6);
+                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//                    glDrawArrays(GL_TRIANGLES, 0, 6);
                 }
             }
         } else {
