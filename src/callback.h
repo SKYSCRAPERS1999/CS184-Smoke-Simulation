@@ -19,7 +19,7 @@ void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
     glfwGetCursorPos(window, &grid.cursor_pos.x, &grid.cursor_pos.y);
 }
 
-void error_callback(int error, const char* description) {
+void error_callback(int error, const char *description) {
     puts(description);
 }
 
@@ -36,6 +36,11 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
     }
 }
 
+void window_size_callback(GLFWwindow *main_window, int width, int height) {
+    WINDOW_WIDTH = width;
+    WINDOW_HEIGHT = height;
+}
+
 void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
     screen->keyCallbackEvent(key, scancode, action, mods);
     if (action == GLFW_PRESS) {
@@ -46,22 +51,22 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
             case GLFW_KEY_RIGHT_SHIFT:
                 shift_pressed = true;
                 break;
-            case '=':
-                if (shift_pressed) size_smoke = min(min(grid.width, grid.height), size_smoke + 1);
-                std::cout << "Size of smoke is " << size_smoke << std::endl;
-                break;
-            case '-':
-                size_smoke = max(1, size_smoke - 1);
-                std::cout << "Size of smoke is " << size_smoke << std::endl;
-                break;
-            case '[':
-                amount_smoke = max(1.0, amount_smoke - 2.0);
-                std::cout << "Amount of smoke is " << amount_smoke << std::endl;
-                break;
-            case ']':
-                amount_smoke = min(100.0, amount_smoke + 2.0);
-                std::cout << "Amount of smoke is " << amount_smoke << std::endl;
-                break;
+//            case '=':
+//                if (shift_pressed) size_smoke = min(min(grid.width, grid.height), size_smoke + 1);
+//                std::cout << "Size of smoke is " << size_smoke << std::endl;
+//                break;
+//            case '-':
+//                size_smoke = max(1, size_smoke - 1);
+//                std::cout << "Size of smoke is " << size_smoke << std::endl;
+//                break;
+//            case '[':
+//                amount_smoke = max(1.0, amount_smoke - 2.0);
+//                std::cout << "Amount of smoke is " << amount_smoke << std::endl;
+//                break;
+//            case ']':
+//                amount_smoke = min(100.0, amount_smoke + 2.0);
+//                std::cout << "Amount of smoke is " << amount_smoke << std::endl;
+//                break;
             case GLFW_KEY_P:
                 is_pause = !is_pause;
                 break;

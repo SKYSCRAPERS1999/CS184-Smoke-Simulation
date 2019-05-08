@@ -36,11 +36,11 @@ public:
   Vector2D cursor_pos;
 
   // Primary simulate function
-  void simulate(double timestep, const vector<Vector2D>& external_forces, const double ambient_temperature);
+  void simulate(double timestep, const vector<Vector2D>& external_forces, const double ambient_temperature, const double temperature_parameter, const double smoke_density_parameter, const double external_force_parameter, const double num_iter);
 
 private:
   // simulate functions called by simulate()
-  vector<Vector2D> simulate_velocity(double timestep, const vector<Vector2D>& external_forces, const double ambient_temperature);
+  vector<Vector2D> simulate_velocity(double timestep, const vector<Vector2D>& external_forces, const double ambient_temperature, const double temperature_parameter, const double smoke_density_parameter, const double external_force_parameter, const double num_iter);
   vector<double> simulate_density(double timestep);
   vector<double> simulate_temperature(double timestep);
     
@@ -53,7 +53,7 @@ private:
   int cell(int x, int y);
 
   // Number of iterations for viscous diffusion
-  int num_iter;
+  //int num_iter;
 
   // Properties of smoke
   vector<double> density; // 0-100
