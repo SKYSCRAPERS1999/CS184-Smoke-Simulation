@@ -222,7 +222,7 @@ int main() {
     screen = new SmokeScreen(window);
     set_callback();
 
-#if defined(_OPENMP)
+#if defined(__OMP_H)
 #pragma omp parallel
     {
         int rank, rankn;
@@ -266,7 +266,6 @@ int main() {
 
                 int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
                 int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
-
                 exit_cell = Vector2D(col, row);
                 if (exit_cell.x != enter_cell.x || exit_cell.y != enter_cell.y) {
                     Vector2D direction_mouse_drag = exit_cell - enter_cell;
@@ -296,9 +295,8 @@ int main() {
                             continue;
                         }
 
-
                         // What type of function should fall off be?
-                        //dis2 /= pow((NUMCOL / 100.0), 2.0);
+//                        dis2 /= pow((NUMCOL / 100.0), 2.0);
                         double fall_off = 2.0 / max(dis2, 1.0);
 
                         double den = grid.getDensity(x, y);
@@ -329,6 +327,9 @@ int main() {
 
         // If modifying the vector field, display vector field. Otherwise, display the smoke.
         if (is_modify_vf) {
+#if defined(__OMP_H)
+#pragma omp parallel for
+#endif
             for (int y = 0; y < NUMROW; ++y) {
                 for (int x = 0; x < NUMCOL; ++x) {
                     Vector2D accumulated_direction = Vector2D(0.0, 0.0);

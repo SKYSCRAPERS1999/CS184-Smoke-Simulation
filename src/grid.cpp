@@ -107,7 +107,9 @@ vector<double> Grid::simulate_density(const double timestep) {
     // (2) Perform density advection using Stam's method.
     vector<double> advection_grid(width * height, 0.0);
     //advection_grid.assign(density.begin(), density.end());
-    //#pragma omp parallel for
+#if defined(__OMP_H)
+#pragma omp parallel for
+#endif
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
@@ -143,7 +145,9 @@ vector<double> Grid::simulate_density(const double timestep) {
 vector<double> Grid::simulate_temperature(const double timestep) {
     // (2) Perform temperature advection using Stam's method.
     vector<double> advection_grid(width * height, 0.0);
-    //advection_grid.assign(density.begin(), density.end());
+#if defined(__OMP_H)
+#pragma omp parallel for
+#endif
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
@@ -180,7 +184,9 @@ vector<Vector2D> Grid::simulate_velocity(double timestep, const vector<Vector2D>
     vector<Vector2D> combined_velocity(width * height, Vector2D(0, 0));
     // (3) Perform self advection of velocity
     vector<Vector2D> self_advection_grid(width * height, Vector2D(0, 0));
-    //#pragma omp parallel for
+#if defined(__OMP_H)
+#pragma omp parallel for
+#endif
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             Vector2D reverse_velocity = -getVelocity(x, y) * timestep;
@@ -221,7 +227,9 @@ vector<Vector2D> Grid::simulate_velocity(double timestep, const vector<Vector2D>
     double alpha = 1 / (timestep * num_iter);
     double beta = 4 + alpha;
     for (int iter = 0; iter < num_iter; ++iter) {
-        //#pragma omp parallel for
+#if defined(__OMP_H)
+#pragma omp parallel for
+#endif
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
                 // Ignore boundaries for now
@@ -247,7 +255,9 @@ vector<Vector2D> Grid::simulate_velocity(double timestep, const vector<Vector2D>
     
     // (5) Add buoyant forces from temperature and external forces
     Vector2D buoyant_direction = Vector2D(0, 1);
-    
+#if defined(__OMP_H)
+#pragma omp parallel for
+#endif
     for (int y = 1; y < height - 1; ++y) {
         for (int x = 1; x < width - 1; ++x) {
             // Have buoyant direction be modifiable by the user
@@ -285,7 +295,9 @@ vector<Vector2D> Grid::simulate_velocity(double timestep, const vector<Vector2D>
     alpha = -1;
     beta = 4;
     for (int iter = 0; iter < num_iter; ++iter) {
-        #pragma omp parallel for
+#if defined(__OMP_H)
+#pragma omp parallel for
+#endif
         for (int y = 1; y < height - 1; ++y) {
             for (int x = 1; x < width - 1; ++x) {
                 double &l = tem_2[y * width + x - 1];

@@ -10,7 +10,7 @@ project(HW0)
 option(BUILD_LIBCGL "Build with libCGL" ON)
 option(BUILD_DEBUG "Build with debug settings" OFF)
 option(BUILD_DOCS "Build documentation" OFF)
-option(OpenMP "Set OpenMP" OFF)
+option(OpenMP "Set OpenMP" ON)
 #-------------------------------------------------------------------------------
 # Platform-specific settings
 #-------------------------------------------------------------------------------
