@@ -27,7 +27,7 @@ Grid::Grid(int width, int height) {
     this->height = height;
     this->density.resize(width * height, 0.0);
     this->temperature.resize(width * height, 0.0);
-    this->num_iter = 16;
+    //this->num_iter = 16;
 
     normal_distribution<double> dis_v_y(2, 5); // normal distribution in C++11
     normal_distribution<double> dis_v_x(0, 3);
@@ -44,7 +44,7 @@ Grid::Grid(const Grid &grid) {
     density = grid.density;
     velocity = grid.velocity;
     temperature = grid.temperature;
-    num_iter = grid.num_iter;
+    //num_iter = grid.num_iter;
 //  cout << "copy" << endl;
 }
 
@@ -54,7 +54,7 @@ Grid &Grid::operator=(const Grid &grid) {
     density = grid.density;
     velocity = grid.velocity;
     temperature = grid.temperature;
-    num_iter = grid.num_iter;
+    //num_iter = grid.num_iter;
 
 //  cout << "copy assign" << endl;
     return *this;
@@ -66,7 +66,7 @@ Grid::Grid(Grid &&grid) {
     density = move(grid.density);
     velocity = move(grid.velocity);
     temperature = move(grid.temperature);
-    num_iter = grid.num_iter;
+    //num_iter = grid.num_iter;
 
 //  cout << "move" << endl;
 }
@@ -77,13 +77,13 @@ Grid &Grid::operator=(Grid &&grid) {
     density = move(grid.density);
     velocity = move(grid.velocity);
     temperature = move(grid.temperature);
-    num_iter = grid.num_iter;
+    //num_iter = grid.num_iter;
 
 //  cout << "move assign" << endl;
     return *this;
 }
 
-void Grid::simulate(const double timestep, const vector<Vector2D> &external_forces, const double ambient_temperature) {
+void Grid::simulate(double timestep, const vector<Vector2D>& external_forces, const double ambient_temperature, const double temperature_parameter, const double smoke_density_parameter, const double external_force_parameter, const double num_iter) {
 
     // (I) DENSITY UPDATE
     vector<double> new_density = simulate_density(timestep);
@@ -92,7 +92,7 @@ void Grid::simulate(const double timestep, const vector<Vector2D> &external_forc
     vector<double> new_temperature = simulate_temperature(timestep);
 
     // (III) VELOCITY UPDATE
-    vector<Vector2D> new_velocity = simulate_velocity(timestep, external_forces, ambient_temperature);
+    vector<Vector2D> new_velocity = simulate_velocity(timestep, external_forces, ambient_temperature, temperature_parameter, smoke_density_parameter, external_force_parameter, num_iter);
 
     // Copy over the new grid to existing grid
     this->density = new_density;
@@ -174,7 +174,7 @@ vector<double> Grid::simulate_temperature(const double timestep) {
     return advection_grid;
 }
 
-vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vector2D> &external_forces, const double ambient_temperature) {
+vector<Vector2D> Grid::simulate_velocity(double timestep, const vector<Vector2D>& external_forces, const double ambient_temperature, const double temperature_parameter, const double smoke_density_parameter, const double external_force_parameter, const double num_iter) {
     // (II) VELOCITY UPDATE
 
     vector<Vector2D> combined_velocity(width * height, Vector2D(0, 0));
@@ -247,18 +247,15 @@ vector<Vector2D> Grid::simulate_velocity(const double timestep, const vector<Vec
     
     // (5) Add buoyant forces from temperature and external forces
     Vector2D buoyant_direction = Vector2D(0, 1);
-    double tempature_parameter = 0.05;
-    double smoke_density_parameter = 0.02;
-    double external_forces_parameter = 2;
     
     for (int y = 1; y < height - 1; ++y) {
         for (int x = 1; x < width - 1; ++x) {
             // Have buoyant direction be modifiable by the user
             //buoyant_direction = external_forces[y*width + x];
             // Ignore boundaries for now
-            Vector2D buoyant_force = (-smoke_density_parameter * getDensity(x, y) + (getTemperature(x, y) - ambient_temperature)*timestep*tempature_parameter)*buoyant_direction;
+            Vector2D buoyant_force = (-smoke_density_parameter * getDensity(x, y) + (getTemperature(x, y) - ambient_temperature)*timestep*temperature_parameter)*buoyant_direction;
             viscous_velocity_grid[y*width + x] += buoyant_force;
-            viscous_velocity_grid[y*width + x] += external_forces_parameter * external_forces[y*width + x];
+            viscous_velocity_grid[y*width + x] += external_force_parameter * external_forces[y*width + x];
         }
     }
     
