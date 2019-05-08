@@ -442,14 +442,14 @@ int main() {
                     data[index * 3 + 2] = max(global_rgb.z * 255, 0.0);
                 }
             }
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, NUMCOL, NUMROW, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-            glGenerateMipmap(GL_TEXTURE_2D);
-            glBindTexture(GL_TEXTURE_2D, texture);
-            glUseProgram(shader_program);
-            glBindVertexArray(VAO);
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         }
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, NUMCOL, NUMROW, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glUseProgram(shader_program);
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         if (debug) {
             rendering_end_time = steady_clock::now();
             rendering_time = duration_cast<milliseconds>(rendering_end_time - rendering_start_time).count();
