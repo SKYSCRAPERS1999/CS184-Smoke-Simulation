@@ -116,27 +116,14 @@ void generate_vertices_array() {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *) (5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    glBindTexture(GL_TEXTURE_2D, texture);
-
+    glBindTexture(GL_TEXTURE_2D, texture); // TODO change those methods
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
                     GL_REPEAT);    // set texture wrapping to GL_REPEAT (default wrapping method)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    int width, height, nrChannels;
-    stbi_set_flip_vertically_on_load(true);
-    unsigned char *data = stbi_load(
-            "/Users/moonshadow/Documents/Note/Intro to Computer Graphics/CS184-Smoke-Simulation/src/container.jpg",
-            &width, &height, &nrChannels, 0);
-    if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        cout << "Width: " << width << ", height: " << height << endl;
-    } else {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
+
 
 //    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 //    glEnableVertexAttribArray(0);
@@ -385,84 +372,83 @@ int main() {
 
 
         // If modifying the vector field, display vector field. Otherwise, display the smoke.
+        unsigned char data[NUMROW * NUMCOL * 3];
         if (is_modify_vf) {
             // TODO uncomment
-//            for (int y = 0; y < NUMROW; ++y) {
-//                for (int x = 0; x < NUMCOL; ++x) {
-//                    Vector2D accumulated_direction = Vector2D(0.0, 0.0);
-//                    for (int ys = -1 + y; ys <= y + 1; ++ys) {
-//                        for (int xs = -1 + x; xs <= x + 1; ++xs) {
-//                            if (ys >= 0 && xs >= 0 && ys < NUMROW && xs < NUMCOL) {
-//                                accumulated_direction += external_forces[ys * grid.width + xs];
-//                            }
-//                        }
-//                    }
-//
-//                    double hue = 0;
-//                    double saturate = 100;
-//                    double value = 100;
-//                    if (accumulated_direction.x == 0 && accumulated_direction.y == 0) {
-//                        value = 0;
-//                    } else {
-//                        accumulated_direction = accumulated_direction.unit();
-//                        double angle =
-//                                accumulated_direction.y >= 0 ? acos(accumulated_direction.x) :
-//                                acos(accumulated_direction.x) + PI;
-//                        angle = angle * 180 / PI;
-//                        hue = angle;
-//                    }
-//
-//                    global_rgb = hsv2rgb({hue, saturate, value});
-//
-//                    int index = y * NUMCOL + x;
-//
+            for (int y = 0; y < NUMROW; ++y) {
+                for (int x = 0; x < NUMCOL; ++x) {
+                    Vector2D accumulated_direction = Vector2D(0.0, 0.0);
+                    for (int ys = -1 + y; ys <= y + 1; ++ys) {
+                        for (int xs = -1 + x; xs <= x + 1; ++xs) {
+                            if (ys >= 0 && xs >= 0 && ys < NUMROW && xs < NUMCOL) {
+                                accumulated_direction += external_forces[ys * grid.width + xs];
+                            }
+                        }
+                    }
+
+                    double hue = 0;
+                    double saturate = 100;
+                    double value = 100;
+                    if (accumulated_direction.x == 0 && accumulated_direction.y == 0) {
+                        value = 0;
+                    } else {
+                        accumulated_direction = accumulated_direction.unit();
+                        double angle =
+                                accumulated_direction.y >= 0 ? acos(accumulated_direction.x) :
+                                acos(accumulated_direction.x) + PI;
+                        angle = angle * 180 / PI;
+                        hue = angle;
+                    }
+
+                    global_rgb = hsv2rgb({hue, saturate, value});
+
+                    int index = y * NUMCOL + x;
+                    data[index * 3] = max(global_rgb.x * 255, 0.0);
+                    data[index * 3 + 1] = max(global_rgb.y * 255, 0.0);
+                    data[index * 3 + 2] = max(global_rgb.z * 255, 0.0);
+
 //                    int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
 //                    glUniform4f(vertexColorLocation, global_rgb.x, global_rgb.y, global_rgb.z, 1.0f);
 //                    glBindVertexArray(VAOs[index]);
 //                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 ////                    glDrawArrays(GL_TRIANGLES, 0, 6);
-//                }
-//            }
+                }
+            }
         } else {
-//            Vector3D rgb = Vector3D(0.3, 0.5, 0.7);
-//            int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
-//            glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
+            for (int y = 0; y < NUMROW; ++y) {
+                for (int x = 0; x < NUMCOL; ++x) {
+                    double density = grid.getDensity(x, y);
+                    if (density <= DISPLAY_LIMIT) continue;
+                    double temperature = grid.getTemperature(x, y);
+
+                    double hue_center = 400;
+                    double hue_halfspan = 50;
+                    if (picked_rgb.norm() > EPS) {
+                        Vector3D picked_hsv = rgb2hsv(picked_rgb);
+                        hue_center = picked_hsv.x;
+                    }
+                    // [0, 100] -> [450, 350]
+                    double hue = (int) (hue_center - (temperature - hue_halfspan)) % 360;
+                    // [0, 100]
+                    double saturate = 100.0;
+                    // [0, 100] -> [0, 100]
+                    double value = density;
+
+                    global_rgb = hsv2rgb({hue, saturate, value});
+
+                    int index = y * NUMCOL + x;
+                    data[index * 3] = max(global_rgb.x * 255, 0.0);
+                    data[index * 3 + 1] = max(global_rgb.y * 255, 0.0);
+                    data[index * 3 + 2] = max(global_rgb.z * 255, 0.0);
+                }
+            }
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, NUMCOL, NUMROW, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
             glBindTexture(GL_TEXTURE_2D, texture);
             glUseProgram(shader_program);
             glBindVertexArray(VAO);
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-//            for (int y = 0; y < NUMROW; ++y) {
-//                for (int x = 0; x < NUMCOL; ++x) {
-//                    double density = grid.getDensity(x, y);
-//                    if (density <= DISPLAY_LIMIT) continue;
-//                    double temperature = grid.getTemperature(x, y);
-//
-//                    double hue_center = 400;
-//                    double hue_halfspan = 50;
-//                    if (picked_rgb.norm() > EPS) {
-//                        Vector3D picked_hsv = rgb2hsv(picked_rgb);
-//                        hue_center = picked_hsv.x;
-//                    }
-//
-//                    // [0, 100] -> [450, 350]
-////          double hue = ((int) (450.0 - temperature * 1)) % 360;
-//                    double hue = (int) (hue_center - (temperature - hue_halfspan)) % 360;
-//                    // [0, 100]
-//                    double saturate = 100.0;
-//                    // [0, 100] -> [0, 100]
-//                    double value = density;
-//
-//                    global_rgb = hsv2rgb({hue, saturate, value});
-//
-//                    int index = y * NUMCOL + x;
-//
-//                    int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
-//                    glUniform4f(vertexColorLocation, global_rgb.x, global_rgb.y, global_rgb.z, 1.0f);
-//                    glBindVertexArray(VAOs[index]);
-//                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-////                    glDrawArrays(GL_TRIANGLES, 0, 6);
-//                }
-//            }
         }
         if (debug) {
             rendering_end_time = steady_clock::now();
