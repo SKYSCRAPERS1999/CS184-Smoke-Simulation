@@ -8,10 +8,10 @@ using std::uniform_int_distribution;
 using uni_dis = uniform_int_distribution<int>;
 using namespace std::chrono;
 
-const int NUMCOL = 300;
-const int NUMROW = 300;
+const int NUMCOL = 200;
+const int NUMROW = 200;
 //const int FREQ   = 20;
-const int FREQ   = 30;
+const int FREQ   = 20;
 int WINDOW_WIDTH = 700; // x is WIDTH
 int WINDOW_HEIGHT = 640; // y is HEIGHT
 const int DISPLAY_LIMIT = 1;

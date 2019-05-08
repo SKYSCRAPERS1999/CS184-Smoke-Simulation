@@ -33,11 +33,10 @@ public:
         "Adjustable parameters");
 
     gui->addGroup("Smoke");
-    gui->addVariable("Size(1 to 20)", size_smoke);
-    gui->addVariable("Density(0 to 100)", amount_smoke);
-    gui->addVariable("Heat(0 to 100)", amount_temperature);
-    gui->addVariable("Ambient(0 to 100)", ambient_temperature);
-
+    nanogui::ref<detail::FormWidget<int>> p_size_smoke = gui->addVariable("Size(1 to 20)", size_smoke);
+    nanogui::ref<detail::FormWidget<double>> p_amount_smoke = gui->addVariable("Density(0 to 100)", amount_smoke);
+    nanogui::ref<detail::FormWidget<double>> p_amount_temperature = gui->addVariable("Heat(0 to 100)", amount_temperature);
+    nanogui::ref<detail::FormWidget<double>> p_amount_ambient = gui->addVariable("Ambient(0 to 100)", ambient_temperature);
 
     // Color Wheel
     nanogui::ref<TabWidget> tabWidget = this->add<TabWidget>();
