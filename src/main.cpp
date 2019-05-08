@@ -35,7 +35,7 @@ Vector2D exit_cell = Vector2D(0, 0);
 
 // Adjustable parameters for nanogui
 
-int size_smoke = 5 * (NUMROW / 100);
+int size_smoke = 3 * (NUMROW / 100);
 double amount_smoke = 90;
 double amount_temperature = 50;
 double ambient_temperature = 0;
