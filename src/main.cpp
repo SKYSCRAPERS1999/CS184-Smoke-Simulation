@@ -5,10 +5,10 @@
 #include <math.h>
 //#include <GLFW/glfw3.h>
 #include <nanogui/nanogui.h>
-
 //#include <OpenGL/gl.h>
 //#include <OpenGL/OpenGL.h>
 #include <CGL/CGL.h>
+#include "stb_image.h"
 
 #include "grid.h"
 #include "common.h"
@@ -32,6 +32,7 @@ bool reset = false;
 bool debug = true; // Set to true to record time
 Vector2D enter_cell = Vector2D(0, 0);
 Vector2D exit_cell = Vector2D(0, 0);
+GLuint shader_program;
 
 // Adjustable parameters for nanogui
 
@@ -52,7 +53,7 @@ int size_mouse = 3 * (NUMROW / 100);
 bool test = true;
 
 // Vertex Array Object and Vertex Buffer Object
-GLuint VBOs[NUMCOL * NUMROW], VAOs[NUMCOL * NUMROW], EBO;
+GLuint VBO, VAO, EBO, texture;
 
 GLFWwindow *window = nullptr;
 Screen *screen = nullptr;
@@ -78,40 +79,98 @@ void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
 }
 
 void generate_vertices_array() {
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+    glGenTextures(1, &texture);
     GLuint elements[] = {
             0, 1, 2,
             2, 3, 0
     };
-    double width = 1 / (double) NUMCOL * 2;
-    double height = 1 / (double) NUMROW * 2;
-    for (int y = 0; y < NUMROW; ++y) {
-        for (int x = 0; x < NUMCOL; ++x) {
-            double bottom_left_x = -1 + width * x;
-            double bottom_left_y = -1 + height * y;
+//    float vertices[] = {
+//            //position & texturecoordinate
+//            -1, 1, 0, 1, // top left
+//            1, 1, 1, 1, // top right
+//            1, -1, 1, 0,// bottom right
+//            -1, -1, 0, 0, // bottom left
+//    };
+    float vertices[] = {
+            // positions          // colors           // texture coords
+            1, 1, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
+            1, -1, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
+            -1, -1, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+            -1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // top left
+    };
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+    // position attribute
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *) 0);
+    glEnableVertexAttribArray(0);
+    // color attribute
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *) (2 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    // texture coord attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *) (5 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
-            // setup first triangle
-            float rectangle_vertices[] = {
-                    bottom_left_x, bottom_left_y + height, // top left
-                    bottom_left_x + width, bottom_left_y + height, // top right
-                    bottom_left_x + width, bottom_left_y, // bottom right
-//                    bottom_left_x + width, bottom_left_y, 0, // bottom right
-                    bottom_left_x, bottom_left_y, // bottom left
-//                    bottom_left_x, bottom_left_y + height, 0, // top left
-            };
-            int index = y * NUMCOL + x;
-            glBindVertexArray(VAOs[index]);
-            glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle_vertices), rectangle_vertices,
-                         GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-            glEnableVertexAttribArray(0);
-        }
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
+                    GL_REPEAT);    // set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
+    unsigned char *data = stbi_load(
+            "/Users/moonshadow/Documents/Note/Intro to Computer Graphics/CS184-Smoke-Simulation/src/container.jpg",
+            &width, &height, &nrChannels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        cout << "Width: " << width << ", height: " << height << endl;
+    } else {
+        std::cout << "Failed to load texture" << std::endl;
     }
-    glBindVertexArray(0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    stbi_image_free(data);
+
+//    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+//    glEnableVertexAttribArray(0);
+
+//    double width = 1 / (double) NUMCOL * 2;
+//    double height = 1 / (double) NUMROW * 2;
+//    for (int y = 0; y < NUMROW; ++y) {
+//        for (int x = 0; x < NUMCOL; ++x) {
+//            double bottom_left_x = -1 + width * x;
+//            double bottom_left_y = -1 + height * y;
+//
+//            // setup first triangle
+//            float rectangle_vertices[] = {
+//                    bottom_left_x, bottom_left_y + height, // top left
+//                    bottom_left_x + width, bottom_left_y + height, // top right
+//                    bottom_left_x + width, bottom_left_y, // bottom right
+////                    bottom_left_x + width, bottom_left_y, 0, // bottom right
+//                    bottom_left_x, bottom_left_y, // bottom left
+////                    bottom_left_x, bottom_left_y + height, 0, // top left
+//            };
+//            int index = y * NUMCOL + x;
+//            glBindVertexArray(VAOs[index]);
+//            glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
+//            glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle_vertices), rectangle_vertices,
+//                         GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
+//            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+//            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+//            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+//            glEnableVertexAttribArray(0);
+//        }
+//    }
+//    glBindVertexArray(0);
+//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+//    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void set_callback() {
@@ -140,7 +199,7 @@ void set_callback() {
     glfwSetWindowSizeCallback(window, window_size_callback);
 }
 
-GLuint build_shader_program() {
+void build_shader_program() {
     // vertex shader
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertex_shader, 1, &vertexShaderSource, NULL);
@@ -164,9 +223,10 @@ GLuint build_shader_program() {
         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << info_log << std::endl;
     }
     // link shaders
-    GLuint shader_program = glCreateProgram();
+    shader_program = glCreateProgram();
     glAttachShader(shader_program, vertex_shader);
     glAttachShader(shader_program, fragment_shader);
+    glBindFragDataLocation(shader_program, 0, "outColor"); // TODO not sure
     glLinkProgram(shader_program);
     // check for link error
     glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
@@ -177,9 +237,8 @@ GLuint build_shader_program() {
     // delete shader
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
-
-    return shader_program;
 }
+
 
 int main() {
     grid = Grid(NUMCOL + 2, NUMROW + 2);
@@ -213,10 +272,7 @@ int main() {
         return -1;
     }
 
-    GLuint shader_program = build_shader_program();
-    glGenVertexArrays(NUMCOL * NUMROW, VAOs);
-    glGenBuffers(NUMCOL * NUMROW, VBOs);
-    glGenBuffers(1, &EBO);
+    build_shader_program();
     generate_vertices_array();
     // Create a nanogui screen
     screen = new SmokeScreen(window);
@@ -317,7 +373,8 @@ int main() {
         if (debug) simulation_start_time = steady_clock::now();
         if (!is_pause && (FREQ * elapsed.count() >= 1000)) {
             last_time = cur_time;
-            grid.simulate(1, external_forces, ambient_temperature, temperature_parameter, smoke_density_parameter, external_force_parameter, num_iter);
+            grid.simulate(1, external_forces, ambient_temperature, temperature_parameter, smoke_density_parameter,
+                          external_force_parameter, num_iter);
         }
 
         // Display the current state of the simulation
@@ -325,79 +382,87 @@ int main() {
             simulation_end_time = steady_clock::now();
             rendering_start_time = steady_clock::now();
         }
-        glUseProgram(shader_program);
+
 
         // If modifying the vector field, display vector field. Otherwise, display the smoke.
         if (is_modify_vf) {
-            for (int y = 0; y < NUMROW; ++y) {
-                for (int x = 0; x < NUMCOL; ++x) {
-                    Vector2D accumulated_direction = Vector2D(0.0, 0.0);
-                    for (int ys = -1 + y; ys <= y + 1; ++ys) {
-                        for (int xs = -1 + x; xs <= x + 1; ++xs) {
-                            if (ys >= 0 && xs >= 0 && ys < NUMROW && xs < NUMCOL) {
-                                accumulated_direction += external_forces[ys * grid.width + xs];
-                            }
-                        }
-                    }
-
-                    double hue = 0;
-                    double saturate = 100;
-                    double value = 100;
-                    if (accumulated_direction.x == 0 && accumulated_direction.y == 0) {
-                        value = 0;
-                    } else {
-                        accumulated_direction = accumulated_direction.unit();
-                        double angle =
-                                accumulated_direction.y >= 0 ? acos(accumulated_direction.x) :
-                                acos(accumulated_direction.x) + PI;
-                        angle = angle * 180 / PI;
-                        hue = angle;
-                    }
-
-                    global_rgb = hsv2rgb({hue, saturate, value});
-
-                    int index = y * NUMCOL + x;
-
-                    int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
-                    glUniform4f(vertexColorLocation, global_rgb.x, global_rgb.y, global_rgb.z, 1.0f);
-                    glBindVertexArray(VAOs[index]);
-                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-//                    glDrawArrays(GL_TRIANGLES, 0, 6);
-                }
-            }
+            // TODO uncomment
+//            for (int y = 0; y < NUMROW; ++y) {
+//                for (int x = 0; x < NUMCOL; ++x) {
+//                    Vector2D accumulated_direction = Vector2D(0.0, 0.0);
+//                    for (int ys = -1 + y; ys <= y + 1; ++ys) {
+//                        for (int xs = -1 + x; xs <= x + 1; ++xs) {
+//                            if (ys >= 0 && xs >= 0 && ys < NUMROW && xs < NUMCOL) {
+//                                accumulated_direction += external_forces[ys * grid.width + xs];
+//                            }
+//                        }
+//                    }
+//
+//                    double hue = 0;
+//                    double saturate = 100;
+//                    double value = 100;
+//                    if (accumulated_direction.x == 0 && accumulated_direction.y == 0) {
+//                        value = 0;
+//                    } else {
+//                        accumulated_direction = accumulated_direction.unit();
+//                        double angle =
+//                                accumulated_direction.y >= 0 ? acos(accumulated_direction.x) :
+//                                acos(accumulated_direction.x) + PI;
+//                        angle = angle * 180 / PI;
+//                        hue = angle;
+//                    }
+//
+//                    global_rgb = hsv2rgb({hue, saturate, value});
+//
+//                    int index = y * NUMCOL + x;
+//
+//                    int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
+//                    glUniform4f(vertexColorLocation, global_rgb.x, global_rgb.y, global_rgb.z, 1.0f);
+//                    glBindVertexArray(VAOs[index]);
+//                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+////                    glDrawArrays(GL_TRIANGLES, 0, 6);
+//                }
+//            }
         } else {
-            for (int y = 0; y < NUMROW; ++y) {
-                for (int x = 0; x < NUMCOL; ++x) {
-                    double density = grid.getDensity(x, y);
-                    if (density <= DISPLAY_LIMIT) continue;
-                    double temperature = grid.getTemperature(x, y);
-
-                    double hue_center = 400;
-                    double hue_halfspan = 50;
-                    if (picked_rgb.norm() > EPS) {
-                        Vector3D picked_hsv = rgb2hsv(picked_rgb);
-                        hue_center = picked_hsv.x;
-                    }
-
-                    // [0, 100] -> [450, 350]
-//          double hue = ((int) (450.0 - temperature * 1)) % 360;
-                    double hue = (int) (hue_center - (temperature - hue_halfspan)) % 360;
-                    // [0, 100]
-                    double saturate = 100.0;
-                    // [0, 100] -> [0, 100]
-                    double value = density;
-
-                    global_rgb = hsv2rgb({hue, saturate, value});
-
-                    int index = y * NUMCOL + x;
-
-                    int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
-                    glUniform4f(vertexColorLocation, global_rgb.x, global_rgb.y, global_rgb.z, 1.0f);
-                    glBindVertexArray(VAOs[index]);
-                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-//                    glDrawArrays(GL_TRIANGLES, 0, 6);
-                }
-            }
+//            Vector3D rgb = Vector3D(0.3, 0.5, 0.7);
+//            int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
+//            glUniform4f(vertexColorLocation, rgb.x, rgb.y, rgb.z, 1.0f);
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glUseProgram(shader_program);
+            glBindVertexArray(VAO);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//            for (int y = 0; y < NUMROW; ++y) {
+//                for (int x = 0; x < NUMCOL; ++x) {
+//                    double density = grid.getDensity(x, y);
+//                    if (density <= DISPLAY_LIMIT) continue;
+//                    double temperature = grid.getTemperature(x, y);
+//
+//                    double hue_center = 400;
+//                    double hue_halfspan = 50;
+//                    if (picked_rgb.norm() > EPS) {
+//                        Vector3D picked_hsv = rgb2hsv(picked_rgb);
+//                        hue_center = picked_hsv.x;
+//                    }
+//
+//                    // [0, 100] -> [450, 350]
+////          double hue = ((int) (450.0 - temperature * 1)) % 360;
+//                    double hue = (int) (hue_center - (temperature - hue_halfspan)) % 360;
+//                    // [0, 100]
+//                    double saturate = 100.0;
+//                    // [0, 100] -> [0, 100]
+//                    double value = density;
+//
+//                    global_rgb = hsv2rgb({hue, saturate, value});
+//
+//                    int index = y * NUMCOL + x;
+//
+//                    int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
+//                    glUniform4f(vertexColorLocation, global_rgb.x, global_rgb.y, global_rgb.z, 1.0f);
+//                    glBindVertexArray(VAOs[index]);
+//                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+////                    glDrawArrays(GL_TRIANGLES, 0, 6);
+//                }
+//            }
         }
         if (debug) {
             rendering_end_time = steady_clock::now();
@@ -414,10 +479,10 @@ int main() {
         glfwSwapBuffers(window);
 
     }
-    glDeleteVertexArrays(NUMCOL * NUMROW, VAOs);
-    glDeleteBuffers(NUMCOL * NUMROW, VBOs);
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
-
+    glDeleteTextures(1, &texture);
     glfwTerminate();
     return 0;
 }
