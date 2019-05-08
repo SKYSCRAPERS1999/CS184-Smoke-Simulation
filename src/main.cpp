@@ -34,7 +34,8 @@ Vector2D enter_cell = Vector2D(0, 0);
 Vector2D exit_cell = Vector2D(0, 0);
 
 // Adjustable parameters for nanogui
-int size_smoke = 5;
+
+int size_smoke = 5 * (NUMROW / 100);
 double amount_smoke = 90;
 double amount_temperature = 50;
 double ambient_temperature = 0;
@@ -46,7 +47,7 @@ double num_iter = 16;
 Vector3D global_rgb;
 extern Vector3D picked_rgb;
 
-int size_mouse = 3 * 2;
+int size_mouse = 3 * (NUMROW / 100);
 
 bool test = true;
 
@@ -138,35 +139,6 @@ void set_callback() {
     glfwSetKeyCallback(window, keyboard_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
 }
-
-//void display(GLuint shader_program, int LIMIT = 3) {
-//    for (int y = 0; y < NUMROW; ++y) {
-//        for (int x = 0; x < NUMCOL; ++x) {
-//            double density = grid.getDensity(x, y);
-//            double temperature = grid.getTemperature(x, y);
-//            if (density <= LIMIT) continue;
-//
-//            // [0, 100] -> [360, 300]
-//            double hue = 360 - temperature * 0.6;
-//            // [0, 100]
-//            double saturate = 100.0;
-//            // [0, 100] -> [0, 100]
-//            double value = density;
-//
-//            Vector3D global_rgb = hsv2rgb({hue, saturate, value});
-//
-//            int index = (y * NUMCOL + x) * 2;
-//            glUseProgram(shader_program);
-//            int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
-//            glUniform4f(vertexColorLocation, 0.0f, 0.5f, 0.0f, 1.0f);
-//            glBindVertexArray(VAOs[index]);
-//            glDrawArrays(GL_TRIANGLES, 0, 3);
-//            glUniform4f(vertexColorLocation, 0.5f, 0.0f, 0.0f, 1.0f);
-//            glBindVertexArray(VAOs[index + 1]);
-//            glDrawArrays(GL_TRIANGLES, 0, 3);
-//        }
-//    }
-//}
 
 GLuint build_shader_program() {
     // vertex shader
@@ -397,7 +369,7 @@ int main() {
             for (int y = 0; y < NUMROW; ++y) {
                 for (int x = 0; x < NUMCOL; ++x) {
                     double density = grid.getDensity(x, y);
-                    if (density <= 1) continue;
+                    if (density <= DISPLAY_LIMIT) continue;
                     double temperature = grid.getTemperature(x, y);
 
                     double hue_center = 400;
@@ -449,55 +421,3 @@ int main() {
     glfwTerminate();
     return 0;
 }
-
-
-//  screen->initialize(window, true);
-
-//  int width, height;
-//  glfwGetFramebufferSize(window, &width, &height);
-//  glViewport(0, 0, width, height);
-
-// Create nanogui GUI
-//  bool enabled = true;
-//  FormHelper *gui = new FormHelper(screen);
-//  nanogui::ref<Window> nanoguiWindow = gui->addWindow(Eigen::Vector2i(10, 10), "Adjustable parameters");
-//  gui->addGroup("Smoke");
-//  gui->addVariable("Size(1 to 20)", size_smoke);
-//  gui->addVariable("Density(0 to 100)", amount_smoke);
-//  gui->addVariable("Heat(0 to 100)", amount_temperature);
-//  gui->addVariable("Ambient(0 to 100)", ambient_temperature);
-
-// Color Wheel
-//  TabWidget *tabWidget = screen->add<TabWidget>();
-//  Widget *layer = tabWidget->createTab("Color Wheel");
-//  layer->setLayout(new GroupLayout());
-//   Use overloaded variadic add to fill the tab widget with Different tabs.
-//  layer->add<Label>("Color wheel widget", "sans-bold");
-//  layer->add<ColorWheel>();
-//  layer = tabWidget->createTab("Function Graph");
-//  layer->setLayout(new GroupLayout());
-//  layer->add<Label>("Function graph widget", "sans-bold");
-//
-//  layer = tabWidget->createTab("Function Graph");
-//  layer->setLayout(new GroupLayout());
-//
-//  layer->add<Label>("Function graph widget", "sans-bold");
-//
-//  Graph *graph = layer->add<Graph>("Some Function");
-//
-//  graph->setHeader("E = 2.35e-3");
-//  graph->setFooter("Iteration 89");
-//  VectorXf &func = graph->values();
-//  func.resize(100);
-//  for (int i = 0; i < 100; ++i)
-//    func[i] = 0.5f * (0.5f * std::sin(i / 10.f) +
-//                      0.5f * std::cos(i / 23.f) + 1);
-//
-//   Dummy tab used to represent the last tab button.
-//  tabWidget->createTab("+");
-
-//  screen->setVisible(true);
-//  screen->performLayout();
-//  nanoguiWindow->center();
-
-//  set_callback();
