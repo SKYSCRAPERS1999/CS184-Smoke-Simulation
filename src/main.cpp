@@ -367,6 +367,9 @@ int main() {
                 }
             }
         } else {
+//#if defined(__OMP_H)
+//#pragma omp parallel for
+//#endif
             for (int y = 0; y < NUMROW; ++y) {
                 for (int x = 0; x < NUMCOL; ++x) {
                     double density = grid.getDensity(x, y);
