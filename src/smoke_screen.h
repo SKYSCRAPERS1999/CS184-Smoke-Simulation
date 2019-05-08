@@ -11,6 +11,10 @@ extern int size_smoke;
 extern double amount_smoke;
 extern double amount_temperature;
 extern double ambient_temperature;
+extern double temperature_parameter;
+extern double smoke_density_parameter;
+extern double external_force_parameter;
+extern double num_iter;
 extern Vector3D global_rgb;
 Vector3D picked_rgb;
 
@@ -33,10 +37,16 @@ public:
         "Adjustable parameters");
 
     gui->addGroup("Smoke");
-    nanogui::ref<detail::FormWidget<int>> p_size_smoke = gui->addVariable("Size(1 to 20)", size_smoke);
-    nanogui::ref<detail::FormWidget<double>> p_amount_smoke = gui->addVariable("Density(0 to 100)", amount_smoke);
-    nanogui::ref<detail::FormWidget<double>> p_amount_temperature = gui->addVariable("Heat(0 to 100)", amount_temperature);
-    nanogui::ref<detail::FormWidget<double>> p_amount_ambient = gui->addVariable("Ambient(0 to 100)", ambient_temperature);
+
+    gui->addVariable("Size(1 to 20)", size_smoke);
+    gui->addVariable("Density(0 to 100)", amount_smoke);
+    gui->addVariable("Heat(0 to 100)", amount_temperature);
+    gui->addVariable("Ambient(0 to 100)", ambient_temperature);
+    gui->addVariable("Heat parameter", temperature_parameter);
+    gui->addVariable("Density parameter", smoke_density_parameter);
+    gui->addVariable("Force parameter", external_force_parameter);
+    gui->addVariable("Diffusion iterations", num_iter);
+
 
     // Color Wheel
     nanogui::ref<TabWidget> tabWidget = this->add<TabWidget>();

@@ -34,10 +34,16 @@ Vector2D enter_cell = Vector2D(0, 0);
 Vector2D exit_cell = Vector2D(0, 0);
 
 // Adjustable parameters for nanogui
-int size_smoke = 5 * (NUMROW / 100);
+
+int size_smoke = 3 * (NUMROW / 100);
 double amount_smoke = 90;
 double amount_temperature = 50;
 double ambient_temperature = 0;
+double temperature_parameter = 0.015;
+double smoke_density_parameter = 0.005;
+double external_force_parameter = 0.5;
+double num_iter = 16;
+
 Vector3D global_rgb;
 extern Vector3D picked_rgb;
 
@@ -292,7 +298,7 @@ int main() {
 
 
                         // What type of function should fall off be?
-                        dis2 /= pow((NUMCOL / 100.0), 2.0);
+                        //dis2 /= pow((NUMCOL / 100.0), 2.0);
                         double fall_off = 2.0 / max(dis2, 1.0);
 
                         double den = grid.getDensity(x, y);
@@ -311,7 +317,7 @@ int main() {
         if (debug) simulation_start_time = steady_clock::now();
         if (!is_pause && (FREQ * elapsed.count() >= 1000)) {
             last_time = cur_time;
-            grid.simulate(1, external_forces, ambient_temperature);
+            grid.simulate(1, external_forces, ambient_temperature, temperature_parameter, smoke_density_parameter, external_force_parameter, num_iter);
         }
 
         // Display the current state of the simulation
