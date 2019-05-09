@@ -87,13 +87,6 @@ void generate_vertices_array() {
             0, 1, 2,
             2, 3, 0
     };
-//    float vertices[] = {
-//            //position & texturecoordinate
-//            -1, 1, 0, 1, // top left
-//            1, 1, 1, 1, // top right
-//            1, -1, 1, 0,// bottom right
-//            -1, -1, 0, 0, // bottom left
-//    };
     float vertices[] = {
             // positions          // colors           // texture coords
             1, 1, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
@@ -116,48 +109,13 @@ void generate_vertices_array() {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *) (5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    glBindTexture(GL_TEXTURE_2D, texture); // TODO change those methods
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-                    GL_REPEAT);    // set texture wrapping to GL_REPEAT (default wrapping method)
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // set texture wrapping to GL_REPEAT (default wrapping method)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     // set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-
-//    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-//    glEnableVertexAttribArray(0);
-
-//    double width = 1 / (double) NUMCOL * 2;
-//    double height = 1 / (double) NUMROW * 2;
-//    for (int y = 0; y < NUMROW; ++y) {
-//        for (int x = 0; x < NUMCOL; ++x) {
-//            double bottom_left_x = -1 + width * x;
-//            double bottom_left_y = -1 + height * y;
-//
-//            // setup first triangle
-//            float rectangle_vertices[] = {
-//                    bottom_left_x, bottom_left_y + height, // top left
-//                    bottom_left_x + width, bottom_left_y + height, // top right
-//                    bottom_left_x + width, bottom_left_y, // bottom right
-////                    bottom_left_x + width, bottom_left_y, 0, // bottom right
-//                    bottom_left_x, bottom_left_y, // bottom left
-////                    bottom_left_x, bottom_left_y + height, 0, // top left
-//            };
-//            int index = y * NUMCOL + x;
-//            glBindVertexArray(VAOs[index]);
-//            glBindBuffer(GL_ARRAY_BUFFER, VBOs[index]);
-//            glBufferData(GL_ARRAY_BUFFER, sizeof(rectangle_vertices), rectangle_vertices,
-//                         GL_STATIC_DRAW); // TODO not sure if GL_DYNAMIC_DRAW is better
-//            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-//            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-//            glEnableVertexAttribArray(0);
-//        }
-//    }
-//    glBindVertexArray(0);
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-//    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void set_callback() {
@@ -370,11 +328,9 @@ int main() {
             rendering_start_time = steady_clock::now();
         }
 
-
         // If modifying the vector field, display vector field. Otherwise, display the smoke.
         unsigned char data[NUMROW * NUMCOL * 3] = {0};
         if (is_modify_vf) {
-            // TODO uncomment
             for (int y = 0; y < NUMROW; ++y) {
                 for (int x = 0; x < NUMCOL; ++x) {
                     Vector2D accumulated_direction = Vector2D(0.0, 0.0);
@@ -385,7 +341,6 @@ int main() {
                             }
                         }
                     }
-
                     double hue = 0;
                     double saturate = 100;
                     double value = 100;
@@ -406,12 +361,6 @@ int main() {
                     data[index * 3] = max(global_rgb.x * 255, 0.0);
                     data[index * 3 + 1] = max(global_rgb.y * 255, 0.0);
                     data[index * 3 + 2] = max(global_rgb.z * 255, 0.0);
-
-//                    int vertexColorLocation = glGetUniformLocation(shader_program, "ourColor");
-//                    glUniform4f(vertexColorLocation, global_rgb.x, global_rgb.y, global_rgb.z, 1.0f);
-//                    glBindVertexArray(VAOs[index]);
-//                    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-////                    glDrawArrays(GL_TRIANGLES, 0, 6);
                 }
             }
         } else {
