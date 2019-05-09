@@ -372,7 +372,7 @@ int main() {
 
 
         // If modifying the vector field, display vector field. Otherwise, display the smoke.
-        unsigned char data[NUMROW * NUMCOL * 3];
+        unsigned char data[NUMROW * NUMCOL * 3] = {0};
         if (is_modify_vf) {
             // TODO uncomment
             for (int y = 0; y < NUMROW; ++y) {
