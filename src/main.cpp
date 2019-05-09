@@ -312,12 +312,12 @@ int main() {
       }
     }
 
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, Con::texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Con::NUMCOL, Con::NUMROW, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glUseProgram(shader_program);
-    glBindVertexArray(VAO);
+    glBindTexture(GL_TEXTURE_2D, Con::texture);
+    glUseProgram(Con::shader_program);
+    glBindVertexArray(Con::VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     if (Con::debug) {
       rendering_end_time = steady_clock::now();
@@ -334,10 +334,10 @@ int main() {
     glfwSwapBuffers(window);
 
   }
-  glDeleteVertexArrays(1, &VAO);
-  glDeleteBuffers(1, &VBO);
-  glDeleteBuffers(1, &EBO);
-  glDeleteTextures(1, &texture);
+  glDeleteVertexArrays(1, &Con::VAO);
+  glDeleteBuffers(1, &Con::VBO);
+  glDeleteBuffers(1, &Con::EBO);
+  glDeleteTextures(1, &Con::texture);
 
   mouse_th.join();
   glfwTerminate();
