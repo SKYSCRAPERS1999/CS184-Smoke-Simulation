@@ -399,8 +399,8 @@ void Grid::printGrid() {
 
 // starts a smoke at a random location (deprecated)
 void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
-    uni_dis dis_x(0, NUMCOL - size); // uniform distribution in C++11
-    uni_dis dis_y(0, NUMROW - size); // uniform distribution in C++11
+    uni_dis dis_x(0, Con::NUMCOL - size); // uniform distribution in C++11
+    uni_dis dis_y(0, Con::NUMROW - size); // uniform distribution in C++11
     uni_dis dis_density(25, 75); // uniform distribution in C++11
     uni_dis dis_size(1, size);
     while (num_speckle--) {

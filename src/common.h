@@ -11,59 +11,24 @@ using std::uniform_int_distribution;
 using uni_dis = uniform_int_distribution<int>;
 using namespace std::chrono;
 
-static const int NUMCOL = 500;
-static const int NUMROW = 500;
-static const int FREQ = 30;
-static int WINDOW_WIDTH = 700; // x is WIDTH
-static int WINDOW_HEIGHT = 640; // y is HEIGHT
-static const int DISPLAY_LIMIT = 1;
-static const double EPS = 1e-3;
+// constats
 
-//const char *vertexShaderSource = "#version 330 core\n"
-//                                 "layout (location = 0) in vec3 aPos;\n"
-//                                 "void main()\n"
-//                                 "{\n"
-//                                 "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-//                                 "}\0";
-//const char *fragmentShaderSource = "#version 330 core\n"
-//                                   "out vec4 FragColor;\n"
-//                                   "uniform vec4 ourColor;\n"
-//                                   "void main()\n"
-//                                   "{\n"
-//                                   "   FragColor = ourColor;\n"
-//                                   "}\n\0";
+class Con {
 
-static const GLchar *vertexShaderSource = R"glsl(
-    #version 330 core
-    layout (location = 0) in vec3 aPos;
-    layout (location = 1) in vec3 aColor;
-    layout (location = 2) in vec2 aTexCoord;
+public:
 
-    out vec3 ourColor;
-    out vec2 TexCoord;
+  static constexpr int NUMCOL = 500;
+  static constexpr int NUMROW = 500;
+  static constexpr int FREQ = 30;
+  static int WINDOW_WIDTH; // x is WIDTH
+  static int WINDOW_HEIGHT; // y is HEIGHT
+  static constexpr int DISPLAY_LIMIT = 1;
+  static constexpr double EPS = 1e-3;
 
-    void main()
-    {
-        gl_Position = vec4(aPos, 1.0);
-        ourColor = aColor;
-        TexCoord = vec2(aTexCoord.x, aTexCoord.y);
-    }
-)glsl";
+  static const GLchar *vertexShaderSource;
+  static const GLchar *fragmentShaderSource;
 
-static const GLchar *fragmentShaderSource = R"glsl(
-    #version 330 core
-    out vec4 FragColor;
+};
 
-    in vec3 ourColor;
-    in vec2 TexCoord;
-
-    // texture sampler
-    uniform sampler2D texture1;
-
-    void main()
-    {
-        FragColor = texture(texture1, TexCoord);
-    }
-)glsl";
 
 #endif

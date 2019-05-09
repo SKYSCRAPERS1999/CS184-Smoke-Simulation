@@ -33,7 +33,7 @@ public:
     // Create nanogui GUI
     bool enabled = true;
     FormHelper *gui = new FormHelper(this);
-    nanogui::ref<Window> window = gui->addWindow(Eigen::Vector2i(WINDOW_WIDTH - margin, margin),
+    nanogui::ref<Window> window = gui->addWindow(Eigen::Vector2i(Con::WINDOW_WIDTH - margin, margin),
         "Adjustable parameters");
 
     gui->addGroup("Smoke");

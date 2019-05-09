@@ -34,7 +34,7 @@ GLuint shader_program;
 
 // Adjustable parameters for nanogui
 
-int size_smoke = 3 * (NUMROW / 100);
+int size_smoke = 3 * (Con::NUMROW / 100);
 double amount_smoke = 90;
 double amount_temperature = 50;
 double ambient_temperature = 0;
@@ -46,7 +46,7 @@ double num_iter = 16;
 Vector3D global_rgb;
 extern Vector3D picked_rgb;
 
-int size_mouse = 3 * (NUMROW / 100);
+int size_mouse = 3 * (Con::NUMROW / 100);
 
 bool test = true;
 
@@ -99,7 +99,7 @@ void generate_vertices_array() {
 void build_shader_program() {
     // vertex shader
     GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &vertexShaderSource, NULL);
+    glShaderSource(vertex_shader, 1, &Con::vertexShaderSource, NULL);
     glCompileShader(vertex_shader);
     // check for compile errors
     int success;
@@ -111,7 +111,7 @@ void build_shader_program() {
     }
     // fragment shader
     GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &fragmentShaderSource, NULL);
+    glShaderSource(fragment_shader, 1, &Con::fragmentShaderSource, NULL);
     glCompileShader(fragment_shader);
     // check for compile error
     glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
@@ -143,7 +143,7 @@ extern void error_callback(int, const char *);
 extern void set_callback(GLFWwindow *window);
 
 int main() {
-    grid = Grid(NUMCOL + 2, NUMROW + 2);
+    grid = Grid(Con::NUMCOL + 2, Con::NUMROW + 2);
     external_forces.resize(grid.width * grid.height, Vector2D(0, 0));
 
     // Initialize window and gui elements
@@ -159,7 +159,7 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #endif
 
-    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
+    window = glfwCreateWindow(Con::WINDOW_WIDTH, Con::WINDOW_HEIGHT, "Smoke Simulation", nullptr, nullptr);
     if (!window) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
@@ -208,8 +208,8 @@ int main() {
             double xpos = grid.cursor_pos.x;
             double ypos = grid.cursor_pos.y;
 
-            int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
-            int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
+            int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
+            int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
 
             enter_cell = Vector2D(col, row);
         }
@@ -220,8 +220,8 @@ int main() {
                 double xpos = grid.cursor_pos.x;
                 double ypos = grid.cursor_pos.y;
 
-                int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
-                int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
+                int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
+                int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
 
                 exit_cell = Vector2D(col, row);
                 if (exit_cell.x != enter_cell.x || exit_cell.y != enter_cell.y) {
@@ -240,8 +240,8 @@ int main() {
                 double xpos = grid.cursor_pos.x;
                 double ypos = grid.cursor_pos.y;
 
-                int row = int(NUMROW - NUMROW * ypos / double(WINDOW_HEIGHT));
-                int col = int(NUMCOL * xpos / double(WINDOW_WIDTH));
+                int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
+                int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
 
                 for (int y = row - size_smoke; y <= row + size_smoke; ++y) {
                     for (int x = col - size_smoke; x <= col + size_smoke; ++x) {
@@ -254,7 +254,7 @@ int main() {
 
 
                         // What type of function should fall off be?
-                        dis2 /= pow((NUMCOL / 100.0), 2.0);
+                        dis2 /= pow((Con::NUMCOL / 100.0), 2.0);
                         double fall_off = 2.0 / max(dis2, 1.0);
 
                         double den = grid.getDensity(x, y);
@@ -271,7 +271,7 @@ int main() {
 
         // Advance one step in the simulation
         if (debug) simulation_start_time = steady_clock::now();
-        if (!is_pause && (FREQ * elapsed.count() >= 1000)) {
+        if (!is_pause && (Con::FREQ * elapsed.count() >= 1000)) {
             last_time = cur_time;
             grid.simulate(1, external_forces, ambient_temperature, temperature_parameter, smoke_density_parameter,
                           external_force_parameter, num_iter);
@@ -284,14 +284,14 @@ int main() {
         }
 
         // If modifying the vector field, display vector field. Otherwise, display the smoke.
-        unsigned char data[NUMROW * NUMCOL * 3] = {0};
+        unsigned char data[Con::NUMROW * Con::NUMCOL * 3] = {0};
         if (is_modify_vf) {
-            for (int y = 0; y < NUMROW; ++y) {
-                for (int x = 0; x < NUMCOL; ++x) {
+            for (int y = 0; y < Con::NUMROW; ++y) {
+                for (int x = 0; x < Con::NUMCOL; ++x) {
                     Vector2D accumulated_direction = Vector2D(0.0, 0.0);
                     for (int ys = -1 + y; ys <= y + 1; ++ys) {
                         for (int xs = -1 + x; xs <= x + 1; ++xs) {
-                            if (ys >= 0 && xs >= 0 && ys < NUMROW && xs < NUMCOL) {
+                            if (ys >= 0 && xs >= 0 && ys < Con::NUMROW && xs < Con::NUMCOL) {
                                 accumulated_direction += external_forces[ys * grid.width + xs];
                             }
                         }
@@ -312,22 +312,22 @@ int main() {
 
                     global_rgb = hsv2rgb({hue, saturate, value});
 
-                    int index = y * NUMCOL + x;
+                    int index = y * Con::NUMCOL + x;
                     data[index * 3] = max(global_rgb.x * 255, 0.0);
                     data[index * 3 + 1] = max(global_rgb.y * 255, 0.0);
                     data[index * 3 + 2] = max(global_rgb.z * 255, 0.0);
                 }
             }
         } else {
-            for (int y = 0; y < NUMROW; ++y) {
-                for (int x = 0; x < NUMCOL; ++x) {
+            for (int y = 0; y < Con::NUMROW; ++y) {
+                for (int x = 0; x < Con::NUMCOL; ++x) {
                     double density = grid.getDensity(x, y);
-                    if (density <= DISPLAY_LIMIT) continue;
+                    if (density <= Con::DISPLAY_LIMIT) continue;
                     double temperature = grid.getTemperature(x, y);
 
                     double hue_center = 400;
                     double hue_halfspan = 50;
-                    if (picked_rgb.norm() > EPS) {
+                    if (picked_rgb.norm() > Con::EPS) {
                         Vector3D picked_hsv = rgb2hsv(picked_rgb);
                         hue_center = picked_hsv.x;
                     }
@@ -340,7 +340,7 @@ int main() {
 
                     global_rgb = hsv2rgb({hue, saturate, value});
 
-                    int index = y * NUMCOL + x;
+                    int index = y * Con::NUMCOL + x;
                     data[index * 3] = max(global_rgb.x * 255, 0.0);
                     data[index * 3 + 1] = max(global_rgb.y * 255, 0.0);
                     data[index * 3 + 2] = max(global_rgb.z * 255, 0.0);
@@ -348,7 +348,7 @@ int main() {
             }
         }
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, NUMCOL, NUMROW, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Con::NUMCOL, Con::NUMROW, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, texture);
         glUseProgram(shader_program);

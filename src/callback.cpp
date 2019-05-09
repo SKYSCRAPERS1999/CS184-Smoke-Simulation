@@ -49,8 +49,8 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 }
 
 void window_size_callback(GLFWwindow *main_window, int width, int height) {
-    WINDOW_WIDTH = width;
-    WINDOW_HEIGHT = height;
+    Con::WINDOW_WIDTH = width;
+    Con::WINDOW_HEIGHT = height;
 }
 
 void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {

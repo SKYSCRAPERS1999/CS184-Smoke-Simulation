@@ -214,7 +214,7 @@ set(APPLICATION_SOURCE
         src/common.h
         src/color.h
         src/smoke_screen.h
-        src/stb_image.h)
+        src/stb_image.h src/common.cpp)
 
 #-------------------------------------------------------------------------------
 # Set include directories
