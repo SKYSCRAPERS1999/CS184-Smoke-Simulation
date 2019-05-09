@@ -2,10 +2,8 @@
 // Created by impulse on 2019-05-07.
 //
 
-#include <nanogui/nanogui.h>
 #include <CGL/CGL.h>
 #include "common.h"
-
 
 extern int size_smoke;
 extern double amount_smoke;

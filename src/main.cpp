@@ -14,6 +14,7 @@
 #include "grid.h"
 #include "color.h"
 #include "smoke_screen.h"
+#include "shader.h"
 
 using namespace nanogui;
 using namespace std;
@@ -22,15 +23,14 @@ std::random_device rd;
 mt19937 rng(rd()); // random number generator in C++11
 
 Grid grid;
-bool mouse_down = false;
-bool is_pause = false;
-bool shift_pressed = false;
-bool is_modify_vf = false;
-bool reset = false;
-bool debug = true; // Set to true to record time
+//bool mouse_down = false;
+//bool is_pause = false;
+//bool shift_pressed = false;
+//bool is_modify_vf = false;
+//bool reset = false;
+//bool debug = true; // Set to true to record time
 Vector2D enter_cell = Vector2D(0, 0);
 Vector2D exit_cell = Vector2D(0, 0);
-GLuint shader_program;
 
 // Adjustable parameters for nanogui
 
@@ -46,105 +46,20 @@ double num_iter = 16;
 Vector3D global_rgb;
 extern Vector3D picked_rgb;
 
-int size_mouse = 3 * (Con::NUMROW / 100);
-
-bool test = true;
-
-// Vertex Array Object and Vertex Buffer Object
-GLuint VBO, VAO, EBO, texture;
+static int size_mouse = 3 * (Con::NUMROW / 100);
+static bool test = true;
 
 GLFWwindow *window = nullptr;
 Screen *screen = nullptr;
 
-void generate_vertices_array() {
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-    glGenTextures(1, &texture);
-    GLuint elements[] = {
-            0, 1, 2,
-            2, 3, 0
-    };
-    float vertices[] = {
-            // positions          // colors           // texture coords
-            1, 1, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
-            1, -1, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
-            -1, -1, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-            -1, 1, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // top left
-    };
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
-    // position attribute
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *) 0);
-    glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *) (2 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // texture coord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 7 * sizeof(float), (void *) (5 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    glBindTexture(GL_TEXTURE_2D, texture);
-    // set texture wrapping to GL_REPEAT (default wrapping method)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // set texture filtering parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-}
-
-void build_shader_program() {
-    // vertex shader
-    GLuint vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertex_shader, 1, &Con::vertexShaderSource, NULL);
-    glCompileShader(vertex_shader);
-    // check for compile errors
-    int success;
-    char info_log[512];
-    glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << info_log << std::endl;
-    }
-    // fragment shader
-    GLuint fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragment_shader, 1, &Con::fragmentShaderSource, NULL);
-    glCompileShader(fragment_shader);
-    // check for compile error
-    glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        glGetShaderInfoLog(fragment_shader, 512, NULL, info_log);
-        std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << info_log << std::endl;
-    }
-    // link shaders
-    shader_program = glCreateProgram();
-    glAttachShader(shader_program, vertex_shader);
-    glAttachShader(shader_program, fragment_shader);
-    glBindFragDataLocation(shader_program, 0, "outColor"); // TODO not sure
-    glLinkProgram(shader_program);
-    // check for link error
-    glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-    if (!success) {
-        glGetProgramInfoLog(shader_program, 512, NULL, info_log);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << info_log << std::endl;
-    }
-    // delete shader
-    glDeleteShader(vertex_shader);
-    glDeleteShader(fragment_shader);
-}
-
-
-// Initialize the initial vector field for buoyant forces to point upwards (gravity)
-vector<Vector2D> external_forces;
-extern void error_callback(int, const char *);
-extern void set_callback(GLFWwindow *window);
+extern void set_callback(GLFWwindow* );
+extern void error_callback(int error, const char* );
 
 int main() {
+
     grid = Grid(Con::NUMCOL + 2, Con::NUMROW + 2);
-    external_forces.resize(grid.width * grid.height, Vector2D(0, 0));
+    // Initialize the initial vector field for buoyant forces to point upwards (gravity)
+    vector<Vector2D> external_forces(grid.width * grid.height, Vector2D(0, 0));
 
     // Initialize window and gui elements
     glfwSetErrorCallback(error_callback);
@@ -198,13 +113,13 @@ int main() {
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT);
         // If the velocity field is reset, reset external forces
-        if (reset) {
-            reset = false;
+        if (Con::reset) {
+            Con::reset = false;
             fill(external_forces.begin(), external_forces.end(), Vector2D(0, 0));
         }
 
         // If modifying the vector field, continuously update the current location of the mouse if not pressed
-        if (is_modify_vf && !mouse_down) {
+        if (Con::is_modify_vf && !Con::mouse_down) {
             double xpos = grid.cursor_pos.x;
             double ypos = grid.cursor_pos.y;
 
@@ -215,8 +130,8 @@ int main() {
         }
 
         // Handle dragging of mouse to create a stream of smoke or modifying the vector field
-        if (mouse_down) {
-            if (is_modify_vf) {
+        if (Con::mouse_down) {
+            if (Con::is_modify_vf) {
                 double xpos = grid.cursor_pos.x;
                 double ypos = grid.cursor_pos.y;
 
@@ -270,22 +185,22 @@ int main() {
         auto elapsed = duration_cast<milliseconds>(cur_time - last_time);
 
         // Advance one step in the simulation
-        if (debug) simulation_start_time = steady_clock::now();
-        if (!is_pause && (Con::FREQ * elapsed.count() >= 1000)) {
+        if (Con::debug) simulation_start_time = steady_clock::now();
+        if (!Con::is_pause && (Con::FREQ * elapsed.count() >= 1000)) {
             last_time = cur_time;
             grid.simulate(1, external_forces, ambient_temperature, temperature_parameter, smoke_density_parameter,
                           external_force_parameter, num_iter);
         }
 
         // Display the current state of the simulation
-        if (debug) {
+        if (Con::debug) {
             simulation_end_time = steady_clock::now();
             rendering_start_time = steady_clock::now();
         }
 
         // If modifying the vector field, display vector field. Otherwise, display the smoke.
         unsigned char data[Con::NUMROW * Con::NUMCOL * 3] = {0};
-        if (is_modify_vf) {
+        if (Con::is_modify_vf) {
             for (int y = 0; y < Con::NUMROW; ++y) {
                 for (int x = 0; x < Con::NUMCOL; ++x) {
                     Vector2D accumulated_direction = Vector2D(0.0, 0.0);
@@ -354,7 +269,7 @@ int main() {
         glUseProgram(shader_program);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-        if (debug) {
+        if (Con::debug) {
             rendering_end_time = steady_clock::now();
             rendering_time = duration_cast<milliseconds>(rendering_end_time - rendering_start_time).count();
             simulation_time = duration_cast<milliseconds>(simulation_end_time - simulation_start_time).count();

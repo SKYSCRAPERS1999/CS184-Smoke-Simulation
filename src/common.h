@@ -25,6 +25,13 @@ public:
   static constexpr int DISPLAY_LIMIT = 1;
   static constexpr double EPS = 1e-3;
 
+  static bool mouse_down;
+  static bool is_pause;
+  static bool shift_pressed;
+  static bool is_modify_vf;
+  static bool reset;
+  static bool debug;
+
   static const GLchar *vertexShaderSource;
   static const GLchar *fragmentShaderSource;
 

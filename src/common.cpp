@@ -6,6 +6,13 @@
 int Con::WINDOW_WIDTH = 700;
 int Con::WINDOW_HEIGHT = 640;
 
+bool Con::mouse_down = false;
+bool Con::is_pause = false;
+bool Con::shift_pressed = false;
+bool Con::is_modify_vf = false;
+bool Con::reset = false;
+bool Con::debug = true;
+
 const GLchar* Con::vertexShaderSource = R"glsl(
     #version 330 core
     layout (location = 0) in vec3 aPos;

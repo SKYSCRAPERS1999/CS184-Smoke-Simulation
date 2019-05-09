@@ -3,8 +3,8 @@
 //
 #include "common.h"
 
-GLuint shader_program;
-GLuint VBO, VAO, EBO, texture;
+// Vertex Array Object and Vertex Buffer Object
+static GLuint VAO, VBO, EBO, texture, shader_program;
 
 void generate_vertices_array() {
   glGenVertexArrays(1, &VAO);
