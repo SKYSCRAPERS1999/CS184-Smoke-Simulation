@@ -23,8 +23,8 @@ public:
 
   // basic constants
 
-  static constexpr int NUMCOL = 500;
-  static constexpr int NUMROW = 500;
+  static constexpr int NUMCOL = 400;
+  static constexpr int NUMROW = 400;
   static constexpr int FREQ = 30;
   static int WINDOW_WIDTH; // x is WIDTH
   static int WINDOW_HEIGHT; // y is HEIGHT
