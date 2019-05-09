@@ -142,7 +142,6 @@ int main() {
                             continue;
                         }
 
-
                         // What type of function should fall off be?
                         dis2 /= pow((Con::NUMCOL / 100.0), 2.0);
                         double fall_off = 2.0 / max(dis2, 1.0);
