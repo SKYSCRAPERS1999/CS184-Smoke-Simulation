@@ -23,13 +23,13 @@ public:
 
   // basic constants
 
-  static constexpr int NUMCOL = 500;
-  static constexpr int NUMROW = 500;
+  static constexpr int NUMCOL = 350;
+  static constexpr int NUMROW = 350;
   static constexpr int FREQ = 30;
-  static int WINDOW_WIDTH; // x is WIDTH
-  static int WINDOW_HEIGHT; // y is HEIGHT
   static constexpr int DISPLAY_LIMIT = 1;
   static constexpr double EPS = 1e-3;
+  static int WINDOW_WIDTH; // x is WIDTH
+  static int WINDOW_HEIGHT; // y is HEIGHT
 
   // for callbacks
 
@@ -51,6 +51,8 @@ public:
   static double external_force_parameter;
   static double num_iter;
 
+  static Vector3D picked_rgb;
+
   // shader sources
 
   static const GLchar *vertexShaderSource;
@@ -59,13 +61,15 @@ public:
   static Vector2D enter_cell;
   static Vector2D exit_cell;
 
-  static Vector3D picked_rgb;
-
   static std::random_device rd;
 
   // random number generator in C++11
   static mt19937 rng;
 
+  // Vertex Array Object and Vertex Buffer Object
+  static GLuint VAO, VBO, EBO;
+  static GLuint texture;
+  static GLuint shader_program;
 };
 
 
