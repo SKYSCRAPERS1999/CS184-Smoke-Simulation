@@ -1,7 +1,7 @@
 #ifndef common_h
 #define common_h
 
-#include "omp.h"
+//#include "omp.h"
 #include "grid.h"
 
 #include <random>
