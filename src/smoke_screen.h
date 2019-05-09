@@ -5,9 +5,6 @@
 #include <CGL/CGL.h>
 #include "common.h"
 
-extern Vector3D global_rgb;
-Vector3D picked_rgb;
-
 class SmokeScreen : public nanogui::Screen {
 public:
 
@@ -48,7 +45,7 @@ public:
     layer->add<Label>("Color wheel widget", "sans-bold");
     nanogui::ref<ColorWheel> color_wheel = layer->add<ColorWheel>();
     color_wheel->setCallback([&](const nanogui::Color& color){
-        picked_rgb = Vector3D(color.r(), color.g(), color.b());
+        Con::picked_rgb = Vector3D(color.r(), color.g(), color.b());
     });
 
 
