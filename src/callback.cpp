@@ -14,6 +14,11 @@ extern int size_smoke;
 extern double amount_smoke;
 extern nanogui::Screen *screen;
 
+extern int size_mouse;
+extern double amount_temperature;
+extern vector<Vector2D> external_forces;
+extern mt19937 rng;
+
 void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
     screen->cursorPosCallbackEvent(xpos, ypos);
     glfwGetCursorPos(window, &grid.cursor_pos.x, &grid.cursor_pos.y);
@@ -29,11 +34,12 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         if (action == GLFW_PRESS) {
             mouse_down = true;
-            //std::cout<<"Mouse Down!"<<std::endl;
+            // Handle dragging of mouse to create a stream of smoke or modifying the vector field
         } else if (action == GLFW_RELEASE) {
             mouse_down = false;
         }
     }
+
 }
 
 void window_size_callback(GLFWwindow *main_window, int width, int height) {
@@ -93,6 +99,32 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
                 break;
         }
     }
+}
+
+void set_callback(GLFWwindow *window) {
+    glfwSetKeyCallback(window, [](GLFWwindow *, int key, int scancode, int action, int mods) {
+      screen->keyCallbackEvent(key, scancode, action, mods);
+    });
+
+    glfwSetCharCallback(window, [](GLFWwindow *, unsigned int codepoint) {
+      screen->charCallbackEvent(codepoint);
+    });
+
+    glfwSetDropCallback(window, [](GLFWwindow *, int count, const char **filenames) {
+      screen->dropCallbackEvent(count, filenames);
+    });
+
+    glfwSetScrollCallback(window, [](GLFWwindow *, double x, double y) {
+      screen->scrollCallbackEvent(x, y);
+    });
+
+    glfwSetFramebufferSizeCallback(window, [](GLFWwindow *, int width, int height) {
+      screen->resizeCallbackEvent(width, height);
+    });
+    glfwSetCursorPosCallback(window, cursor_position_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetKeyCallback(window, keyboard_callback);
+    glfwSetWindowSizeCallback(window, window_size_callback);
 }
 
 #endif
