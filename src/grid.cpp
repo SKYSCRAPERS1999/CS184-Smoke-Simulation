@@ -5,18 +5,18 @@
 
 #include <stdio.h>
 #include <iostream>
-#include "grid.h"
 #include <algorithm>
 #include <string>
 #include <memory>
-#include <random>
 #include "CGL/vector2D.h"
+#include "common.h"
+#include "grid.h"
 
 using namespace std;
 using namespace CGL;
 
-static std::random_device rd;
-static mt19937 rng(rd()); // random number generator in C++11
+extern std::random_device rd;
+extern mt19937 rng; // random number generator in C++11
 
 double interpolate(double d1, double d2, double s);
 
@@ -397,3 +397,22 @@ void Grid::printGrid() {
     cout << "____________" << endl;
 }
 
+// starts a smoke at a random location (deprecated)
+void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
+    uni_dis dis_x(0, NUMCOL - size); // uniform distribution in C++11
+    uni_dis dis_y(0, NUMROW - size); // uniform distribution in C++11
+    uni_dis dis_density(25, 75); // uniform distribution in C++11
+    uni_dis dis_size(1, size);
+    while (num_speckle--) {
+        int chosen_x = dis_x(rng);
+        int chosen_y = dis_y(rng);
+        int chosen_size = dis_size(rng);
+        double chosen_density = dis_density(rng);
+        for (int i = 0; i < chosen_size; ++i) {
+            for (int j = 0; j < chosen_size; ++j) {
+                grid.setDensity(chosen_x + i, chosen_y + j,
+                                grid.getDensity(chosen_x + i, chosen_y + j) + chosen_density);
+            }
+        }
+    }
+}

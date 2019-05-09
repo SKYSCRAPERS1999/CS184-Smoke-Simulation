@@ -1,7 +1,8 @@
+#include "common.h"
 #include <iostream>
-#include <random>
 #include <chrono>
 #include <algorithm>
+#include <thread>
 #include <math.h>
 //#include <GLFW/glfw3.h>
 #include <nanogui/nanogui.h>
@@ -11,17 +12,14 @@
 #include "stb_image.h"
 
 #include "grid.h"
-#include "common.h"
-#include "callback.h"
 #include "color.h"
 #include "smoke_screen.h"
 
 using namespace nanogui;
 using namespace std;
 
-static std::random_device rd;
-
-static mt19937 rng(rd()); // random number generator in C++11
+std::random_device rd;
+mt19937 rng(rd()); // random number generator in C++11
 
 Grid grid;
 bool mouse_down = false;
@@ -57,26 +55,6 @@ GLuint VBO, VAO, EBO, texture;
 
 GLFWwindow *window = nullptr;
 Screen *screen = nullptr;
-
-// starts a smoke at a random location (deprecated)
-void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
-    uni_dis dis_x(0, NUMCOL - size); // uniform distribution in C++11
-    uni_dis dis_y(0, NUMROW - size); // uniform distribution in C++11
-    uni_dis dis_density(25, 75); // uniform distribution in C++11
-    uni_dis dis_size(1, size);
-    while (num_speckle--) {
-        int chosen_x = dis_x(rng);
-        int chosen_y = dis_y(rng);
-        int chosen_size = dis_size(rng);
-        double chosen_density = dis_density(rng);
-        for (int i = 0; i < chosen_size; ++i) {
-            for (int j = 0; j < chosen_size; ++j) {
-                grid.setDensity(chosen_x + i, chosen_y + j,
-                                grid.getDensity(chosen_x + i, chosen_y + j) + chosen_density);
-            }
-        }
-    }
-}
 
 void generate_vertices_array() {
     glGenVertexArrays(1, &VAO);
@@ -116,32 +94,6 @@ void generate_vertices_array() {
     // set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-}
-
-void set_callback() {
-    glfwSetKeyCallback(window, [](GLFWwindow *, int key, int scancode, int action, int mods) {
-        screen->keyCallbackEvent(key, scancode, action, mods);
-    });
-
-    glfwSetCharCallback(window, [](GLFWwindow *, unsigned int codepoint) {
-        screen->charCallbackEvent(codepoint);
-    });
-
-    glfwSetDropCallback(window, [](GLFWwindow *, int count, const char **filenames) {
-        screen->dropCallbackEvent(count, filenames);
-    });
-
-    glfwSetScrollCallback(window, [](GLFWwindow *, double x, double y) {
-        screen->scrollCallbackEvent(x, y);
-    });
-
-    glfwSetFramebufferSizeCallback(window, [](GLFWwindow *, int width, int height) {
-        screen->resizeCallbackEvent(width, height);
-    });
-    glfwSetCursorPosCallback(window, cursor_position_callback);
-    glfwSetMouseButtonCallback(window, mouse_button_callback);
-    glfwSetKeyCallback(window, keyboard_callback);
-    glfwSetWindowSizeCallback(window, window_size_callback);
 }
 
 void build_shader_program() {
@@ -185,11 +137,14 @@ void build_shader_program() {
 }
 
 
+// Initialize the initial vector field for buoyant forces to point upwards (gravity)
+vector<Vector2D> external_forces;
+extern void error_callback(int, const char *);
+extern void set_callback(GLFWwindow *window);
+
 int main() {
     grid = Grid(NUMCOL + 2, NUMROW + 2);
-
-    // Initialize the initial vector field for buoyant forces to point upwards (gravity)
-    vector<Vector2D> external_forces(grid.width * grid.height, Vector2D(0, 0));
+    external_forces.resize(grid.width * grid.height, Vector2D(0, 0));
 
     // Initialize window and gui elements
     glfwSetErrorCallback(error_callback);
@@ -221,7 +176,7 @@ int main() {
     generate_vertices_array();
     // Create a nanogui screen
     screen = new SmokeScreen(window);
-    set_callback();
+    set_callback(window);
 
 #if defined(_OPENMP)
 #pragma omp parallel
@@ -299,7 +254,7 @@ int main() {
 
 
                         // What type of function should fall off be?
-                        //dis2 /= pow((NUMCOL / 100.0), 2.0);
+                        dis2 /= pow((NUMCOL / 100.0), 2.0);
                         double fall_off = 2.0 / max(dis2, 1.0);
 
                         double den = grid.getDensity(x, y);

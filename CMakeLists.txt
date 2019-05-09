@@ -210,7 +210,7 @@ set(APPLICATION_SOURCE
         src/main.cpp
         src/grid.cpp
         src/grid.h
-        src/callback.h
+        src/callback.cpp
         src/common.h
         src/color.h
         src/smoke_screen.h

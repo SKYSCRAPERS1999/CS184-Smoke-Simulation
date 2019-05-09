@@ -3,18 +3,21 @@
 
 #include "omp.h"
 
+#include <random>
+#include <nanogui/nanogui.h>
+
 using std::mt19937;
 using std::uniform_int_distribution;
 using uni_dis = uniform_int_distribution<int>;
 using namespace std::chrono;
 
-const int NUMCOL = 500;
-const int NUMROW = 500;
-const int FREQ = 30;
-int WINDOW_WIDTH = 700; // x is WIDTH
-int WINDOW_HEIGHT = 640; // y is HEIGHT
-const int DISPLAY_LIMIT = 1;
-const double EPS = 1e-3;
+static const int NUMCOL = 500;
+static const int NUMROW = 500;
+static const int FREQ = 30;
+static int WINDOW_WIDTH = 700; // x is WIDTH
+static int WINDOW_HEIGHT = 640; // y is HEIGHT
+static const int DISPLAY_LIMIT = 1;
+static const double EPS = 1e-3;
 
 //const char *vertexShaderSource = "#version 330 core\n"
 //                                 "layout (location = 0) in vec3 aPos;\n"
@@ -30,7 +33,7 @@ const double EPS = 1e-3;
 //                                   "   FragColor = ourColor;\n"
 //                                   "}\n\0";
 
-const GLchar *vertexShaderSource = R"glsl(
+static const GLchar *vertexShaderSource = R"glsl(
     #version 330 core
     layout (location = 0) in vec3 aPos;
     layout (location = 1) in vec3 aColor;
@@ -47,7 +50,7 @@ const GLchar *vertexShaderSource = R"glsl(
     }
 )glsl";
 
-const GLchar *fragmentShaderSource = R"glsl(
+static const GLchar *fragmentShaderSource = R"glsl(
     #version 330 core
     out vec4 FragColor;
 

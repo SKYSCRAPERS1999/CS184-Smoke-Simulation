@@ -1,6 +1,12 @@
 #ifndef callback_h
 #define callback_h
 
+#include "grid.h"
+#include <CGL/CGL.h>
+#include <nanogui/nanogui.h>
+#include <random>
+#include "common.h"
+
 extern Grid grid;
 // global variables to control simulation in main.cpp
 extern bool mouse_down;
