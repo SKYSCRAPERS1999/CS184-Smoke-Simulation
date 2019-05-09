@@ -32,3 +32,4 @@ void set_callback(GLFWwindow *window) {
   glfwSetKeyCallback(window, keyboard_callback);
   glfwSetWindowSizeCallback(window, window_size_callback);
 }
+

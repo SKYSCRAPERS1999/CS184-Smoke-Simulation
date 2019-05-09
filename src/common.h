@@ -40,6 +40,7 @@ public:
   static bool is_modify_vf;
   static bool reset;
   static bool debug;
+  static int size_mouse;
 
   // Adjustable parameters for nanogui
 
