@@ -1,15 +1,10 @@
 #ifndef callback_h
 #define callback_h
 
-#include <CGL/CGL.h>
 #include "grid.h"
 #include "common.h"
 
 extern Grid grid;
-extern Vector2D enter_cell;
-extern Vector2D exit_cell;
-//extern int size_smoke;
-//extern double amount_smoke;
 extern nanogui::Screen *screen;
 
 void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {

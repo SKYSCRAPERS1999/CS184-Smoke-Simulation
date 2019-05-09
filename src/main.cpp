@@ -1,4 +1,3 @@
-#include "common.h"
 #include <iostream>
 #include <chrono>
 #include <algorithm>
@@ -11,6 +10,7 @@
 #include <CGL/CGL.h>
 #include "stb_image.h"
 
+#include "common.h"
 #include "grid.h"
 #include "color.h"
 #include "smoke_screen.h"
@@ -19,38 +19,13 @@
 using namespace nanogui;
 using namespace std;
 
-std::random_device rd;
-mt19937 rng(rd()); // random number generator in C++11
-
 Grid grid;
-//bool mouse_down = false;
-//bool is_pause = false;
-//bool shift_pressed = false;
-//bool is_modify_vf = false;
-//bool reset = false;
-//bool debug = true; // Set to true to record time
-Vector2D enter_cell = Vector2D(0, 0);
-Vector2D exit_cell = Vector2D(0, 0);
-
-// Adjustable parameters for nanogui
-
-int size_smoke = 3 * (Con::NUMROW / 100);
-double amount_smoke = 90;
-double amount_temperature = 50;
-double ambient_temperature = 0;
-double temperature_parameter = 0.015;
-double smoke_density_parameter = 0.005;
-double external_force_parameter = 0.5;
-double num_iter = 16;
-
-Vector3D global_rgb;
-extern Vector3D picked_rgb;
-
-static int size_mouse = 3 * (Con::NUMROW / 100);
-static bool test = true;
-
 GLFWwindow *window = nullptr;
 Screen *screen = nullptr;
+
+static Vector3D rgb;
+static int size_mouse = 3 * (Con::NUMROW / 100);
+static bool test = true;
 
 extern void set_callback(GLFWwindow* );
 extern void error_callback(int error, const char* );
@@ -126,7 +101,7 @@ int main() {
             int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
             int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
 
-            enter_cell = Vector2D(col, row);
+            Con::enter_cell = Vector2D(col, row);
         }
 
         // Handle dragging of mouse to create a stream of smoke or modifying the vector field
@@ -138,9 +113,9 @@ int main() {
                 int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
                 int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
 
-                exit_cell = Vector2D(col, row);
-                if (exit_cell.x != enter_cell.x || exit_cell.y != enter_cell.y) {
-                    Vector2D direction_mouse_drag = exit_cell - enter_cell;
+                Con::exit_cell = Vector2D(col, row);
+                if (Con::exit_cell.x != Con::enter_cell.x || Con::exit_cell.y != Con::enter_cell.y) {
+                    Vector2D direction_mouse_drag = Con::exit_cell - Con::enter_cell;
                     for (int y = row - size_mouse; y < row + size_mouse; y++) {
                         for (int x = col - size_mouse; x < col + size_mouse; x++) {
                             if (y < 1 || x < 1 || y >= grid.height - 1 || x >= grid.width - 1) {
@@ -149,7 +124,7 @@ int main() {
                             external_forces[y * grid.width + x] = direction_mouse_drag.unit();
                         }
                     }
-                    enter_cell = exit_cell;
+                    Con::enter_cell = Con::exit_cell;
                 }
             } else {
                 double xpos = grid.cursor_pos.x;
@@ -158,12 +133,12 @@ int main() {
                 int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
                 int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
 
-                for (int y = row - size_smoke; y <= row + size_smoke; ++y) {
-                    for (int x = col - size_smoke; x <= col + size_smoke; ++x) {
+                for (int y = row - Con::size_smoke; y <= row + Con::size_smoke; ++y) {
+                    for (int x = col - Con::size_smoke; x <= col + Con::size_smoke; ++x) {
                         double dis2 = pow(y - row, 2.0) + pow(x - col, 2.0);
 
                         if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 ||
-                            (dis2 > size_smoke * size_smoke)) {
+                            (dis2 > Con::size_smoke * Con::size_smoke)) {
                             continue;
                         }
 
@@ -174,8 +149,8 @@ int main() {
 
                         double den = grid.getDensity(x, y);
                         double temp = grid.getTemperature(x, y);
-                        grid.setDensity(x, y, min(den + amount_smoke * fall_off, 100.0));
-                        grid.setTemperature(x, y, min(temp + amount_temperature * fall_off, 100.0));
+                        grid.setDensity(x, y, min(den + Con::amount_smoke * fall_off, 100.0));
+                        grid.setTemperature(x, y, min(temp + Con::amount_temperature * fall_off, 100.0));
 
                     }
                 }
@@ -188,8 +163,8 @@ int main() {
         if (Con::debug) simulation_start_time = steady_clock::now();
         if (!Con::is_pause && (Con::FREQ * elapsed.count() >= 1000)) {
             last_time = cur_time;
-            grid.simulate(1, external_forces, ambient_temperature, temperature_parameter, smoke_density_parameter,
-                          external_force_parameter, num_iter);
+            grid.simulate(1, external_forces, Con::ambient_temperature, Con::temperature_parameter, Con::smoke_density_parameter,
+                          Con::external_force_parameter, Con::num_iter);
         }
 
         // Display the current state of the simulation
@@ -225,12 +200,12 @@ int main() {
                         hue = angle;
                     }
 
-                    global_rgb = hsv2rgb({hue, saturate, value});
+                    rgb = hsv2rgb({hue, saturate, value});
 
                     int index = y * Con::NUMCOL + x;
-                    data[index * 3] = max(global_rgb.x * 255, 0.0);
-                    data[index * 3 + 1] = max(global_rgb.y * 255, 0.0);
-                    data[index * 3 + 2] = max(global_rgb.z * 255, 0.0);
+                    data[index * 3] = max(rgb.x * 255, 0.0);
+                    data[index * 3 + 1] = max(rgb.y * 255, 0.0);
+                    data[index * 3 + 2] = max(rgb.z * 255, 0.0);
                 }
             }
         } else {
@@ -242,8 +217,8 @@ int main() {
 
                     double hue_center = 400;
                     double hue_halfspan = 50;
-                    if (picked_rgb.norm() > Con::EPS) {
-                        Vector3D picked_hsv = rgb2hsv(picked_rgb);
+                    if (Con::picked_rgb.norm() > Con::EPS) {
+                        Vector3D picked_hsv = rgb2hsv(Con::picked_rgb);
                         hue_center = picked_hsv.x;
                     }
                     // [0, 100] -> [450, 350]
@@ -253,15 +228,16 @@ int main() {
                     // [0, 100] -> [0, 100]
                     double value = density;
 
-                    global_rgb = hsv2rgb({hue, saturate, value});
+                    rgb = hsv2rgb({hue, saturate, value});
 
                     int index = y * Con::NUMCOL + x;
-                    data[index * 3] = max(global_rgb.x * 255, 0.0);
-                    data[index * 3 + 1] = max(global_rgb.y * 255, 0.0);
-                    data[index * 3 + 2] = max(global_rgb.z * 255, 0.0);
+                    data[index * 3] = max(rgb.x * 255, 0.0);
+                    data[index * 3 + 1] = max(rgb.y * 255, 0.0);
+                    data[index * 3 + 2] = max(rgb.z * 255, 0.0);
                 }
             }
         }
+
         glBindTexture(GL_TEXTURE_2D, texture);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Con::NUMCOL, Con::NUMROW, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
@@ -273,7 +249,7 @@ int main() {
             rendering_end_time = steady_clock::now();
             rendering_time = duration_cast<milliseconds>(rendering_end_time - rendering_start_time).count();
             simulation_time = duration_cast<milliseconds>(simulation_end_time - simulation_start_time).count();
-            if (rng() % 70 == 0) {
+            if (Con::rng() % 70 == 0) {
                 printf("simulation_time = %lld mm\trendering_time = %lld mm\n", simulation_time, rendering_time);
             }
         }

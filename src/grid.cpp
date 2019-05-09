@@ -3,20 +3,9 @@
 //
 //
 
-#include <stdio.h>
-#include <iostream>
-#include <algorithm>
-#include <string>
 #include <memory>
-#include "CGL/vector2D.h"
 #include "common.h"
 #include "grid.h"
-
-using namespace std;
-using namespace CGL;
-
-extern std::random_device rd;
-extern mt19937 rng; // random number generator in C++11
 
 double interpolate(double d1, double d2, double s);
 
@@ -33,7 +22,7 @@ Grid::Grid(int width, int height) {
     normal_distribution<double> dis_v_x(0, 3);
     this->velocity.resize(width * height, Vector2D(0, 0));
     for (int i = 0; i < width * height; ++i) {
-        this->velocity[i] = Vector2D(dis_v_x(rng), dis_v_y(rng));
+        this->velocity[i] = Vector2D(dis_v_x(Con::rng), dis_v_y(Con::rng));
         //this->velocity[i] = Vector2D(1, 1);
     }
 }
@@ -404,10 +393,10 @@ void randomize_grid(Grid &grid, int num_speckle = 3, int size = 3) {
     uni_dis dis_density(25, 75); // uniform distribution in C++11
     uni_dis dis_size(1, size);
     while (num_speckle--) {
-        int chosen_x = dis_x(rng);
-        int chosen_y = dis_y(rng);
-        int chosen_size = dis_size(rng);
-        double chosen_density = dis_density(rng);
+        int chosen_x = dis_x(Con::rng);
+        int chosen_y = dis_y(Con::rng);
+        int chosen_size = dis_size(Con::rng);
+        double chosen_density = dis_density(Con::rng);
         for (int i = 0; i < chosen_size; ++i) {
             for (int j = 0; j < chosen_size; ++j) {
                 grid.setDensity(chosen_x + i, chosen_y + j,

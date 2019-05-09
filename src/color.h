@@ -8,8 +8,6 @@
 #include "CGL/vector3D.h"
 #include "CGL/vector4D.h"
 
-using namespace CGL;
-
 // may be used later if we change to another method,
 // not used for the current hsv2rgb
 
