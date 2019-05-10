@@ -6,7 +6,9 @@
 #include "common.h"
 
 class SmokeScreen : public nanogui::Screen {
+
 public:
+  void reset_parameters();
 
   SmokeScreen(GLFWwindow *glfw_window) {
 
@@ -26,15 +28,15 @@ public:
 
     gui->addGroup("Smoke");
 
-    nanogui::ref<Slider> s_size_smoke = new nanogui::Slider(window);
-    nanogui::ref<Slider> s_amount_smoke = new nanogui::Slider(window);
-    nanogui::ref<Slider> s_amount_temperature = new nanogui::Slider(window);
-    nanogui::ref<Slider> s_ambient_temperature = new nanogui::Slider(window);
-    nanogui::ref<Slider> s_temperature_parameter = new nanogui::Slider(window);
-    nanogui::ref<Slider> s_smoke_density_parameter = new nanogui::Slider(window);
-    nanogui::ref<Slider> s_external_force_parameter = new nanogui::Slider(window);
-    nanogui::ref<Slider> s_num_iter = new nanogui::Slider(window);
-    nanogui::ref<Slider> s_alpha = new nanogui::Slider(window);
+    s_size_smoke = new nanogui::Slider(window);
+    s_amount_smoke = new nanogui::Slider(window);
+    s_amount_temperature = new nanogui::Slider(window);
+    s_ambient_temperature = new nanogui::Slider(window);
+    s_temperature_parameter = new nanogui::Slider(window);
+    s_smoke_density_parameter = new nanogui::Slider(window);
+    s_external_force_parameter = new nanogui::Slider(window);
+    s_num_iter = new nanogui::Slider(window);
+    s_alpha = new nanogui::Slider(window);
 
     s_size_smoke->setCallback([&](double ret) { Con::size_smoke = int(ret); });
     s_amount_smoke->setCallback([&](double ret) { Con::amount_smoke = ret; });
@@ -95,15 +97,16 @@ public:
   }
 
 private:
+
   double margin = 10;
+  nanogui::ref<nanogui::Slider> s_size_smoke;
+  nanogui::ref<nanogui::Slider> s_amount_smoke;
+  nanogui::ref<nanogui::Slider> s_amount_temperature;
+  nanogui::ref<nanogui::Slider> s_ambient_temperature;
+  nanogui::ref<nanogui::Slider> s_temperature_parameter;
+  nanogui::ref<nanogui::Slider> s_smoke_density_parameter;
+  nanogui::ref<nanogui::Slider> s_external_force_parameter;
+  nanogui::ref<nanogui::Slider> s_num_iter;
+  nanogui::ref<nanogui::Slider> s_alpha;
+
 };
-
-
-//    gui->addVariable("Size", Con::size_smoke);
-//    gui->addVariable("Density(0 to 100)", Con::amount_smoke);
-//    gui->addVariable("Heat(0 to 100)", Con::amount_temperature);
-//    gui->addVariable("Ambient(0 to 100)", Con::ambient_temperature);
-//    gui->addVariable("Heat parameter", Con::temperature_parameter);
-//    gui->addVariable("Density parameter", Con::smoke_density_parameter);
-//    gui->addVariable("Force parameter", Con::external_force_parameter);
-//    gui->addVariable("Diffusion iterations", Con::num_iter);

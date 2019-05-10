@@ -3,9 +3,10 @@
 
 #include "grid.h"
 #include "common.h"
+#include "smoke_screen.h"
 
 extern Grid grid;
-extern nanogui::Screen *screen;
+extern SmokeScreen *screen;
 extern vector<Vector2D> external_forces;
 
 // Handles mouse click to manually create smoke.
@@ -36,22 +37,6 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
             case GLFW_KEY_RIGHT_SHIFT:
                 Con::shift_pressed = true;
                 break;
-//            case '=':
-//                if (shift_pressed) size_smoke = min(min(grid.width, grid.height), size_smoke + 1);
-//                std::cout << "Size of smoke is " << size_smoke << std::endl;
-//                break;
-//            case '-':
-//                size_smoke = max(1, size_smoke - 1);
-//                std::cout << "Size of smoke is " << size_smoke << std::endl;
-//                break;
-//            case '[':
-//                amount_smoke = max(1.0, amount_smoke - 2.0);
-//                std::cout << "Amount of smoke is " << amount_smoke << std::endl;
-//                break;
-//            case ']':
-//                amount_smoke = min(100.0, amount_smoke + 2.0);
-//                std::cout << "Amount of smoke is " << amount_smoke << std::endl;
-//                break;
             case GLFW_KEY_P:
                 Con::is_pause = !Con::is_pause;
                 break;
@@ -61,8 +46,9 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
             case GLFW_KEY_R:
                 Con::reset = true;
                 break;
+            case GLFW_KEY_S:
+                screen->reset_parameters();
             default:
-//                std::cout << key << " pressed" << std::endl;
                 break;
         }
     } else if (action == GLFW_RELEASE) {
@@ -74,7 +60,6 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
                 Con::shift_pressed = false;
                 break;
             default:
-//                std::cout << key << " released" << std::endl;
                 break;
         }
     }

@@ -11,10 +11,10 @@
 #include <CGL/CGL.h>
 #include "stb_image.h"
 
+#include "smoke_screen.h"
 #include "common.h"
 #include "grid.h"
 #include "color.h"
-#include "smoke_screen.h"
 #include "shader.h"
 
 using namespace nanogui;
