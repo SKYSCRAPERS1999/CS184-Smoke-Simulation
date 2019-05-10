@@ -14,7 +14,6 @@ bool Con::reset = false;
 bool Con::debug = true;
 int Con::size_mouse = 3 * (Con::NUMROW / 100);
 
-int Con::size_smoke = 3 * (Con::NUMROW / 100);
 double Con::amount_smoke = 90;
 double Con::amount_temperature = 50;
 double Con::ambient_temperature = 0;
