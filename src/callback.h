@@ -118,7 +118,7 @@ void update_mouse() {
                 grid.setDensity(x, y, min(den + Con::amount_smoke * fall_off, 100.0));
                 grid.setTemperature(x, y, min(temp + Con::amount_temperature * fall_off, 100.0));
                 if (Con::exit_cell.x != Con::enter_cell.x || Con::exit_cell.y != Con::enter_cell.y) {
-                    grid.setVelocity(x, y, (Con::exit_cell - Con::enter_cell).unit() * 5);
+                    grid.setVelocity(x, y, (Con::exit_cell - Con::enter_cell).unit() * (Con::exit_cell - Con::enter_cell).norm() / 2);
                 }
             }
         }
