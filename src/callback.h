@@ -81,17 +81,6 @@ void keyboard_callback(GLFWwindow *window, int key, int scancode, int action, in
 }
 
 void update_mouse() {
-    // If modifying the vector field, continuously update the current location of the mouse if not pressed
-    if (Con::is_modify_vf && !Con::mouse_down) {
-        double xpos = grid.cursor_pos.x;
-        double ypos = grid.cursor_pos.y;
-
-        int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
-        int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
-
-        Con::enter_cell = Vector2D(col, row);
-    }
-
     // Handle dragging of mouse to create a stream of smoke or modifying the vector field
     double xpos = grid.cursor_pos.x;
     double ypos = grid.cursor_pos.y;
@@ -136,6 +125,16 @@ void update_mouse() {
 void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
     screen->cursorPosCallbackEvent(xpos, ypos);
     glfwGetCursorPos(window, &grid.cursor_pos.x, &grid.cursor_pos.y);
+    // If modifying the vector field, continuously update the current location of the mouse if not pressed
+    if (Con::is_modify_vf && !Con::mouse_down) {
+        double xpos = grid.cursor_pos.x;
+        double ypos = grid.cursor_pos.y;
+
+        int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
+        int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
+
+        Con::enter_cell = Vector2D(col, row);
+    }
     if (Con::mouse_down) {
         update_mouse();
     }
