@@ -11,7 +11,7 @@ bool Con::is_pause = false;
 bool Con::shift_pressed = false;
 bool Con::is_modify_vf = false;
 bool Con::reset = false;
-bool Con::debug = true;
+bool Con::debug = false;
 int Con::size_mouse = 3 * (Con::NUMROW / 100);
 
 int Con::size_smoke = 3 * (Con::NUMROW / 100);
