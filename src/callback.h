@@ -93,56 +93,44 @@ void update_mouse() {
     }
 
     // Handle dragging of mouse to create a stream of smoke or modifying the vector field
-    if (Con::mouse_down) {
-        if (Con::is_modify_vf) {
-            double xpos = grid.cursor_pos.x;
-            double ypos = grid.cursor_pos.y;
-
-            int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
-            int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
-
-            Con::exit_cell = Vector2D(col, row);
-            if (Con::exit_cell.x != Con::enter_cell.x || Con::exit_cell.y != Con::enter_cell.y) {
-                Vector2D direction_mouse_drag = Con::exit_cell - Con::enter_cell;
-                for (int y = row - Con::size_mouse; y < row + Con::size_mouse; y++) {
-                    for (int x = col - Con::size_mouse; x < col + Con::size_mouse; x++) {
-                        if (y < 1 || x < 1 || y >= grid.height - 1 || x >= grid.width - 1) {
-                            continue;
-                        }
-                        external_forces[y * grid.width + x] = direction_mouse_drag.unit();
-                    }
-                }
-                Con::enter_cell = Con::exit_cell;
-            }
-        } else {
-            double xpos = grid.cursor_pos.x;
-            double ypos = grid.cursor_pos.y;
-
-            int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
-            int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
-
-            for (int y = row - Con::size_smoke; y <= row + Con::size_smoke; ++y) {
-                for (int x = col - Con::size_smoke; x <= col + Con::size_smoke; ++x) {
-                    double dis2 = pow(y - row, 2.0) + pow(x - col, 2.0);
-
-                    if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 ||
-                        (dis2 > Con::size_smoke * Con::size_smoke)) {
+    double xpos = grid.cursor_pos.x;
+    double ypos = grid.cursor_pos.y;
+    int row = int(Con::NUMROW - Con::NUMROW * ypos / double(Con::WINDOW_HEIGHT));
+    int col = int(Con::NUMCOL * xpos / double(Con::WINDOW_WIDTH));
+    if (Con::is_modify_vf) {
+        Con::exit_cell = Vector2D(col, row);
+        if (Con::exit_cell.x != Con::enter_cell.x || Con::exit_cell.y != Con::enter_cell.y) {
+            Vector2D direction_mouse_drag = Con::exit_cell - Con::enter_cell;
+            for (int y = row - Con::size_mouse; y < row + Con::size_mouse; y++) {
+                for (int x = col - Con::size_mouse; x < col + Con::size_mouse; x++) {
+                    if (y < 1 || x < 1 || y >= grid.height - 1 || x >= grid.width - 1) {
                         continue;
                     }
-
-                    // What type of function should fall off be?
-                    dis2 /= pow((Con::NUMCOL / 100.0), 2.0);
-                    double fall_off = 1.0 / max(dis2, 1.0);
-
-                    double den = grid.getDensity(x, y);
-                    double temp = grid.getTemperature(x, y);
-                    grid.setDensity(x, y, min(den + Con::amount_smoke * fall_off, 100.0));
-                    grid.setTemperature(x, y, min(temp + Con::amount_temperature * fall_off, 100.0));
-
+                    external_forces[y * grid.width + x] = direction_mouse_drag.unit();
                 }
+            }
+            Con::enter_cell = Con::exit_cell;
+        }
+    } else {
+        for (int y = row - Con::size_smoke; y <= row + Con::size_smoke; ++y) {
+            for (int x = col - Con::size_smoke; x <= col + Con::size_smoke; ++x) {
+                double dis2 = pow(y - row, 2.0) + pow(x - col, 2.0);
+                if (y < 1 || y >= grid.height - 1 || x < 1 || x >= grid.width - 1 ||
+                    (dis2 > Con::size_smoke * Con::size_smoke)) {
+                    continue;
+                }
+                // What type of function should fall off be?
+                dis2 /= pow((Con::NUMCOL / 100.0), 2.0);
+                double fall_off = 1.0 / max(dis2, 1.0);
+
+                double den = grid.getDensity(x, y);
+                double temp = grid.getTemperature(x, y);
+                grid.setDensity(x, y, min(den + Con::amount_smoke * fall_off, 100.0));
+                grid.setTemperature(x, y, min(temp + Con::amount_temperature * fall_off, 100.0));
             }
         }
     }
+
 }
 
 void cursor_position_callback(GLFWwindow *window, double xpos, double ypos) {
