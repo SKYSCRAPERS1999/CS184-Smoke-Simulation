@@ -3,8 +3,8 @@
 //
 #include "common.h"
 
-int Con::WINDOW_WIDTH = 700;
-int Con::WINDOW_HEIGHT = 640;
+int Con::WINDOW_WIDTH = 1600; //700;
+int Con::WINDOW_HEIGHT = 960; //640;
 
 bool Con::mouse_down = false;
 bool Con::is_pause = false;
@@ -14,14 +14,15 @@ bool Con::reset = false;
 bool Con::debug = false;
 int Con::size_mouse = 3 * (Con::NUMROW / 100);
 
-int Con::size_smoke = 15;
+int Con::size_smoke = 10;
 double Con::amount_smoke = 90;
 double Con::amount_temperature = 50;
 double Con::ambient_temperature = 0;
-double Con::temperature_parameter = 0.015;
+double Con::temperature_parameter = 0.010;
 double Con::smoke_density_parameter = 0.005;
 double Con::external_force_parameter = 0.5;
 double Con::num_iter = 16;
+double Con::ALPHA = 0.7;
 
 Vector2D Con::enter_cell = Vector2D(0, 0);
 Vector2D Con::exit_cell = Vector2D(0, 0);

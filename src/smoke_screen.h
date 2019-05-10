@@ -34,6 +34,7 @@ public:
     nanogui::ref<Slider> s_smoke_density_parameter = new nanogui::Slider(window);
     nanogui::ref<Slider> s_external_force_parameter = new nanogui::Slider(window);
     nanogui::ref<Slider> s_num_iter = new nanogui::Slider(window);
+    nanogui::ref<Slider> s_alpha = new nanogui::Slider(window);
 
     s_size_smoke->setCallback([&](double ret) { Con::size_smoke = int(ret); });
     s_amount_smoke->setCallback([&](double ret) { Con::amount_smoke = ret; });
@@ -43,6 +44,7 @@ public:
     s_smoke_density_parameter->setCallback([&](double ret) { Con::smoke_density_parameter = ret; });
     s_external_force_parameter->setCallback([&](double ret) { Con::external_force_parameter = ret; });
     s_num_iter->setCallback([&](double ret) { Con::num_iter = ret; });
+    s_alpha->setCallback([&](double ret) { Con::ALPHA = ret; });
 
     s_size_smoke->setValue(Con::size_smoke);
     s_amount_smoke->setValue(Con::amount_smoke);
@@ -51,13 +53,13 @@ public:
     s_temperature_parameter->setValue(Con::temperature_parameter);
     s_smoke_density_parameter->setValue(Con::smoke_density_parameter);
     s_external_force_parameter->setValue(Con::external_force_parameter);
-    s_num_iter->setValue(Con::num_iter);
+    s_alpha->setValue(Con::ALPHA);
 
     s_size_smoke->setRange({3.0, 30.0});
     s_amount_smoke->setRange({50.0, 100.0});
     s_amount_temperature->setRange({0, 100.0});
     s_ambient_temperature->setRange({0, 50.0});
-    s_temperature_parameter->setRange({0, 0.03});
+    s_temperature_parameter->setRange({0, 0.02});
     s_smoke_density_parameter->setRange({0, 0.01});
     s_external_force_parameter->setRange({0, 1.0});
     s_num_iter->setRange({4, 32});
@@ -65,11 +67,12 @@ public:
     gui->addWidget("Size(0 to 30)", s_size_smoke);
     gui->addWidget("Density(50 to 100)", s_amount_smoke);
     gui->addWidget("Heat(0 to 100)", s_amount_temperature);
-    gui->addWidget("Ambient(0 to 50)", s_ambient_temperature);
-    gui->addWidget("Heat parameter(0 to 0.03)", s_temperature_parameter);
-    gui->addWidget("Density parameter(0 to 0.01)", s_smoke_density_parameter);
-    gui->addWidget("Force parameter(0 to 1.0)", s_external_force_parameter);
-    gui->addWidget("Diffusion iterations(4 to 32)", s_num_iter);
+    gui->addWidget("Ambient", s_ambient_temperature);
+    gui->addWidget("Heat parameter", s_temperature_parameter);
+    gui->addWidget("Density parameter", s_smoke_density_parameter);
+    gui->addWidget("Force parameter", s_external_force_parameter);
+    gui->addWidget("Diffusion iterations", s_num_iter);
+    gui->addWidget("Velocity ratio", s_alpha);
 
     // Color Wheel
     nanogui::ref<TabWidget> tabWidget = this->add<TabWidget>();

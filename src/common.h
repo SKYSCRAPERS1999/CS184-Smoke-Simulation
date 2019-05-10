@@ -23,12 +23,13 @@ public:
 
   // basic constants
 
-  static constexpr int NUMCOL = 400;
-  static constexpr int NUMROW = 400;
+  static constexpr int NUMCOL = 500;
+  static constexpr int NUMROW = 300;
 
-  static constexpr int FREQ = 30;
+  static constexpr int FREQ = 60;
   static constexpr int DISPLAY_LIMIT = 1;
   static constexpr double EPS = 1e-3;
+
   static int WINDOW_WIDTH; // x is WIDTH
   static int WINDOW_HEIGHT; // y is HEIGHT
 
@@ -41,6 +42,7 @@ public:
   static bool reset;
   static bool debug;
   static int size_mouse;
+  static double ALPHA;
 
   // Adjustable parameters for nanogui
 

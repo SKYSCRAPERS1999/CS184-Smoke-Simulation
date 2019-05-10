@@ -117,8 +117,12 @@ void update_mouse() {
                 double temp = grid.getTemperature(x, y);
                 grid.setDensity(x, y, min(den + Con::amount_smoke * fall_off, 100.0));
                 grid.setTemperature(x, y, min(temp + Con::amount_temperature * fall_off, 100.0));
+
+                // initial velocity
                 if (Con::exit_cell.x != Con::enter_cell.x || Con::exit_cell.y != Con::enter_cell.y) {
-                    grid.setVelocity(x, y, (Con::exit_cell - Con::enter_cell).unit() * (Con::exit_cell - Con::enter_cell).norm() / 2);
+                    Vector2D mouse_velocity = (Con::exit_cell - Con::enter_cell) * 1.0;
+                    grid.setVelocity(x, y,
+                    mouse_velocity * Con::ALPHA + grid.getVelocity(x, y) * (1 - Con::ALPHA));
                 }
             }
         }
