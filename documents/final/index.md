@@ -14,6 +14,10 @@
 
 ### Implementation
 
+![render_pipeline](./images/render_pipeline.png)
+
+<center>Pipeline of our implementation.
+
 #### Physical Simulation
 
 #### Smoke Generation (Mouse Tracking)
@@ -23,16 +27,13 @@ Besides, we add HSV color fields to the smoke, which is an intuitive color model
 
 #### Rendering
 
-![render_pipeline](./images/render_pipeline.png)
+The rendering part can be separated into three stages:
 
-<center>Rendering pipeline
+1. Generate the density map and temperature map from simulation.
+2. Convert density and temperature map into RGB texture map.
+3. Use shader program to map the texture map to screen.
 
-As is shown in the figure, the rendering part can be separated into four stages:
-
-1. Simulate one time step according to the grid status.
-2. Generate the density map and temperature map according from simulation.
-3. Convert density and temperature map into RGB texture map.
-4. Use shader program to map the texture map to screen.
+Specifically, for the seconde step, we create a char array with capacity $3\times W\times H$, where $W$ and $H$ are width and height of the grid, respectively. %%%%Fangzhou please write here%%%% We then save the RGB color to the array, which is basically a texture map now. After that, we pass the array to fragment shader as a 2D sampler, and render the grid.
 
 #### GUI
 We added nanogui to our project from scratch. Widgets we used includes sliders for configuring smoke parameters and a color wheel.
