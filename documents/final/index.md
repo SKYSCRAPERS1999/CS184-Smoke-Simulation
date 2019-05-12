@@ -24,8 +24,14 @@ Besides, we add HSV color fields to the smoke, which is an intuitive color model
 #### Rendering
 
 #### GUI
+We added nanogui to our project from scratch. Widgets we used includes sliders for configuring smoke parameters and a color wheel.
 
-#### Optimization
+#### Optimizations
+We should accelerate simulation part in order to achieve a frequency of more than 60 FPS.
+
++ Using OpenMP: We configured OpenMP and added pragma of OpenMP before each time-consuming loops of simulation part. We have to make sure that we do not parallel the time steps by accident. Simply by these we get a acceleration of 4-5 times on a 6-core Macbook Pro.
+
++ Using references and move constructors: We use reference of variables instead of a new copy if possible. Besides, we prefer move constructor of class objects instead of copy constructor to reduce unnecessary copy. 
 
 ### Problems and Solutions
 
