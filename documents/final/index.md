@@ -23,6 +23,17 @@ Besides, we add HSV color fields to the smoke, which is an intuitive color model
 
 #### Rendering
 
+![render_pipeline](./images/render_pipeline.png)
+
+<center>Rendering pipeline
+
+As is shown in the figure, the rendering part can be separated into four stages:
+
+1. Simulate one time step according to the grid status.
+2. Generate the density map and temperature map according from simulation.
+3. Convert density and temperature map into RGB texture map.
+4. Use shader program to map the texture map to screen.
+
 #### GUI
 We added nanogui to our project from scratch. Widgets we used includes sliders for configuring smoke parameters and a color wheel.
 
