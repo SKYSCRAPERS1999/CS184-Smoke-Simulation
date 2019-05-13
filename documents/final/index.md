@@ -5,8 +5,7 @@
 ------
 
 ## Abstract
-
-
+We implemented realistic smoke simulation in a 2D grid based environment, and used OpenGL to represent our simulation. Mouse input was caught by callbacks to create smoke and affect the path of the smoke. We integrated nanogui to our project, allowing various adjustable parameters including heat, density, color and so on. OpenMP was added for acceleration of the simulation part, and shader programs in OpenGL for acceleration of the rendering part.
 
 ------
 
@@ -125,7 +124,7 @@ We should accelerate simulation part in order to achieve a frequency of more tha
 
 ### Lessons
 
-
+From this project, we learned how to make realistic physical simulation and writing OpenGL for grid's rendering. Also we got experience on how to organize a relatively large C++ project, as well as integrating libraries like nanogui for GUI and OpenMP for acceleration. 
 
 ------
 
@@ -136,6 +135,10 @@ We should accelerate simulation part in order to achieve a frequency of more tha
 ------
 
 ## References
+
+[Chapter 38. Fast Fluid Dynamics Simulation on the GPU](http://developer.download.nvidia.com/books/HTML/gpugems/gpugems_ch38.html)
+
+[Real-Time Fluid Dynamics for Games](http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf)
 
 
 
