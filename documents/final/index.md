@@ -85,7 +85,10 @@ Finally, we subtract the gradient of the pressure from the vector field.
 
 
 #### Smoke Generation (Mouse Tracking)
-We generate smoke by tracking the clicks and drags of mouse. Callback funtions will catch the cursor movement (static mouse click is specially shandled), setting density and temperature fields correspondingly. To better simulate the emission of smoke, we update the density and temperature fields of all the grids in a certain distance from the mouse. We also adds quadratic fall-off to the emission fields, similar to the definition of irradiance.
+We generate smoke by tracking the clicks and drags of mouse. callback funtions will catch the cursor movement (static mouse click is specially shandled), setting density and temperature fields correspondingly. To better simulate the emission of smoke, we update the density and temperature fields of all the grids in a certain distance from the mouse. We also adds quadratic fall-off to the emission fields, similar to the definition of irradiance. 
+
+Additionally, the drags of mouse are tracked for update of velocity. In the callback function, we also update the velocity fields of grids which are in a certain distance from the mouse, using a weighted average of the previous velocity and the mouse's velocity: 
+$mouse\_velocity * \alpha + previous\_velocity * (1 - \alpha)$. Here mouse_velocity is proportional to direction of mouse, and $\alpha$ is an adjustable parameter in $[0,1]$.
 
 Besides, we add HSV color fields to the smoke, which is an intuitive color model. We set `HUE` as a range of value determined by temprature, with the color wheel's select the center of range. We set `Satuaration` to $100.0$, which represents primary colors. We set `Value`, which stands for brightness, to density of smoke naturally. 
 + $HUE = (value\_of\_color\_wheel - (temperature - 50)) % 360$ 
