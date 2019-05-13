@@ -20,18 +20,23 @@ We implemented realistic smoke simulation in a 2D grid based environment, and us
 #### Physical Simulation
 
 ##### Order of Operations
-<center><td>
-    <img src="./images/simu-order.png" align="middle" width="200px"/>
-</td></center>
+
+$$
+\mathbb{P\cdot F\cdot D\cdot A}
+$$
+
 
 + For density and temperature , we only advect.
 + For velocity, we first advect, then diffuse, then apply external and buoyant forces, and finally project our velocity field.
 
 ##### Advection
-<center><td>
-    <img src="./images/simu-advection.png" align="middle" width="300px"/>
-    <figcaption>Stam’s method</figcaption>
-</td></center>
+
+$$
+q(\mathbf{x},t+\delta t)=q(\mathbf{x}-\mathbf{u}(\mathbf{x},t)\delta t, t)
+$$
+
+<center>Stam’s method
+
 
 + Advection is movement of certain quantities along the velocity field.
     + In our simulation, we advect smoke density, temperature, and velocity
@@ -39,38 +44,38 @@ We implemented realistic smoke simulation in a 2D grid based environment, and us
     + For each grid location/cell, we trace its velocity backwards.
     + We linearly interpolate the smoke quantities closest to the position we end up.
     + We set the quantity of the original cell to the interpolated quantity.
-
 + q is the quantity we want to advect, x is a location in our grid, t is the current time, δt is the duration of a timestep, and u is the velocity field.
 
 ##### Diffusion
 + Diffusion occurs when smoke moves from areas of higher concentration to areas of lower concentration.
 + Viscosity is the natural resistance of fluids to flow.
 + We solve the below partial differential equation to determine velocity field after viscous diffusion occurs.
-+ We iteratively solve the equation using 
-**Jacobi iteration**.
++ We iteratively solve the equation using  **Jacobi iteration**.
 
-<center><td>
-    <img src="./images/simu-diffusion.png" align="middle" width="150px"/>
-    <figcaption>Diffusion Equation: u is velocity field, v is viscosity term </figcaption>
-</td></center>
+$$
+\frac{\partial \mathbf{u}}{\partial t}=v\nabla^2\mathbf{u}
+$$
 
-
+<center>Diffusion Equation: u is velocity field, v is viscosity term
 
 ##### Jacobi iteration 
-<center><td>
-    <img src="./images/simu-jacobi.png" align="middle" width="400px"/>
-</td></center>
+
+$$
+x^{(k+1)}_{i,j}=\frac{x^{(k)}_{i-1,j} + x^{(k)}_{i+1,j} + x^{(k)}_{i,j-1}+x^{(k)}_{i,j+1}+\alpha b_{i,j}}{\beta}
+$$
+
 
 + The Jacobi iteration technique involves iterating several times.
 + In our simulation, the number of iterations is set default at $16$.
 + For viscous diffusion, the $x$ and $b$ term is the velocity at location $i, j, α$ term is $1/(num\_iter\cdot dt)$, and $\beta$ term is $4 + \alpha$. 
 + For pressure, the $x$ term is the pressure at location $i, j, b$ is the divergence of the velocity field at location $i, j, α$ term is $-(dx)$, and $β$ term is $4$.
 
-
 ##### Buoyancy
-<center><td>
-    <img src="./images/simu-buoyant.png" align="middle" width="200px"/>
-</td></center>
+
+$$
+\left(-\kappa d+\sigma(T-T_0)\right)\hat{\mathbf{j}}
+$$
+
 
 + Buoyant forces result from smoke traveling from areas of high temperature to lower temperature. Buoyant forces result in the smoke traveling up. 
 
