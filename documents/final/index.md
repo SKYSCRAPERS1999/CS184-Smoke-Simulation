@@ -16,14 +16,19 @@
 
 ![render_pipeline](./images/render_pipeline.png)
 
-<center>Pipeline of our implementation.
+<center>Pipeline of our implementation.</center>
 
 #### Physical Simulation
 
 #### Smoke Generation (Mouse Tracking)
 We generate smoke by tracking the clicks and drags of mouse. Callback funtions will catch the cursor movement (static mouse click is specially shandled), setting density and temperature fields correspondingly. To better simulate the emission of smoke, we update the density and temperature fields of all the grids in a certain distance from the mouse. We also adds quadratic fall-off to the emission fields, similar to the definition of irradiance.
 
-Besides, we add HSV color fields to the smoke, which is an intuitive color model. We set HUE as a range of value determined by temprature, with the color wheel's select the center of range. We set Satuaration to 100.0, which represents primary colors. We set Value, which stands for brightness, to density of smoke naturally. The HSV fields are finally transformed to RGB and displayed on screen. 
+Besides, we add HSV color fields to the smoke, which is an intuitive color model. We set `HUE` as a range of value determined by temprature, with the color wheel's select the center of range. We set `Satuaration` to $100.0$, which represents primary colors. We set `Value`, which stands for brightness, to density of smoke naturally. 
++ $HUE = (value\_of\_color\_wheel - (temperature - 50)) % 360$ 
++ $SATURATION = 100$
++ $VALUE = density$
+
+The HSV fields are finally transformed to RGB and displayed on screen. 
 
 #### Rendering
 
@@ -33,7 +38,7 @@ The rendering part can be separated into three stages:
 2. Convert density and temperature map into RGB texture map.
 3. Use shader program to map the texture map to screen.
 
-Specifically, for the seconde step, we create a char array with capacity $3\times W\times H$, where $W$ and $H$ are width and height of the grid, respectively. %%%%Fangzhou please write here%%%% We then save the RGB color to the array, which is basically a texture map now. After that, we pass the array to fragment shader as a 2D sampler, and render the grid.
+Specifically, for the second step, we create a char array with capacity $3\times W\times H$, where $W$ and $H$ are width and height of the grid, respectively. We first calculate the HSV value of each grid. We then change the HSV fields to RGB fields, and save the RGB color to the array, which is basically a texture map now. After that, we pass the array to fragment shader as a 2D sampler, and render the grid.
 
 #### GUI
 We added nanogui to our project from scratch. Widgets we used includes sliders for configuring smoke parameters and a color wheel.
@@ -41,7 +46,7 @@ We added nanogui to our project from scratch. Widgets we used includes sliders f
 #### Optimizations
 We should accelerate simulation part in order to achieve a frequency of more than 60 FPS.
 
-+ Using OpenMP: We configured OpenMP and added pragma of OpenMP before each time-consuming loops of simulation part. We have to make sure that we do not parallel the time steps by accident. Simply by these we get a acceleration of 4-5 times on a 6-core Macbook Pro.
++ Using OpenMP: We configured OpenMP and added `#pragma` of OpenMP before each time-consuming loops of simulation part. We have to make sure that we do not parallel the time steps by accident. Simply by these we get a acceleration of 4-5 times on a 6-core Macbook Pro.
 
 + Using references and move constructors: We use reference of variables instead of a new copy if possible. Besides, we prefer move constructor of class objects instead of copy constructor to reduce unnecessary copy. 
 
