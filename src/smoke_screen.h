@@ -55,6 +55,7 @@ public:
     s_temperature_parameter->setValue(Con::temperature_parameter);
     s_smoke_density_parameter->setValue(Con::smoke_density_parameter);
     s_external_force_parameter->setValue(Con::external_force_parameter);
+    s_num_iter->setValue(Con::num_iter);
     s_alpha->setValue(Con::ALPHA);
 
     s_size_smoke->setRange({3.0, 30.0});
