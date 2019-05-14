@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-<head>
+<!-- <head>
 <meta charset='UTF-8'><meta name='viewport' content='width=device-width initial-scale=1'>
 <title>index</title><link href='https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext' rel='stylesheet' type='text/css' /><style type='text/css'>html {overflow-x: initial !important;}:root { --bg-color: #ffffff; --text-color: #333333; --select-text-bg-color: #B5D6FC; --select-text-font-color: auto; --monospace: "Lucida Console",Consolas,"Courier",monospace; }
 html { font-size: 14px; background-color: var(--bg-color); color: var(--text-color); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
@@ -491,7 +491,7 @@ header, .context-menu, .megamenu-content, footer{
 
  .typora-export li, .typora-export p, .typora-export,  .footnote-line {white-space: normal;} 
 </style>
-</head>
+</head> -->
 <body class='typora-export' >
 <div  id='write'  class = 'is-mac'><h2><a name='header-n0' class='md-header-anchor '></a><center>CS 184 Final Project: 2D Grid Based Smoke Simulation Final Report</h2><h3><a name='header-n2' class='md-header-anchor '></a><center>Eric Ying, Yuanhao Zhai, Fangzhou Lan</h3><hr /><p><img src='images/smoke-example.png' alt='smoke-example' referrerPolicy='no-referrer' /></p><h2><a name='header-n5' class='md-header-anchor '></a>Abstract</h2><p>For our CS184 final project, we implemented realistic smoke simulation in a 2D grid based environment. We used OpenGL to render our simulation live on a window. Mouse input was caught by callbacks to allow users to create smoke and affect the path/initial velocity of the smoke. We also integrated the nanogui library into our project, allowing users to adjust various parameters including heat, density, color and so on. OpenMP was added for acceleration of the simulation part, and shader programs in OpenGL were added for acceleration of the rendering part.</p><hr /><h2><a name='header-n8' class='md-header-anchor '></a>Technical Approach </h2><h3><a name='header-n9' class='md-header-anchor '></a>Implementation</h3><p><img src='./images/render_pipeline.png' alt='render_pipeline' referrerPolicy='no-referrer' /></p><center>Pipeline of our implementation.</center><p>We first retrieve the density and temperature each each grid location from our simulation. We convert those into HSV and then into RGB colors for each grid location, depending on the density and temperature. We create a texture from those colors, and finally we display the texture on the screen.</p><h4><a name='header-n13' class='md-header-anchor '></a>Physical Simulation</h4><h5><a name='header-n14' class='md-header-anchor '></a>Basic Technical Overview and Order of Operations</h5><div contenteditable="false" spellcheck="false" class="mathjax-block md-end-block md-math-block md-rawblock" id="mathjax-n15" cid="n15" mdtype="math_block">
 			
