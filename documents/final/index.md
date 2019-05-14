@@ -169,6 +169,8 @@ Video demo:
 
 [Real-Time Fluid Dynamics for Games](http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf)
 
+[Stable Fluids](http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/ns.pdf)
+
 ------
 
 ### Contributions from team member
