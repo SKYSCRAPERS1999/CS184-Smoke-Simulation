@@ -26,10 +26,11 @@ We first retrieve the density and temperature each each grid location from our s
 #### Physical Simulation
 
 ##### Basic Technical Overview and Order of Operations
-<center><td>
-    <img src="./images/simu-order.png" align="middle" width="200px"/>
-</td></center>
-For our simulation, we kept track of three quantities: smoke density, temperature, and velocity. The grid, which represented the entire space of the simulation was split into individual cells. Each cell contained the density, temperature, and velocity of the smoke at that specific location. 
+$$
+\mathbb{P\cdot F\cdot D\cdot A}
+$$
+
+For our simulation, we kept track of three quantities: smoke density, temperature, and velocity. The grid, which represented the entire space of the simulation, was split into individual cells. Each cell contained the density, temperature, and velocity of the smoke at that specific location. 
 
 + For density and temperature, we only advect the quantities.
 + For velocity, we first advect, then diffuse, then apply external and buoyant forces, and finally project our velocity field.
@@ -37,10 +38,12 @@ For our simulation, we kept track of three quantities: smoke density, temperatur
 We used <http://developer.download.nvidia.com/books/HTML/gpugems/gpugems_ch38.html> as our primary resource for our simulation equations. We implemented most of the features in the webpage, with the exception of vorticity confinement. 
 
 ##### Advection
-<center><td>
-    <img src="./images/simu-advection.png" align="middle" width="300px"/>
-    <figcaption>Stam’s method</figcaption>
-</td></center>
+
+$$
+q(\mathbf{x},t+\delta t)=q(\mathbf{x}-\mathbf{u}(\mathbf{x},t)\delta t, t)
+$$
+
+<center>Stam’s method
 
 Advection is movement of certain quantities along the velocity field. Recall that in our simulation, we advect smoke density, temperature, and velocity. It is necessary to advect velocity in order to realistically simulate the flow of the smoke.
 
@@ -52,25 +55,29 @@ In the above equation, q is the quantity we want to advect, x is a location in o
 
 Diffusion occurs when smoke moves from areas of higher concentration to areas of lower concentration. Viscosity is the natural resistance of fluids to flow. We model viscous diffusion by updating the velocity field to simulate the effects of smoke diffusing outwards. We solve the below partial differential equation to determine the updates to the velocity field. In order to actually solve the equation, we use the **Jacobi iteration** technique.
 
-<center><td>
-    <img src="./images/simu-diffusion.png" align="middle" width="150px"/>
-    <figcaption>Diffusion Partial Differentation Equation: u is velocity field, v is viscosity term </figcaption>
-</td></center>
+$$
+\frac{\partial \mathbf{u}}{\partial t}=v\nabla^2\mathbf{u}
+$$
 
-
+<center>Diffusion Equation: u is velocity field, v is viscosity term
 
 ##### Jacobi iteration 
-<center><td>
-    <img src="./images/simu-jacobi.png" align="middle" width="400px"/>
-</td></center>
+
+$$
+x^{(k+1)}_{i,j}=\frac{x^{(k)}_{i-1,j} + x^{(k)}_{i+1,j} + x^{(k)}_{i,j-1}+x^{(k)}_{i,j+1}+\alpha b_{i,j}}{\beta}
+$$
+
 
 The Jacobi iteration technique involves iterating several times and continuously updating the values of the grid. In our simulation, the number of iterations was set default at $16$. For viscous diffusion calcualations, the $x$ and $b$ term is the velocity at location $i, j, α$ term is $1/(num\_iter\cdot dt)$, and $\beta$ term is $4 + \alpha$. For pressure calculations, the $x$ term is the pressure at location $i, j, b$ is the divergence of the velocity field at location $i, j, α$ term is $-(dx)$, and $β$ term is $4$. The higher the number of iterations, the more realistic our simulation becomes, but the longer the computation time of the simulation becomes as well.
 
-
 ##### Buoyancy
-<center><td>
-    <img src="./images/simu-buoyant.png" align="middle" width="200px"/>
-</td></center>
+
+$$
+\left(-\kappa d+\sigma(T-T_0)\right)\hat{\mathbf{j}}
+$$
+
+<center>Buoyant and gravitational force
+  
 
 Buoyant forces result from smoke traveling from areas of high temperature to lower temperature. Buoyant forces result in the smoke traveling up. It is the equivalent of hot air rising and cold air falling. We also model a gravitational force on the smoke that pulls the particles down. In the above equation, $d$ is the density of smoke, $T$ is the temperature of smoke, $To$ is the ambient temperature, $j$ is a vector pointing up, and $\kappa, \sigma$ are adjustable parameters. Notice that the gravitational force counteracts the buoyant force, although the buoyant force is usually much higher than the gravitational force.
 
