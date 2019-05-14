@@ -175,9 +175,9 @@ Video demo:
 
 ### Contributions from team member
 
-Eric Ying: Worked primarily on the simulation. Created the grid model and implemented the various equations for fluid simulation such as: advection, diffusion, buoyant force, external force, and projection. Also worked on mouse input for smoke. 
+Eric Ying: Worked primarily on the simulation. Created the grid model and </center>implemented the various equations for fluid simulation such as: advection, diffusion, buoyant force, external force, and projection. Also worked on mouse input for smoke. 
 
-Yuanhao Zhai: Worked on the rendering aspect of the project. 
+Yuanhao Zhai: Worked on the rendering aspect of the project, especially writing OpenGL codes. Also worked on integrating nanogui into the project. 
 
-Fangzhou Lan: Worked on accelerating the performance of the simulation. Also worked extensively on reorganizing and refactoring code.
+Fangzhou Lan: Worked on accelerating the performance of the simulation, and stuff about smoke's color. Also worked extensively on reorganizing and refactoring code, giving advice on using C++.
 
