@@ -4,11 +4,10 @@
 
 ------
 
-<center><td>
-    <img src="./images/smoke-example.png" align="middle" width="400px"/>
-</td></center>
+![smoke-example](images/smoke-example.png)
 
 ## Abstract
+
 For our CS184 final project, we implemented realistic smoke simulation in a 2D grid based environment. We used OpenGL to render our simulation live on a window. Mouse input was caught by callbacks to allow users to create smoke and affect the path/initial velocity of the smoke. We also integrated the nanogui library into our project, allowing users to adjust various parameters including heat, density, color and so on. OpenMP was added for acceleration of the simulation part, and shader programs in OpenGL were added for acceleration of the rendering part.
 
 ------
@@ -77,7 +76,7 @@ $$
 $$
 
 <center>Buoyant and gravitational force</center>
-  
+
 
 Buoyant forces result from smoke traveling from areas of high temperature to lower temperature. Buoyant forces result in the smoke traveling up. It is the equivalent of hot air rising and cold air falling. We also model a gravitational force on the smoke that pulls the particles down. In the above equation, $d$ is the density of smoke, $T$ is the temperature of smoke, $To$ is the ambient temperature, $j$ is a vector pointing up, and $\kappa, \sigma$ are adjustable parameters. Notice that the gravitational force counteracts the buoyant force, although the buoyant force is usually much higher than the gravitational force.
 
@@ -170,12 +169,11 @@ Video demo:
 
 [Real-Time Fluid Dynamics for Games](http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf)
 
-
 ------
 
 ### Contributions from team member
 
-Eric Ying: Worked primarily on the simulation. Created the grid model and </center>implemented the various equations for fluid simulation such as: advection, diffusion, buoyant force, external force, and projection. Also worked on mouse input for smoke. 
+Eric Ying: Worked primarily on the simulation. Created the grid model and implemented the various equations for fluid simulation such as: advection, diffusion, buoyant force, external force, and projection. Also worked on mouse input for smoke. 
 
 Yuanhao Zhai: Worked on the rendering aspect of the project, especially writing OpenGL codes. Also worked on integrating nanogui into the project. 
 
