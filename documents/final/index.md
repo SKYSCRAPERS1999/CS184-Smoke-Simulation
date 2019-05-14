@@ -43,7 +43,7 @@ $$
 q(\mathbf{x},t+\delta t)=q(\mathbf{x}-\mathbf{u}(\mathbf{x},t)\delta t, t)
 $$
 
-<center>Stam’s method
+<center>Stam’s method</center>
 
 Advection is movement of certain quantities along the velocity field. Recall that in our simulation, we advect smoke density, temperature, and velocity. It is necessary to advect velocity in order to realistically simulate the flow of the smoke.
 
@@ -59,7 +59,7 @@ $$
 \frac{\partial \mathbf{u}}{\partial t}=v\nabla^2\mathbf{u}
 $$
 
-<center>Diffusion Equation: u is velocity field, v is viscosity term
+<center>Diffusion Equation: u is velocity field, v is viscosity term</center>
 
 ##### Jacobi iteration 
 
@@ -76,7 +76,7 @@ $$
 \left(-\kappa d+\sigma(T-T_0)\right)\hat{\mathbf{j}}
 $$
 
-<center>Buoyant and gravitational force
+<center>Buoyant and gravitational force</center>
   
 
 Buoyant forces result from smoke traveling from areas of high temperature to lower temperature. Buoyant forces result in the smoke traveling up. It is the equivalent of hot air rising and cold air falling. We also model a gravitational force on the smoke that pulls the particles down. In the above equation, $d$ is the density of smoke, $T$ is the temperature of smoke, $To$ is the ambient temperature, $j$ is a vector pointing up, and $\kappa, \sigma$ are adjustable parameters. Notice that the gravitational force counteracts the buoyant force, although the buoyant force is usually much higher than the gravitational force.
