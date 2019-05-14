@@ -89,11 +89,15 @@ The projection step ensures that the velocity field is mass conserving and the f
 
 We use **Helmholtz–Hodge decomposition** for our projection step. This decomposition states that our velocity can be decomposed into a divergence free field and a gradient field: $u_{field} = u_{div} + u_{grad}$. For our projection step, we first calculate the divergence of the velocity field at each grid location. This involves finding the difference in the $x$ velocity of the left and right cells, adding that to the difference in $y$ velocity in the top and bottom cell, and scaling the result be a factor (0.5). Once we have the divergence, we then calculate the pressure at each grid location using the Jacobi technique as described earlier. Finally, we subtract the gradients of the pressure from the vector field at each grid location. The gradients of the pressure is found by taking the slope/rate of change of the pressure at each grid location. 
 
-$$div = 0.5 * ((r.x - l.x) + (t.y - b.y))$$
+$$
+div = 0.5 * ((r.x - l.x) + (t.y - b.y))
+$$
 
 <center>Divergence</center>
 
-$$\delta p = (p_{right} - p_{left}, p_{up} - p_{bottom})$$
+$$
+\delta p = (p_{right} - p_{left}, p_{up} - p_{bottom})
+$$
 
 <center>Gradient of pressure</center>
 
